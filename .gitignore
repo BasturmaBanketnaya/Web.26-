@@ -1,0 +1,13 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.cursor/
+.vscode/
+
+# Node modules (if added later)
+node_modules/
+
+# HubSpot local config
+hubspot.config.yml
