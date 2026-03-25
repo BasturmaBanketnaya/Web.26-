@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SPREAD — Engineering Intelligence that turns fragmented product data into confident decisions. Know your product inside out.">
+  <title>SPREAD — AI for Engineering | Engineering Intelligence</title>
+
+  <!-- Satoshi font -->
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap">
+
+  <style>
+    /* ==============================================
+       DESIGN TOKENS
+       ============================================== */
+    :root {
+      --color-orange: #FF6F47;
+      --color-orange-hover: #E85A33;
+      --color-orange-light: #FFF1ED;
+      --color-orange-mid: #FEA991;
+      --color-beige: #F9F5F0;
+      --color-dark: #272727;
+      --color-gray-900: #1A1A1A;
+      --color-gray-800: #272727;
+      --color-gray-700: #525252;
+      --color-gray-500: #7D7D7D;
+      --color-gray-300: #A9A9A9;
+      --color-gray-200: #D1D1D1;
+      --color-gray-100: #F5F5F5;
+      --color-white: #FFFFFF;
+
+      --font-primary: 'Satoshi', sans-serif;
+      --font-size-display: clamp(2.5rem, 5.5vw, 4.5rem);
+      --font-size-h2: clamp(1.75rem, 3.5vw, 2.75rem);
+      --font-size-h3: clamp(1.25rem, 2vw, 1.5rem);
+      --font-size-h4: clamp(1.1rem, 1.5vw, 1.25rem);
+      --font-size-body: 1.0625rem;
+      --font-size-body-sm: 0.9375rem;
+      --font-size-small: 0.875rem;
+      --font-size-caption: 0.75rem;
+      --font-size-metric: clamp(2.5rem, 5vw, 4rem);
+
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2rem;
+      --space-xl: 3rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+      --space-section: clamp(5rem, 10vw, 8rem);
+
+      --max-width: 1200px;
+      --max-width-narrow: 800px;
+      --border-radius: 8px;
+      --border-radius-lg: 16px;
+
+      --transition-fast: 0.2s ease;
+      --transition-base: 0.3s ease;
+      --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ==============================================
+       RESET & BASE
+       ============================================== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-primary); font-size: var(--font-size-body); line-height: 1.6; color: var(--color-dark); background: var(--color-white); }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ==============================================
+       UTILITIES
+       ============================================== */
+    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-md); }
+    .container--narrow { max-width: var(--max-width-narrow); }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-orange);
+      margin-bottom: var(--space-sm);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.875rem 2rem;
+      font-family: var(--font-primary);
+      font-size: var(--font-size-body-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 0;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--color-orange);
+      color: var(--color-white);
+      border-color: var(--color-orange);
+    }
+    .btn--primary:hover {
+      background: var(--color-orange-hover);
+      border-color: var(--color-orange-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(255, 111, 71, 0.3);
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--color-dark);
+      border-color: var(--color-dark);
+    }
+    .btn--outline:hover {
+      background: var(--color-dark);
+      color: var(--color-white);
+    }
+
+    .btn--outline-light {
+      background: transparent;
+      color: var(--color-white);
+      border-color: rgba(255,255,255,0.3);
+    }
+    .btn--outline-light:hover {
+      background: var(--color-white);
+      color: var(--color-dark);
+    }
+
+    .btn--sm { padding: 0.5rem 1.25rem; font-size: var(--font-size-small); }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: var(--font-size-body-sm);
+      color: var(--color-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      transition: gap var(--transition-fast);
+    }
+    .text-link:hover { gap: 0.75rem; }
+    .text-link::after { content: '→'; }
+
+    .section-header { text-align: center; max-width: 700px; margin: 0 auto var(--space-2xl); }
+    .section-header h2 { font-size: var(--font-size-h2); font-weight: 700; line-height: 1.15; color: var(--color-dark); margin-bottom: var(--space-sm); letter-spacing: -0.02em; }
+    .section-header p { color: var(--color-gray-700); font-size: var(--font-size-body); }
+
+    /* Scroll animation */
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity var(--transition-slow), transform var(--transition-slow); }
+    .fade-up.is-visible { opacity: 1; transform: translateY(0); }
+    .fade-up-d1 { transition-delay: 0.1s; }
+    .fade-up-d2 { transition-delay: 0.2s; }
+    .fade-up-d3 { transition-delay: 0.3s; }
+    .fade-up-d4 { transition-delay: 0.4s; }
+
+    /* ==============================================
+       HEADER / NAV
+       ============================================== */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(249, 245, 240, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: box-shadow var(--transition-fast);
+    }
+    .site-header.scrolled { box-shadow: 0 1px 12px rgba(0,0,0,0.06); }
+
+    .header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .header__logo img { height: 26px; width: auto; }
+
+    .header__nav { display: flex; align-items: center; gap: var(--space-lg); }
+    .header__nav a, .header__nav .nav-dropdown > span {
+      font-size: var(--font-size-small);
+      font-weight: 500;
+      color: var(--color-gray-700);
+      cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+    .header__nav a:hover, .header__nav .nav-dropdown:hover > span { color: var(--color-dark); }
+
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > span::after { content: ' ▾'; font-size: 0.65em; opacity: 0.5; }
+    .nav-dropdown__menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: -12px;
+      min-width: 220px;
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      padding: var(--space-xs) 0;
+      margin-top: 12px;
+      z-index: 10;
+    }
+    .nav-dropdown:hover .nav-dropdown__menu { display: block; }
+    .nav-dropdown__menu a {
+      display: block;
+      padding: 0.5rem var(--space-md);
+      font-size: var(--font-size-small);
+      color: var(--color-gray-700);
+    }
+    .nav-dropdown__menu a:hover { background: var(--color-gray-100); color: var(--color-dark); }
+
+    .header__actions { display: flex; align-items: center; gap: var(--space-sm); }
+    .lang-switch {
+      font-size: var(--font-size-small);
+      font-weight: 500;
+      color: var(--color-gray-500);
+      cursor: pointer;
+    }
+
+    .hamburger {
+      display: none;
+      background: none; border: none; cursor: pointer; padding: 0.5rem;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px; background: var(--color-dark);
+      margin: 5px 0; transition: all var(--transition-fast); border-radius: 2px;
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+      background: var(--color-white);
+      padding: var(--space-lg);
+      z-index: 99;
+      overflow-y: auto;
+    }
+    .mobile-nav.open { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .mobile-nav a {
+      font-size: 1.125rem; font-weight: 500; color: var(--color-dark);
+      padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-gray-100);
+    }
+    .mobile-nav .mobile-nav__label {
+      font-size: var(--font-size-caption); font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--color-gray-500); padding-top: var(--space-md);
+    }
+
+    /* ==============================================
+       SECTION 1: HERO
+       ============================================== */
+    .hero {
+      background: var(--color-beige);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 72px;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: var(--space-3xl) 0;
+    }
+
+    .hero h1 {
+      font-size: var(--font-size-display);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--color-dark);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-lg);
+    }
+
+    .hero__metric {
+      font-size: var(--font-size-body);
+      color: var(--color-gray-700);
+      margin-bottom: var(--space-xl);
+    }
+    .hero__metric strong {
+      color: var(--color-dark);
+    }
+
+    .hero__cta { margin-bottom: 0; }
+
+    /* Decorative circles behind hero text */
+    .hero__decoration {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 900px;
+      height: 600px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero__circle {
+      position: absolute;
+      border: 1.5px solid var(--color-orange-mid);
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+    .hero__circle--1 { width: 500px; height: 500px; top: 50%; left: 8%; transform: translateY(-50%); }
+    .hero__circle--2 { width: 400px; height: 400px; top: 50%; left: 15%; transform: translateY(-50%); }
+    .hero__circle--3 { width: 500px; height: 500px; top: 50%; right: 8%; transform: translateY(-50%); }
+    .hero__circle--4 { width: 400px; height: 400px; top: 50%; right: 15%; transform: translateY(-50%); }
+    .hero__circle--5 { width: 300px; height: 300px; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3; }
+
+    /* ==============================================
+       SECTION 2: TRUSTED BY — Logo bar
+       ============================================== */
+    .trusted {
+      background: var(--color-white);
+      padding: var(--space-2xl) 0;
+      border-top: 1px solid var(--color-gray-200);
+    }
+
+    .trusted__label {
+      text-align: center;
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-gray-500);
+      margin-bottom: var(--space-lg);
+    }
+
+    .trusted__logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2xl);
+      flex-wrap: wrap;
+    }
+
+    .trusted__logos span {
+      font-size: var(--font-size-small);
+      font-weight: 700;
+      color: var(--color-gray-300);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    /* ==============================================
+       SECTION 3: HOW IT WORKS — 3-step process
+       ============================================== */
+    .how-it-works {
+      padding: var(--space-section) 0;
+      background: var(--color-white);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+      counter-reset: step;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+      align-items: center;
+    }
+
+    .step__visual {
+      background: var(--color-gray-100);
+      border-radius: var(--border-radius-lg);
+      aspect-ratio: 16 / 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .step__visual-placeholder {
+      font-size: var(--font-size-small);
+      color: var(--color-gray-300);
+      font-weight: 500;
+    }
+
+    .step__number {
+      font-size: var(--font-size-metric);
+      font-weight: 900;
+      color: var(--color-orange-light);
+      line-height: 1;
+      margin-bottom: var(--space-xs);
+    }
+
+    .step h3 {
+      font-size: var(--font-size-h3);
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: var(--space-xs);
+    }
+
+    .step p {
+      color: var(--color-gray-700);
+      font-size: var(--font-size-body-sm);
+      line-height: 1.7;
+    }
+
+    /* ==============================================
+       SECTION 4: IMPACT — Metrics
+       ============================================== */
+    .impact {
+      padding: var(--space-section) 0;
+      background: var(--color-beige);
+    }
+
+    .impact__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .impact__card {
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg);
+    }
+
+    .impact__card .metric {
+      font-size: var(--font-size-metric);
+      font-weight: 900;
+      color: var(--color-dark);
+      line-height: 1;
+      margin-bottom: var(--space-xs);
+    }
+
+    .impact__card .metric-label {
+      font-size: var(--font-size-body-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-gray-700);
+    }
+
+    /* ==============================================
+       SECTION 5: SOLUTIONS — Cards
+       ============================================== */
+    .solutions {
+      padding: var(--space-section) 0;
+      background: var(--color-white);
+    }
+
+    .solutions__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+
+    .solution-card {
+      background: var(--color-gray-100);
+      border-radius: var(--border-radius-lg);
+      padding: var(--space-xl);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .solution-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+
+    .solution-card h3 {
+      font-size: var(--font-size-h4);
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: var(--space-xs);
+    }
+
+    .solution-card p {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-gray-700);
+      line-height: 1.6;
+      margin-bottom: var(--space-md);
+    }
+
+    /* ==============================================
+       SECTION 6: TESTIMONIAL — Rotating quote
+       ============================================== */
+    .testimonial {
+      padding: var(--space-section) 0;
+      background: var(--color-white);
+    }
+
+    .testimonial__inner {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .testimonial__quote {
+      font-size: var(--font-size-h3);
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--color-dark);
+      margin-bottom: var(--space-lg);
+      font-style: italic;
+    }
+
+    .testimonial__quote::before { content: '"'; }
+    .testimonial__quote::after { content: '"'; }
+
+    .testimonial__author {
+      font-size: var(--font-size-body-sm);
+      font-weight: 700;
+      color: var(--color-dark);
+    }
+
+    .testimonial__role {
+      font-size: var(--font-size-small);
+      color: var(--color-gray-500);
+    }
+
+    .testimonial__nav {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-xs);
+      margin-top: var(--space-lg);
+    }
+
+    .testimonial__dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--color-gray-200);
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      padding: 0;
+    }
+    .testimonial__dot.active { background: var(--color-orange); }
+
+    /* ==============================================
+       SECTION 7: CASE STUDIES — Highlight cards
+       ============================================== */
+    .case-studies {
+      padding: var(--space-section) 0;
+      background: var(--color-gray-100);
+    }
+
+    .cases__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+
+    .case-card {
+      background: var(--color-white);
+      border-radius: var(--border-radius-lg);
+      padding: var(--space-xl);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .case-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .case-card__eyebrow {
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-gray-500);
+      margin-bottom: var(--space-xs);
+    }
+
+    .case-card h3 {
+      font-size: var(--font-size-h4);
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: var(--space-sm);
+      line-height: 1.3;
+    }
+
+    .case-card__metrics {
+      display: flex;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .case-card__metric strong {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-orange);
+      line-height: 1;
+    }
+
+    .case-card__metric span {
+      font-size: var(--font-size-caption);
+      color: var(--color-gray-500);
+    }
+
+    /* ==============================================
+       SECTION 8: CTA
+       ============================================== */
+    .cta-section {
+      padding: var(--space-section) 0;
+      background: var(--color-gray-900);
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: var(--font-size-h2);
+      font-weight: 700;
+      color: var(--color-white);
+      margin-bottom: var(--space-sm);
+    }
+
+    .cta-section p {
+      color: var(--color-gray-300);
+      max-width: 500px;
+      margin: 0 auto var(--space-xl);
+    }
+
+    .cta-section__buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    /* ==============================================
+       FOOTER
+       ============================================== */
+    .site-footer {
+      background: var(--color-gray-900);
+      color: var(--color-gray-300);
+      padding: var(--space-3xl) 0 var(--space-lg);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .footer__brand img {
+      height: 22px;
+      filter: brightness(0) invert(1);
+      margin-bottom: var(--space-sm);
+    }
+
+    .footer__brand p {
+      font-size: var(--font-size-small);
+      color: var(--color-gray-500);
+      max-width: 280px;
+    }
+
+    .footer__nav h4 {
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      color: var(--color-white);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .footer__nav ul { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .footer__nav a { font-size: var(--font-size-small); color: var(--color-gray-500); transition: color var(--transition-fast); }
+    .footer__nav a:hover { color: var(--color-white); }
+
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      padding-top: var(--space-lg);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer__bottom p { font-size: var(--font-size-caption); color: var(--color-gray-500); }
+
+    .footer__social { display: flex; gap: var(--space-sm); }
+    .footer__social a {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.06); color: var(--color-gray-500);
+      transition: all var(--transition-fast);
+    }
+    .footer__social a:hover { background: rgba(255,255,255,0.12); color: var(--color-white); }
+    .footer__social svg { width: 18px; height: 18px; }
+
+    /* ==============================================
+       RESPONSIVE
+       ============================================== */
+    @media (min-width: 768px) {
+      .steps .step { grid-template-columns: 1fr 1fr; }
+      .steps .step:nth-child(even) .step__visual { order: 2; }
+      .steps .step:nth-child(even) .step__text { order: 1; }
+
+      .solutions__grid { grid-template-columns: 1fr 1fr; }
+      .cases__grid { grid-template-columns: 1fr 1fr; }
+
+      .footer__grid { grid-template-columns: 1.5fr repeat(3, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 var(--space-xl); }
+      .solutions__grid { grid-template-columns: repeat(3, 1fr); }
+      .cases__grid { grid-template-columns: repeat(3, 1fr); }
+      .footer__grid { grid-template-columns: 1.5fr repeat(4, 1fr); }
+    }
+
+    @media (max-width: 767px) {
+      .header__nav, .header__actions .lang-switch, .header__actions .btn { display: none; }
+      .hamburger { display: block; }
+
+      .hero { min-height: auto; }
+      .hero__circle { display: none; }
+      .hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
+
+      .impact__grid { grid-template-columns: 1fr; }
+
+      .cta-section__buttons { flex-direction: column; width: 100%; }
+      .cta-section__buttons .btn { width: 100%; }
+
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+      .footer__brand { grid-column: 1 / -1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+      .fade-up { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================
+       HEADER
+       ============================================ -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a href="/" class="header__logo" aria-label="SPREAD home">
+        <img src="../../images/Spread_Logo_Orange.svg" alt="SPREAD" height="26">
+      </a>
+
+      <nav class="header__nav" aria-label="Main navigation">
+        <div class="nav-dropdown">
+          <span>Product</span>
+          <div class="nav-dropdown__menu">
+            <a href="/platform">Our Platform / Why SPREAD</a>
+            <a href="/solutions/requirement-manager">Requirement Manager</a>
+            <a href="/solutions/product-explorer">Product Explorer</a>
+            <a href="/solutions/inspector">Error Inspector</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span>Solutions</span>
+          <div class="nav-dropdown__menu">
+            <a href="/solutions/automotive">Automotive &amp; Mobility</a>
+            <a href="/solutions/aerospace-defense">Aerospace &amp; Defense</a>
+            <a href="/solutions/industrial-goods-machinery">Industrial Goods &amp; Machinery</a>
+          </div>
+        </div>
+        <a href="/customers">Customers</a>
+        <div class="nav-dropdown">
+          <span>Knowledge Hub</span>
+          <div class="nav-dropdown__menu">
+            <a href="/docs">Documentation</a>
+            <a href="/blog">Blog</a>
+            <a href="/events">Events</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span>Company</span>
+          <div class="nav-dropdown__menu">
+            <a href="/about">About Us</a>
+            <a href="/careers">Careers</a>
+            <a href="/contact">Contact Us</a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="header__actions">
+        <span class="lang-switch">ENG</span>
+        <a href="/get-started" class="btn btn--primary btn--sm">Book a Demo</a>
+      </div>
+
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <span class="mobile-nav__label">Product</span>
+    <a href="/platform">Our Platform / Why SPREAD</a>
+    <a href="/solutions/requirement-manager">Requirement Manager</a>
+    <a href="/solutions/product-explorer">Product Explorer</a>
+    <a href="/solutions/inspector">Error Inspector</a>
+    <span class="mobile-nav__label">Solutions</span>
+    <a href="/solutions/automotive">Automotive &amp; Mobility</a>
+    <a href="/solutions/aerospace-defense">Aerospace &amp; Defense</a>
+    <a href="/solutions/industrial-goods-machinery">Industrial Goods &amp; Machinery</a>
+    <span class="mobile-nav__label">More</span>
+    <a href="/customers">Customers</a>
+    <a href="/blog">Knowledge Hub</a>
+    <a href="/about">About Us</a>
+    <a href="/careers">Careers</a>
+    <a href="/contact">Contact Us</a>
+    <a href="/get-started" class="btn btn--primary" style="margin-top: var(--space-sm);">Book a Demo</a>
+  </div>
+
+  <main>
+
+    <!-- ============================================
+         SECTION 1: HERO
+         ============================================ -->
+    <section class="hero">
+      <div class="hero__decoration" aria-hidden="true">
+        <div class="hero__circle hero__circle--1"></div>
+        <div class="hero__circle hero__circle--2"></div>
+        <div class="hero__circle hero__circle--3"></div>
+        <div class="hero__circle hero__circle--4"></div>
+        <div class="hero__circle hero__circle--5"></div>
+      </div>
+      <div class="container hero__content">
+        <h1 class="fade-up">Stop guessing what breaks when you ship</h1>
+        <p class="hero__metric fade-up fade-up-d1"><strong>&gt;€10M</strong> saved yearly by a European auto OEM</p>
+        <div class="hero__cta fade-up fade-up-d2">
+          <a href="/get-started" class="btn btn--primary">Contact Us</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 2: TRUSTED BY
+         ============================================ -->
+    <section class="trusted">
+      <div class="container">
+        <p class="trusted__label fade-up">Trusted by</p>
+        <div class="trusted__logos fade-up fade-up-d1">
+          <span>VW</span>
+          <span>Mercedes</span>
+          <span>BMW</span>
+          <span>Ford</span>
+          <span>Rheinmetall</span>
+          <span>Bosch</span>
+          <span>Audi</span>
+          <span>Porsche</span>
+          <span>Daimler Truck</span>
+          <span>Stadler</span>
+          <span>Mini</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 3: HOW IT WORKS — 3-step process
+         ============================================ -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <div class="section-header fade-up">
+          <span class="eyebrow">How it works</span>
+          <h2>See how Engineering Intelligence works</h2>
+          <p>SPREAD turns fragmented product data into a living, graph-based functional model of how your product actually works.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step fade-up">
+            <div class="step__visual">
+              <span class="step__visual-placeholder">Video / Animation placeholder</span>
+            </div>
+            <div class="step__text">
+              <div class="step__number">1</div>
+              <h3>Rapid data ingestion</h3>
+              <p>Connect all of your structured and unstructured product data with our out-of-the-box connectors and AI-assisted mapper. PLM, ALM, CAD, ERP, MES — plus documents and logs.</p>
+            </div>
+          </div>
+
+          <div class="step fade-up">
+            <div class="step__visual">
+              <span class="step__visual-placeholder">Video / Animation placeholder</span>
+            </div>
+            <div class="step__text">
+              <div class="step__number">2</div>
+              <h3>Product Twin</h3>
+              <p>Contextualize your product data into functional product twins with our leading knowledge graph and engineering ontology. See mechanical, electronic, and software relationships — even before a physical prototype exists.</p>
+            </div>
+          </div>
+
+          <div class="step fade-up">
+            <div class="step__visual">
+              <span class="step__visual-placeholder">Video / Animation placeholder</span>
+            </div>
+            <div class="step__text">
+              <div class="step__number">3</div>
+              <h3>ActionCloud</h3>
+              <p>Harness Engineering Intelligence in our open platform with out-of-the-box solutions and customizable applications. Deploy within weeks with real, scalable impact.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-2xl);">
+          <a href="/platform" class="text-link fade-up">Discover our platform</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 4: IMPACT — Metrics
+         ============================================ -->
+    <section class="impact">
+      <div class="container">
+        <div class="section-header fade-up">
+          <h2>Faster innovation. Lower costs. Better products.</h2>
+          <p>Real-world impact across your entire product lifecycle — from R&amp;D to Production to Aftermarket.</p>
+        </div>
+
+        <div class="impact__grid">
+          <div class="impact__card fade-up">
+            <div class="metric">2x</div>
+            <div class="metric-label">Faster time-to-market</div>
+          </div>
+          <div class="impact__card fade-up fade-up-d1">
+            <div class="metric">25%</div>
+            <div class="metric-label">Lower costs</div>
+          </div>
+          <div class="impact__card fade-up fade-up-d2">
+            <div class="metric">Superior</div>
+            <div class="metric-label">Quality</div>
+          </div>
+        </div>
+
+        <div style="text-align: center;">
+          <a href="/why-spread" class="text-link fade-up">See why leaders choose SPREAD</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 5: SOLUTIONS — Cards
+         ============================================ -->
+    <section class="solutions">
+      <div class="container">
+        <div class="section-header fade-up">
+          <span class="eyebrow">Solutions</span>
+          <h2>Solutions for R&amp;D, Production &amp; Aftermarket</h2>
+          <p>Harness the full potential of your product data across the product lifecycle with our out-of-the-box solutions.</p>
+        </div>
+
+        <div class="solutions__grid">
+          <div class="solution-card fade-up">
+            <h3>Requirements Manager</h3>
+            <p>Accelerate proposals by matching requirements to real product data. Instantly identify reusable components, estimate costs, and reduce variant complexity.</p>
+            <a href="/solutions/requirement-manager" class="text-link">Explore</a>
+          </div>
+
+          <div class="solution-card fade-up fade-up-d1">
+            <h3>Product Explorer</h3>
+            <p>Navigate product architectures to decode complexity. Map how each function is realized across components, software modules, and signals.</p>
+            <a href="/solutions/product-explorer" class="text-link">Explore</a>
+          </div>
+
+          <div class="solution-card fade-up fade-up-d2">
+            <h3>Error Inspector</h3>
+            <p>Find and solve issues earlier across the lifecycle. Link errors to dependencies, accelerate resolution, and improve product quality.</p>
+            <a href="/solutions/inspector" class="text-link">Explore</a>
+          </div>
+
+          <div class="solution-card fade-up">
+            <h3>Action Tower</h3>
+            <p>Gain complete visibility and control over product maturity. Track changes, optimize quality, and resolve errors faster across the lifecycle.</p>
+            <a href="/solutions/action-tower" class="text-link">Explore</a>
+          </div>
+
+          <div class="solution-card fade-up fade-up-d1">
+            <h3>Custom Solutions</h3>
+            <p>Build your own apps within minutes in our low-code SPREAD Studio. Connect your data and choose from pre-built widgets and tailored analyses.</p>
+            <a href="/solutions/custom" class="text-link">Explore</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 6: TESTIMONIAL
+         ============================================ -->
+    <section class="testimonial">
+      <div class="container">
+        <div class="testimonial__inner fade-up">
+          <div class="testimonial__slides">
+            <div class="testimonial__slide active" data-index="0">
+              <p class="testimonial__quote">Together with our employees, SPREAD quickly develops exciting AI concepts to solve engineering problems and brings them live as practical applications, e.g. AI-based quality assurance in all our plants.</p>
+              <p class="testimonial__author">Valerij Asmus</p>
+              <p class="testimonial__role">Head of Artificial Intelligence Research at Mercedes-Benz</p>
+            </div>
+            <div class="testimonial__slide" data-index="1" style="display:none;">
+              <p class="testimonial__quote">It's great you can access lots of engineering knowledge instantly. At Rheinmetall, we will make product knowledge available to everyone when, where and how they need it with a digital product twin.</p>
+              <p class="testimonial__author">Dr. Marc Honikel</p>
+              <p class="testimonial__role">Chief Innovation Officer at Rheinmetall Air Defence</p>
+            </div>
+            <div class="testimonial__slide" data-index="2" style="display:none;">
+              <p class="testimonial__quote">SPREAD pools technical knowledge and makes it accessible to all employees quickly, easily and comprehensibly. This brings powerful AI expertise to manufacturing industries.</p>
+              <p class="testimonial__author">Dr. Till Reuter</p>
+              <p class="testimonial__role">Former CEO of KUKA</p>
+            </div>
+            <div class="testimonial__slide" data-index="3" style="display:none;">
+              <p class="testimonial__quote">SPREAD doesn't talk about digital transformation. It delivers it by turning complex data into insights engineering teams can actually act on.</p>
+              <p class="testimonial__author">Dr. Christof Horn</p>
+              <p class="testimonial__role">Automotive Lead Europe</p>
+            </div>
+          </div>
+          <div class="testimonial__nav">
+            <button class="testimonial__dot active" data-index="0" aria-label="Quote 1"></button>
+            <button class="testimonial__dot" data-index="1" aria-label="Quote 2"></button>
+            <button class="testimonial__dot" data-index="2" aria-label="Quote 3"></button>
+            <button class="testimonial__dot" data-index="3" aria-label="Quote 4"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 7: CASE STUDIES
+         ============================================ -->
+    <section class="case-studies">
+      <div class="container">
+        <div class="section-header fade-up">
+          <span class="eyebrow">Customer Stories</span>
+          <h2>Engineering success in action</h2>
+          <p>See how industry leaders steer projects confidently and unlock innovation with SPREAD.</p>
+        </div>
+
+        <div class="cases__grid">
+          <div class="case-card fade-up">
+            <p class="case-card__eyebrow">Automotive OEM</p>
+            <h3>Mitigating €2B SOP risk</h3>
+            <div class="case-card__metrics">
+              <div class="case-card__metric"><strong>&gt;€20M</strong><span>error reduction</span></div>
+              <div class="case-card__metric"><strong>60%</strong><span>faster troubleshooting</span></div>
+            </div>
+            <a href="/customers/automotive-oem" class="text-link">Learn more</a>
+          </div>
+
+          <div class="case-card fade-up fade-up-d1">
+            <p class="case-card__eyebrow">Defense OEM</p>
+            <h3>Accelerating time-to-market by 20%</h3>
+            <div class="case-card__metrics">
+              <div class="case-card__metric"><strong>20%</strong><span>faster development</span></div>
+              <div class="case-card__metric"><strong>+5%</strong><span>revenue growth</span></div>
+            </div>
+            <a href="/customers/defense-oem" class="text-link">Learn more</a>
+          </div>
+
+          <div class="case-card fade-up fade-up-d2">
+            <p class="case-card__eyebrow">Automotive OEM — Aftermarket</p>
+            <h3>Saving &gt;€10M yearly through faster troubleshooting</h3>
+            <div class="case-card__metrics">
+              <div class="case-card__metric"><strong>&gt;€10M</strong><span>saved annually</span></div>
+              <div class="case-card__metric"><strong>50%</strong><span>faster repairs</span></div>
+            </div>
+            <a href="/customers/automotive-oem-aftermarket" class="text-link">Learn more</a>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-2xl);">
+          <a href="/customers" class="text-link fade-up">View all customer stories</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 8: CTA
+         ============================================ -->
+    <section class="cta-section">
+      <div class="container">
+        <h2 class="fade-up">Ready to take control of your product complexity?</h2>
+        <p class="fade-up fade-up-d1">Discover the technology powering innovation at the world's leading manufacturers.</p>
+        <div class="cta-section__buttons fade-up fade-up-d2">
+          <a href="/get-started" class="btn btn--primary">Book a Demo</a>
+          <a href="/customers" class="btn btn--outline-light">View Customer Stories</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="/" aria-label="SPREAD home">
+            <img src="../../images/Spread_Logo_Orange.svg" alt="SPREAD" height="22">
+          </a>
+          <p>Engineering Intelligence for complex software-defined products.</p>
+        </div>
+        <nav class="footer__nav">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/platform">Our Platform</a></li>
+            <li><a href="/solutions/requirement-manager">Requirement Manager</a></li>
+            <li><a href="/solutions/product-explorer">Product Explorer</a></li>
+            <li><a href="/solutions/inspector">Error Inspector</a></li>
+            <li><a href="/solutions/action-tower">Action Tower</a></li>
+          </ul>
+        </nav>
+        <nav class="footer__nav">
+          <h4>Solutions</h4>
+          <ul>
+            <li><a href="/solutions/automotive">Automotive &amp; Mobility</a></li>
+            <li><a href="/solutions/aerospace-defense">Aerospace &amp; Defense</a></li>
+            <li><a href="/solutions/industrial-goods-machinery">Industrial Goods &amp; Machinery</a></li>
+          </ul>
+        </nav>
+        <nav class="footer__nav">
+          <h4>Knowledge Hub</h4>
+          <ul>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/events">Events</a></li>
+          </ul>
+        </nav>
+        <nav class="footer__nav">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; 2026 SPREAD GmbH. All rights reserved.</p>
+        <div class="footer__social">
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Sticky header shadow
+      var header = document.querySelector('.site-header');
+      window.addEventListener('scroll', function() {
+        header.classList.toggle('scrolled', window.scrollY > 10);
+      }, { passive: true });
+
+      // Mobile hamburger
+      var hamburger = document.querySelector('.hamburger');
+      var mobileNav = document.querySelector('.mobile-nav');
+      hamburger.addEventListener('click', function() {
+        var open = mobileNav.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', open);
+        var spans = hamburger.querySelectorAll('span');
+        spans[0].style.transform = open ? 'rotate(45deg) translate(5px, 5px)' : '';
+        spans[1].style.opacity = open ? '0' : '';
+        spans[2].style.transform = open ? 'rotate(-45deg) translate(5px, -5px)' : '';
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+
+      mobileNav.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { hamburger.click(); });
+      });
+
+      // Scroll-triggered animations
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('.fade-up').forEach(function(el) {
+          observer.observe(el);
+        });
+      } else {
+        document.querySelectorAll('.fade-up').forEach(function(el) {
+          el.classList.add('is-visible');
+        });
+      }
+
+      // Smooth scroll for anchors
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          var target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+          }
+        });
+      });
+
+      // Testimonial slider
+      var slides = document.querySelectorAll('.testimonial__slide');
+      var dots = document.querySelectorAll('.testimonial__dot');
+      var currentSlide = 0;
+
+      function showSlide(index) {
+        slides.forEach(function(s) { s.style.display = 'none'; });
+        dots.forEach(function(d) { d.classList.remove('active'); });
+        slides[index].style.display = 'block';
+        dots[index].classList.add('active');
+        currentSlide = index;
+      }
+
+      dots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          showSlide(parseInt(this.dataset.index));
+        });
+      });
+
+      // Auto-rotate testimonials every 6 seconds
+      setInterval(function() {
+        showSlide((currentSlide + 1) % slides.length);
+      }, 6000);
+
+    })();
+  </script>
+
+</body>
+</html>
