@@ -229,12 +229,15 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(249, 245, 240, 0.92);
+      background: transparent;
+      transition: background var(--transition-base), box-shadow var(--transition-fast);
+    }
+    .site-header.scrolled {
+      background: rgba(249, 245, 240, 0.95);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      transition: box-shadow var(--transition-fast);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.06);
     }
-    .site-header.scrolled { box-shadow: 0 1px 12px rgba(0,0,0,0.06); }
 
     .header__inner {
       display: flex;
@@ -243,17 +246,27 @@
       height: 72px;
     }
 
-    .header__logo img { height: 26px; width: auto; }
+    .header__logo img {
+      height: 26px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      transition: filter var(--transition-base);
+    }
+    .site-header.scrolled .header__logo img { filter: none; }
 
     .header__nav { display: flex; align-items: center; gap: var(--space-lg); }
     .header__nav a, .header__nav .nav-dropdown > span {
       font-size: var(--font-size-small);
       font-weight: 500;
-      color: var(--color-gray-700);
+      color: rgba(255, 255, 255, 0.8);
       cursor: pointer;
       transition: color var(--transition-fast);
     }
-    .header__nav a:hover, .header__nav .nav-dropdown:hover > span { color: var(--color-dark); }
+    .header__nav a:hover, .header__nav .nav-dropdown:hover > span { color: #fff; }
+    .site-header.scrolled .header__nav a,
+    .site-header.scrolled .header__nav .nav-dropdown > span { color: var(--color-gray-700); }
+    .site-header.scrolled .header__nav a:hover,
+    .site-header.scrolled .header__nav .nav-dropdown:hover > span { color: var(--color-dark); }
 
     .nav-dropdown { position: relative; }
     .nav-dropdown > span::after { content: ' ▾'; font-size: 0.65em; opacity: 0.5; }
@@ -284,9 +297,11 @@
     .lang-switch {
       font-size: var(--font-size-small);
       font-weight: 500;
-      color: var(--color-gray-500);
+      color: rgba(255, 255, 255, 0.6);
       cursor: pointer;
+      transition: color var(--transition-base);
     }
+    .site-header.scrolled .lang-switch { color: var(--color-gray-500); }
 
     .hamburger {
       display: none;
@@ -316,32 +331,59 @@
     }
 
     /* ==============================================
-       SECTION 1: HERO
+       SECTION 1: HERO — Collapse Animation
        ============================================== */
     .hero {
-      background: var(--color-beige);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
       position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background: #0D0D0D;
       overflow: hidden;
-      padding-top: 72px;
     }
 
-    .hero__content {
+    .hero__canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    .hero__overlay {
       position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: var(--space-3xl) 0;
+      z-index: 1;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      padding: 2rem;
+      transition: opacity 0.6s ease;
+    }
+
+    .hero__eyebrow {
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--color-orange);
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
     }
 
     .hero h1 {
-      font-size: var(--font-size-display);
+      font-size: clamp(36px, 6vw, 72px);
       font-weight: 500;
-      line-height: 1.1;
-      color: var(--color-dark);
+      color: #FFFFFF;
+      text-align: center;
+      line-height: 1.05;
+      margin: 0;
       letter-spacing: -0.03em;
-      margin-bottom: var(--space-lg);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;
     }
 
     .hero h1 .highlight {
@@ -349,29 +391,87 @@
     }
 
     .hero__subline {
-      font-size: var(--font-size-body);
-      color: var(--color-gray-500);
-      max-width: 520px;
-      margin: 0 auto var(--space-xl);
-      line-height: 1.6;
+      font-size: clamp(14px, 1.8vw, 18px);
+      color: #999;
+      margin-top: 20px;
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
     }
 
     .hero__ctas {
+      margin-top: 32px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-sm);
-      flex-wrap: wrap;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.8s ease 0.9s, transform 0.8s ease 0.9s;
+      pointer-events: auto;
     }
 
-    /* Interactive circle chain canvas */
-    .hero__canvas {
+    .hero__ctas .btn {
+      border-radius: 6px;
+    }
+
+    .hero__ctas .btn--primary {
+      background: var(--color-orange);
+      color: #fff;
+    }
+
+    .hero__ctas .btn--outline {
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .hero__ctas .btn--outline:hover {
+      background: transparent;
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #fff;
+    }
+
+    /* Dark vignette behind text — appears on resolve */
+    .hero__overlay::before {
+      content: '';
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      height: 70%;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 80%);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 1s ease 0.3s;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero__overlay.resolved::before {
+      opacity: 1;
+    }
+
+    /* Resolved state — text fades in after collapse */
+    .hero__overlay.resolved .hero__eyebrow,
+    .hero__overlay.resolved h1,
+    .hero__overlay.resolved .hero__subline,
+    .hero__overlay.resolved .hero__ctas {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero__hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      color: #666;
+      font-size: 13px;
+      transition: opacity 0.5s ease;
     }
 
     /* ==============================================
@@ -1061,7 +1161,7 @@
       .hamburger { display: block; }
 
       .hero { min-height: auto; }
-      .hero__canvas { display: none; }
+      .hero__hint { display: none; }
       .hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
 
       .impact__grid { grid-template-columns: 1fr; }
@@ -1165,19 +1265,20 @@
   <main>
 
     <!-- ============================================
-         SECTION 1: HERO
+         SECTION 1: HERO — Collapse Animation
          ============================================ -->
     <section class="hero">
-      <canvas class="hero__canvas" aria-hidden="true"></canvas>
-      <div class="container hero__content">
-        <span class="eyebrow fade-up">Intelligence Layer for Engineering</span>
-        <h1 class="fade-up fade-up-d1">Ship Faster.<br>Break Nothing.<br><span class="highlight">Know Exactly Why.</span></h1>
-        <p class="hero__subline fade-up fade-up-d2">SPREAD connects your PLM, CAD, ERP, and ALM into a single intelligence layer. Find hidden dependencies in seconds, not sprint cycles.</p>
-        <div class="hero__ctas fade-up fade-up-d3">
+      <canvas class="hero__canvas"></canvas>
+      <div class="hero__overlay" id="hero-overlay">
+        <span class="hero__eyebrow">Intelligence Layer for Engineering</span>
+        <h1>Ship Faster.<br>Break Nothing.<br><span class="highlight">Know Exactly Why.</span></h1>
+        <p class="hero__subline">SPREAD connects your PLM, CAD, ERP, and ALM into a single intelligence layer. Find hidden dependencies in seconds, not sprint cycles.</p>
+        <div class="hero__ctas">
           <a href="/get-started" class="btn btn--primary">Request a Demo →</a>
           <a href="#how-it-works" class="btn btn--outline">See How It Works</a>
         </div>
       </div>
+      <div class="hero__hint" id="hero-hint">Click anywhere to collapse</div>
     </section>
 
 
@@ -1586,128 +1687,145 @@
       'use strict';
 
       // =============================================
-      // HERO CHAIN ANIMATION — Interactive ellipses
+      // HERO COLLAPSE — Particle animation
       // =============================================
-      (function initHeroChain() {
+      (function() {
         var canvas = document.querySelector('.hero__canvas');
         if (!canvas) return;
         var ctx = canvas.getContext('2d');
-        var hero = canvas.parentElement;
-        var dpr = window.devicePixelRatio || 1;
-        var mouseX = -9999, mouseY = -9999;
-        var mouseRadius = 120;
-        var ellipses = [];
-        var NUM_ELLIPSES = 14;
+        var heroSection = canvas.closest('.hero');
+        var overlay = document.getElementById('hero-overlay');
+        var hint = document.getElementById('hero-hint');
+
+        var W, H;
+        var particles = [];
+        var isResolved = false;
+        var PARTICLE_COUNT = 180;
+        var CONNECTION_DIST = 120;
+        var NODE_COLORS = [
+          'rgba(255, 111, 71, 0.8)',
+          'rgba(255, 111, 71, 0.4)',
+          'rgba(255, 255, 255, 0.5)',
+          'rgba(255, 255, 255, 0.2)'
+        ];
 
         function resize() {
-          var rect = hero.getBoundingClientRect();
-          canvas.width = rect.width * dpr;
-          canvas.height = rect.height * dpr;
-          canvas.style.width = rect.width + 'px';
-          canvas.style.height = rect.height + 'px';
-          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-          buildEllipses(rect.width, rect.height);
+          W = canvas.width = heroSection.offsetWidth;
+          H = canvas.height = heroSection.offsetHeight;
+          assignTargets();
         }
 
-        function buildEllipses(w, h) {
-          ellipses = [];
-          var centerY = h * 0.48;
-          var radiusX, radiusY;
+        function Particle(i) {
+          this.x = Math.random() * (W || window.innerWidth);
+          this.y = Math.random() * (H || window.innerHeight);
+          this.size = Math.random() * 2.5 + 1;
+          this.color = NODE_COLORS[Math.floor(Math.random() * NODE_COLORS.length)];
+          this.vx = (Math.random() - 0.5) * 1.8;
+          this.vy = (Math.random() - 0.5) * 1.8;
+          this.tx = 0; this.ty = 0;
+          this.progress = 0;
+        }
 
-          for (var i = 0; i < NUM_ELLIPSES; i++) {
-            var t = i / (NUM_ELLIPSES - 1);
-            var x = w * 0.05 + t * w * 0.9;
+        Particle.prototype.update = function() {
+          if (isResolved) {
+            this.progress = Math.min(1, this.progress + 0.025);
+            var ease = this.progress * this.progress * (3 - 2 * this.progress);
+            this.x += (this.tx - this.x) * 0.04 * (1 + ease);
+            this.y += (this.ty - this.y) * 0.04 * (1 + ease);
+            this.vx *= 0.96; this.vy *= 0.96;
+            this.x += this.vx * (1 - ease);
+            this.y += this.vy * (1 - ease);
+          } else {
+            this.progress = Math.max(0, this.progress - 0.02);
+            this.x += this.vx; this.y += this.vy;
+            this.vx += (Math.random() - 0.5) * 0.1;
+            this.vy += (Math.random() - 0.5) * 0.1;
+            var speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+            if (speed > 2) { this.vx = (this.vx / speed) * 2; this.vy = (this.vy / speed) * 2; }
+            if (this.x < -20) this.x = W + 20;
+            if (this.x > W + 20) this.x = -20;
+            if (this.y < -20) this.y = H + 20;
+            if (this.y > H + 20) this.y = -20;
+          }
+        };
 
-            // Wave pattern: sine wave for vertical offset
-            var wave = Math.sin(t * Math.PI * 2.5) * h * 0.08;
+        Particle.prototype.draw = function() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        };
 
-            // Vary sizes for organic feel
-            radiusX = w * 0.06 + Math.sin(t * Math.PI * 1.3) * w * 0.025;
-            radiusY = h * 0.18 + Math.cos(t * Math.PI * 1.7) * h * 0.06;
-
-            ellipses.push({
-              homeX: x,
-              homeY: centerY + wave,
-              x: x,
-              y: centerY + wave,
-              vy: 0,
-              rx: radiusX,
-              ry: radiusY,
-              rotation: (Math.sin(t * Math.PI * 3) * 0.3),
-              falling: false
-            });
+        function assignTargets() {
+          if (!W || !H) return;
+          var cols = Math.ceil(Math.sqrt(PARTICLE_COUNT * (W / H)));
+          var rows = Math.ceil(PARTICLE_COUNT / cols);
+          var spacingX = W / cols;
+          var spacingY = H / rows;
+          for (var i = 0; i < particles.length; i++) {
+            var col = i % cols;
+            var row = Math.floor(i / cols);
+            particles[i].tx = (col + 0.5) * spacingX + (row % 2) * (spacingX * 0.4);
+            particles[i].ty = (row + 0.5) * spacingY;
           }
         }
 
-        hero.addEventListener('mousemove', function(e) {
-          var rect = hero.getBoundingClientRect();
-          mouseX = e.clientX - rect.left;
-          mouseY = e.clientY - rect.top;
-        });
-
-        hero.addEventListener('mouseleave', function() {
-          mouseX = -9999;
-          mouseY = -9999;
-        });
-
-        function animate() {
-          var rect = hero.getBoundingClientRect();
-          var w = rect.width;
-          var h = rect.height;
-          ctx.clearRect(0, 0, w, h);
-
-          for (var i = 0; i < ellipses.length; i++) {
-            var el = ellipses[i];
-
-            // Check if mouse is near this ellipse
-            var dx = mouseX - el.x;
-            var dy = mouseY - el.y;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < mouseRadius + el.ry) {
-              // Mouse is near — apply gravity (fall)
-              el.falling = true;
-              el.vy += 0.8;
-              el.y += el.vy;
-
-              // Floor bounce
-              if (el.y > h + el.ry * 0.5) {
-                el.y = h + el.ry * 0.5;
-                el.vy *= -0.3;
-                if (Math.abs(el.vy) < 1) el.vy = 0;
-              }
-            } else {
-              // Mouse is gone — spring back to home position
-              el.falling = false;
-              var homeDistY = el.homeY - el.y;
-              el.vy += homeDistY * 0.06;
-              el.vy *= 0.82;
-              el.y += el.vy;
-
-              // Snap to home if close enough
-              if (Math.abs(homeDistY) < 0.5 && Math.abs(el.vy) < 0.5) {
-                el.y = el.homeY;
-                el.vy = 0;
+        function drawConnections() {
+          for (var i = 0; i < particles.length; i++) {
+            for (var j = i + 1; j < particles.length; j++) {
+              var dx = particles[i].x - particles[j].x;
+              var dy = particles[i].y - particles[j].y;
+              var dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < CONNECTION_DIST) {
+                var alpha = 1 - dist / CONNECTION_DIST;
+                if (isResolved && particles[i].progress > 0.5) {
+                  ctx.strokeStyle = 'rgba(255,111,71,' + (alpha * 0.25 * particles[i].progress) + ')';
+                } else {
+                  ctx.strokeStyle = 'rgba(255,255,255,' + (alpha * 0.07) + ')';
+                }
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
               }
             }
-
-            // Draw ellipse
-            ctx.save();
-            ctx.translate(el.x, el.y);
-            ctx.rotate(el.rotation);
-            ctx.beginPath();
-            ctx.ellipse(0, 0, el.rx, el.ry, 0, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(254, 169, 145, 0.55)';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-            ctx.restore();
           }
+        }
 
+        function animate() {
+          ctx.fillStyle = 'rgba(13, 13, 13, 0.3)';
+          ctx.fillRect(0, 0, W, H);
+          drawConnections();
+          for (var k = 0; k < particles.length; k++) {
+            particles[k].update();
+            particles[k].draw();
+          }
           requestAnimationFrame(animate);
         }
 
         resize();
+        for (var i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle(i));
+        assignTargets();
         animate();
+
+        heroSection.addEventListener('click', function() {
+          isResolved = !isResolved;
+          if (isResolved) {
+            overlay.classList.add('resolved');
+            if (hint) hint.textContent = 'Click to scatter';
+            for (var i = 0; i < particles.length; i++) particles[i].progress = 0;
+          } else {
+            overlay.classList.remove('resolved');
+            if (hint) hint.textContent = 'Click to collapse';
+            for (var j = 0; j < particles.length; j++) {
+              particles[j].vx = (Math.random() - 0.5) * 3;
+              particles[j].vy = (Math.random() - 0.5) * 3;
+              particles[j].progress = 1;
+            }
+          }
+        });
+
         window.addEventListener('resize', resize);
       })();
 

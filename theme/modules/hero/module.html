@@ -1,0 +1,53 @@
+{# ============================================
+   HERO MODULE — The Collapse Animation
+   
+   Particles start chaotic, click collapses them
+   into an organized grid. Hero text fades in.
+   
+   All text fields are editable by marketers
+   in the HubSpot page editor.
+   ============================================ #}
+
+{# Load module assets via HubSpot's asset pipeline #}
+{{ require_css(get_asset_url("../../modules/hero/module.css")) }}
+{{ require_js(get_asset_url("../../modules/hero/module.js"), { "position": "footer" }) }}
+
+<section class="hero-collapse">
+  {# Canvas — the particle animation renders here #}
+  <canvas class="hero-collapse__canvas"></canvas>
+
+  {# Text overlay — sits on top of the canvas #}
+  <div class="hero-collapse__overlay" id="hero-overlay">
+
+    {# Eyebrow — small category label above the headline #}
+    {% if module.eyebrow %}
+      <span class="hero-collapse__eyebrow">{{ module.eyebrow }}</span>
+    {% endif %}
+
+    {# Headline — the main hero title #}
+    <h1 class="hero-collapse__title">{{ module.headline }}</h1>
+
+    {# Subline — supporting description text #}
+    {% if module.subline %}
+      <p class="hero-collapse__subline">{{ module.subline }}</p>
+    {% endif %}
+
+    {# CTA buttons — primary and secondary #}
+    <div class="hero-collapse__ctas">
+      {% if module.primary_cta_label && module.primary_cta_url %}
+        <a href="{{ module.primary_cta_url }}" class="hero-collapse__btn hero-collapse__btn--primary">
+          {{ module.primary_cta_label }}
+        </a>
+      {% endif %}
+
+      {% if module.secondary_cta_label && module.secondary_cta_url %}
+        <a href="{{ module.secondary_cta_url }}" class="hero-collapse__btn hero-collapse__btn--outline">
+          {{ module.secondary_cta_label }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Hint text at the bottom #}
+  <div class="hero-collapse__hint">Click anywhere to collapse</div>
+</section>

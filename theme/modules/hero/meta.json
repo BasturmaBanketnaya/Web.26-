@@ -1,0 +1,66 @@
+{
+  "label": "Hero — Collapse Animation",
+  "css_assets": [],
+  "external_js": [],
+  "global": false,
+  "host_template_types": ["PAGE"],
+  "icon": "module",
+  "js_assets": [],
+  "other_assets": [],
+  "smart_type": "NOT_SMART",
+  "tags": [],
+  "is_available_for_new_content": true,
+  "fields": [
+    {
+      "name": "eyebrow",
+      "label": "Eyebrow text",
+      "type": "text",
+      "default": "AI for Engineering",
+      "help_text": "Small label above the headline (e.g. 'AI for Engineering')"
+    },
+    {
+      "name": "headline",
+      "label": "Headline",
+      "type": "text",
+      "default": "Know your product<br>inside out",
+      "help_text": "Main hero headline. Use <br> for line breaks."
+    },
+    {
+      "name": "subline",
+      "label": "Subline",
+      "type": "text",
+      "default": "Engineering Intelligence that turns fragmented product data into confident decisions.",
+      "help_text": "Supporting description below the headline"
+    },
+    {
+      "name": "primary_cta_label",
+      "label": "Primary CTA label",
+      "type": "text",
+      "default": "Get started"
+    },
+    {
+      "name": "primary_cta_url",
+      "label": "Primary CTA URL",
+      "type": "url",
+      "default": {
+        "url": { "href": "/get-started" },
+        "open_in_new_tab": false
+      }
+    },
+    {
+      "name": "secondary_cta_label",
+      "label": "Secondary CTA label",
+      "type": "text",
+      "default": "See how it works"
+    },
+    {
+      "name": "secondary_cta_url",
+      "label": "Secondary CTA URL",
+      "type": "url",
+      "default": {
+        "url": { "href": "#how-it-works" },
+        "open_in_new_tab": false
+      }
+    }
+  ]
+}

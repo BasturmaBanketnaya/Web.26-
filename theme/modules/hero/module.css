@@ -1,0 +1,148 @@
+/* ==============================================
+   HERO MODULE — The Collapse Animation
+   Particles start chaotic, click collapses them
+   into an organized grid. Text fades in.
+   ============================================== */
+
+.hero-collapse {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #0D0D0D;
+  overflow: hidden;
+}
+
+.hero-collapse__canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-collapse__overlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  padding: 2rem;
+  transition: opacity 0.6s ease;
+}
+
+.hero-collapse__eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #FF6F47;
+  margin-bottom: 16px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+}
+
+.hero-collapse__title {
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 700;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 1.05;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;
+}
+
+.hero-collapse__subline {
+  font-size: clamp(14px, 1.8vw, 18px);
+  color: #999;
+  margin-top: 20px;
+  text-align: center;
+  max-width: 500px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
+}
+
+.hero-collapse__ctas {
+  margin-top: 32px;
+  display: flex;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease 0.9s, transform 0.8s ease 0.9s;
+  pointer-events: auto;
+}
+
+.hero-collapse__btn {
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-collapse__btn:hover {
+  transform: translateY(-1px);
+}
+
+.hero-collapse__btn--primary {
+  background: #FF6F47;
+  color: #fff;
+}
+
+.hero-collapse__btn--primary:hover {
+  box-shadow: 0 4px 16px rgba(255, 111, 71, 0.3);
+}
+
+.hero-collapse__btn--outline {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-collapse__btn--outline:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Resolved state — text fades in after collapse */
+.hero-collapse__overlay.resolved .hero-collapse__eyebrow,
+.hero-collapse__overlay.resolved .hero-collapse__title,
+.hero-collapse__overlay.resolved .hero-collapse__subline,
+.hero-collapse__overlay.resolved .hero-collapse__ctas {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-collapse__hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  color: #666;
+  font-size: 13px;
+  transition: opacity 0.5s ease;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .hero-collapse__eyebrow,
+  .hero-collapse__title,
+  .hero-collapse__subline,
+  .hero-collapse__ctas {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
