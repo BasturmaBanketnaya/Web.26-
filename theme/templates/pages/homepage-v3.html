@@ -28,6 +28,14 @@
 
     @font-face {
       font-family: 'DIN Pro';
+      src: url('../../Fonts/dinpro_medium.otf') format('opentype');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'DIN Pro';
       src: url('../../Fonts/dinpro_bold.otf') format('opentype');
       font-weight: 700;
       font-style: normal;
@@ -165,7 +173,9 @@
     .btn--outline {
       background: transparent;
       color: var(--color-dark);
-      border-color: var(--color-dark);
+      border: 1px solid var(--color-orange);
+      border-radius: 2px;
+      font-weight: 500;
     }
     .btn--outline:hover {
       background: var(--color-dark);
@@ -325,24 +335,32 @@
 
     .hero h1 {
       font-size: var(--font-size-display);
-      font-weight: 900;
-      line-height: 1.05;
+      font-weight: 700;
+      line-height: 1.1;
       color: var(--color-dark);
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       margin-bottom: var(--space-lg);
     }
 
-    .hero__metric {
-      font-size: var(--font-size-body);
-      color: var(--color-gray-700);
-      margin-bottom: var(--space-xl);
-    }
-    .hero__metric strong {
-      color: var(--color-dark);
+    .hero h1 .highlight {
+      color: var(--color-orange);
     }
 
-    .hero__cta { margin-bottom: 0; }
+    .hero__subline {
+      font-size: var(--font-size-body);
+      color: var(--color-gray-500);
+      max-width: 520px;
+      margin: 0 auto var(--space-xl);
+      line-height: 1.6;
+    }
+
+    .hero__ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
 
     /* Interactive circle chain canvas */
     .hero__canvas {
@@ -360,31 +378,35 @@
     .trusted {
       background: var(--color-beige);
       padding: var(--space-lg) 0 var(--space-2xl);
-    }
-
-    .trusted__inner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-xl);
-      flex-wrap: wrap;
+      overflow: hidden;
     }
 
     .trusted__label {
+      text-align: center;
       font-size: var(--font-size-caption);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: var(--color-gray-500);
-      white-space: nowrap;
+      margin-bottom: var(--space-md);
+    }
+
+    .trusted__track {
+      display: flex;
+      width: max-content;
+      animation: scroll-logos 30s linear infinite;
+    }
+
+    .trusted__track:hover {
+      animation-play-state: paused;
     }
 
     .trusted__logos {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: var(--space-md);
-      flex-wrap: wrap;
+      gap: var(--space-2xl);
+      padding: 0 var(--space-xl);
+      flex-shrink: 0;
     }
 
     .trusted__logos img {
@@ -393,27 +415,64 @@
       opacity: 0.7;
       filter: grayscale(100%);
       transition: opacity var(--transition-fast);
+      flex-shrink: 0;
     }
 
     .trusted__logos img:hover {
       opacity: 1;
     }
 
-    /*
-      Visually balance logos: icon logos (circles) get a taller height,
-      wordmark logos get a shorter height so everything feels equal weight.
-    */
-    .trusted__logos img[alt="Volkswagen"]    { height: 28px; }
-    .trusted__logos img[alt="Mercedes-Benz"] { height: 26px; }
-    .trusted__logos img[alt="BMW"]           { height: 26px; }
-    .trusted__logos img[alt="Audi"]          { height: 18px; }
-    .trusted__logos img[alt="Mini"]          { height: 18px; }
-    .trusted__logos img[alt="Ford"]          { height: 18px; }
-    .trusted__logos img[alt="Rheinmetall"]   { height: 10px; }
-    .trusted__logos img[alt="Bosch"]         { height: 12px; }
-    .trusted__logos img[alt="Porsche"]       { height: 8px; }
-    .trusted__logos img[alt="Daimler Truck"] { height: 8px; }
-    .trusted__logos img[alt="Stadler"]       { height: 9px; }
+    /* Visually balance logos — 15% bigger than before */
+    .trusted__logos img[alt="Volkswagen"]    { height: 32px; }
+    .trusted__logos img[alt="Mercedes-Benz"] { height: 30px; }
+    .trusted__logos img[alt="BMW"]           { height: 30px; }
+    .trusted__logos img[alt="Audi"]          { height: 21px; }
+    .trusted__logos img[alt="Mini"]          { height: 21px; }
+    .trusted__logos img[alt="Ford"]          { height: 21px; }
+    .trusted__logos img[alt="Rheinmetall"]   { height: 12px; }
+    .trusted__logos img[alt="Bosch"]         { height: 14px; }
+    .trusted__logos img[alt="Porsche"]       { height: 9px; }
+    .trusted__logos img[alt="Daimler Truck"] { height: 9px; }
+    .trusted__logos img[alt="Stadler"]       { height: 10px; }
+
+    @keyframes scroll-logos {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ==============================================
+       SECTION: PLATFORM — 3-layer animated diagram
+       ============================================== */
+    .platform {
+      padding: var(--space-section) 0;
+      background: var(--color-white);
+      overflow: hidden;
+    }
+
+    .platform__header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto var(--space-3xl);
+    }
+
+    .platform__header h2 {
+      font-size: var(--font-size-h2);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--color-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .platform__image {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .platform__image img {
+      width: 100%;
+      height: auto;
+    }
 
     /* ==============================================
        SECTION 3: HOW IT WORKS — 3-step process
@@ -550,120 +609,334 @@
     }
 
     /* ==============================================
-       SECTION 6: TESTIMONIAL — Rotating quote
+       STORIES SLIDER — Combined case studies + quotes
        ============================================== */
-    .testimonial {
+    .stories {
       padding: var(--space-section) 0;
-      background: var(--color-white);
+      background: var(--color-gray-100);
     }
 
-    .testimonial__inner {
-      text-align: center;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .testimonial__quote {
-      font-size: var(--font-size-h3);
-      font-weight: 500;
-      line-height: 1.5;
-      color: var(--color-dark);
+    .stories__header {
       margin-bottom: var(--space-lg);
-      font-style: italic;
     }
 
-    .testimonial__quote::before { content: '"'; }
-    .testimonial__quote::after { content: '"'; }
+    .stories__header-left h2 {
+      font-size: var(--font-size-h2);
+      font-weight: 500;
+      color: var(--color-dark);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: var(--space-md);
+    }
 
-    .testimonial__author {
+    .stories__case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 400;
+      font-size: var(--font-size-small);
+      color: var(--color-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      transition: gap var(--transition-fast);
+      margin-bottom: 0;
+    }
+
+    .stories__case-link:hover {
+      gap: 1rem;
+    }
+
+    .stories__case-link img {
+      width: 22px;
+      height: 11px;
+    }
+
+    .stories__subheader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+    }
+
+    .stories__arrows {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+    }
+
+    .stories__arrow {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity var(--transition-fast);
+      opacity: 0.7;
+    }
+
+    .stories__arrow:hover {
+      opacity: 1;
+    }
+
+    .stories__arrow img {
+      width: 28px;
+      height: 14px;
+    }
+
+    .stories__arrow--prev img {
+      transform: scaleX(-1);
+    }
+
+    .stories__track-outer {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      overflow: hidden;
+    }
+
+    .stories__track {
+      display: flex;
+      gap: var(--space-md);
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 max(var(--space-md), calc((100vw - var(--max-width)) / 2 + var(--space-xl))) var(--space-sm);
+      scrollbar-width: none;
+    }
+
+    .stories__track::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Base card */
+    .story-card {
+      flex: 0 0 340px;
+      min-height: 420px;
+      border-radius: var(--border-radius-lg);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      scroll-snap-align: start;
+      position: relative;
+    }
+
+    /* Case study card — interactive gradient, larger */
+    .story-card--case {
+      flex: 0 0 56%;
+      min-height: 480px;
+      background:
+        radial-gradient(circle at var(--mouse-x, 30%) var(--mouse-y, 40%), rgba(255, 224, 210, 0.7) 0%, transparent 50%),
+        radial-gradient(circle at var(--glow-x, 70%) var(--glow-y, 60%), rgba(255, 180, 140, 0.5) 0%, transparent 45%),
+        linear-gradient(135deg, #C4411A 0%, #E8552B 25%, #FF6F47 50%, #FF9D7F 75%, #FFD4C2 100%);
+      background-size: 200% 200%, 200% 200%, 100% 100%;
+      color: var(--color-white);
+      animation: gradient-drift 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradient-drift {
+      0%   { background-position: 20% 30%, 80% 70%, 0% 0%; }
+      25%  { background-position: 60% 20%, 40% 80%, 0% 0%; }
+      50%  { background-position: 80% 50%, 20% 30%, 0% 0%; }
+      75%  { background-position: 40% 70%, 60% 20%, 0% 0%; }
+      100% { background-position: 30% 60%, 70% 40%, 0% 0%; }
+    }
+
+    .story-card--case:hover {
+      animation-play-state: paused;
+    }
+
+    .story-card--case .story-card__tag {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--color-white);
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.375rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: var(--space-md);
+      align-self: flex-start;
+    }
+
+    .story-card--case .story-card__arrow {
+      position: absolute;
+      top: var(--space-xl);
+      right: var(--space-xl);
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .story-card--case .story-card__arrow svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .story-card--case h3 {
+      font-size: var(--font-size-h3);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: auto;
+    }
+
+    .story-card__metrics {
+      display: flex;
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .story-card__metric strong {
+      display: block;
+      font-size: 1.75rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--color-white);
+    }
+
+    .story-card__metric span {
+      font-size: var(--font-size-caption);
+      color: rgba(255, 255, 255, 0.75);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .story-card--case .story-card__footer {
+      margin-top: var(--space-md);
+      padding-top: var(--space-md);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .story-card--case .story-card__company {
+      font-size: var(--font-size-small);
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Testimonial card — white, narrower */
+    .story-card--quote {
+      flex: 0 0 36%;
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+    }
+
+    .story-card--quote .story-card__tag {
+      display: inline-block;
+      background: var(--color-gray-100);
+      color: var(--color-gray-700);
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.375rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: var(--space-lg);
+      align-self: flex-start;
+    }
+
+    .story-card--quote .story-card__quote {
+      font-size: var(--font-size-body);
+      line-height: 1.6;
+      color: var(--color-dark);
+      margin-bottom: auto;
+    }
+
+    .story-card--quote .story-card__quote::before { content: '\201C'; }
+    .story-card--quote .story-card__quote::after { content: '\201D'; }
+
+    .story-card--quote .story-card__author {
+      margin-top: var(--space-xl);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--color-gray-200);
+    }
+
+    .story-card--quote .story-card__author-name {
       font-size: var(--font-size-body-sm);
       font-weight: 700;
       color: var(--color-dark);
     }
 
-    .testimonial__role {
+    .story-card--quote .story-card__author-role {
       font-size: var(--font-size-small);
       color: var(--color-gray-500);
     }
 
-    .testimonial__nav {
-      display: flex;
-      justify-content: center;
-      gap: var(--space-xs);
-      margin-top: var(--space-lg);
+    @media (max-width: 767px) {
+      .story-card { flex: 0 0 85vw; min-height: 360px; }
+      .story-card--case { flex: 0 0 85vw; min-height: 420px; }
+      .story-card--quote { flex: 0 0 80vw; }
+      .stories__header { flex-direction: column; align-items: flex-start; }
+      .stories__arrows { align-self: flex-start; }
     }
-
-    .testimonial__dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--color-gray-200);
-      border: none;
-      cursor: pointer;
-      transition: background var(--transition-fast);
-      padding: 0;
-    }
-    .testimonial__dot.active { background: var(--color-orange); }
 
     /* ==============================================
-       SECTION 7: CASE STUDIES — Highlight cards
+       SECTION: SECURITY — Enterprise ready
        ============================================== */
-    .case-studies {
+    .security {
       padding: var(--space-section) 0;
-      background: var(--color-gray-100);
+      background: var(--color-white);
     }
 
-    .cases__grid {
+    .security__header {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .security__header h2 {
+      font-size: var(--font-size-h2);
+      font-weight: 700;
+      color: var(--color-dark);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .security__grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--color-gray-200);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--border-radius-lg);
+      overflow: hidden;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .security__card {
+      background: var(--color-white);
+      padding: var(--space-xl) var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
       gap: var(--space-md);
     }
 
-    .case-card {
-      background: var(--color-white);
-      border-radius: var(--border-radius-lg);
-      padding: var(--space-xl);
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-    }
-    .case-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    .security__card img {
+      height: 56px;
+      width: auto;
+      filter: grayscale(100%) opacity(0.5);
     }
 
-    .case-card__eyebrow {
-      font-size: var(--font-size-caption);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--color-gray-500);
-      margin-bottom: var(--space-xs);
+    .security__card span {
+      font-size: var(--font-size-small);
+      font-weight: 500;
+      color: var(--color-gray-700);
     }
 
-    .case-card h3 {
-      font-size: var(--font-size-h4);
-      font-weight: 700;
-      color: var(--color-dark);
-      margin-bottom: var(--space-sm);
-      line-height: 1.3;
-    }
-
-    .case-card__metrics {
-      display: flex;
-      gap: var(--space-lg);
-      margin-bottom: var(--space-md);
-      flex-wrap: wrap;
-    }
-
-    .case-card__metric strong {
-      display: block;
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: var(--color-orange);
-      line-height: 1;
-    }
-
-    .case-card__metric span {
-      font-size: var(--font-size-caption);
-      color: var(--color-gray-500);
+    @media (max-width: 767px) {
+      .security__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     /* ==============================================
@@ -821,7 +1094,7 @@
         <div class="nav-dropdown">
           <span>Product</span>
           <div class="nav-dropdown__menu">
-            <a href="/platform">Our Platform / Why SPREAD</a>
+            <a href="/platform">Platform</a>
             <a href="/solutions/requirement-manager">Requirement Manager</a>
             <a href="/solutions/product-explorer">Product Explorer</a>
             <a href="/solutions/inspector">Error Inspector</a>
@@ -830,9 +1103,10 @@
         <div class="nav-dropdown">
           <span>Solutions</span>
           <div class="nav-dropdown__menu">
-            <a href="/solutions/automotive">Automotive &amp; Mobility</a>
-            <a href="/solutions/aerospace-defense">Aerospace &amp; Defense</a>
-            <a href="/solutions/industrial-goods-machinery">Industrial Goods &amp; Machinery</a>
+            <a href="/solutions/automotive">Automotive</a>
+            <a href="/solutions/defence">Defence</a>
+            <a href="/solutions/aerospace">Aerospace</a>
+            <a href="/solutions/industrial-machines">Industrial Machines</a>
           </div>
         </div>
         <a href="/customers">Customers</a>
@@ -868,14 +1142,15 @@
   <!-- Mobile nav -->
   <div class="mobile-nav">
     <span class="mobile-nav__label">Product</span>
-    <a href="/platform">Our Platform / Why SPREAD</a>
+    <a href="/platform">Platform</a>
     <a href="/solutions/requirement-manager">Requirement Manager</a>
     <a href="/solutions/product-explorer">Product Explorer</a>
     <a href="/solutions/inspector">Error Inspector</a>
     <span class="mobile-nav__label">Solutions</span>
-    <a href="/solutions/automotive">Automotive &amp; Mobility</a>
-    <a href="/solutions/aerospace-defense">Aerospace &amp; Defense</a>
-    <a href="/solutions/industrial-goods-machinery">Industrial Goods &amp; Machinery</a>
+    <a href="/solutions/automotive">Automotive</a>
+    <a href="/solutions/defence">Defence</a>
+    <a href="/solutions/aerospace">Aerospace</a>
+    <a href="/solutions/industrial-machines">Industrial Machines</a>
     <span class="mobile-nav__label">More</span>
     <a href="/customers">Customers</a>
     <a href="/blog">Knowledge Hub</a>
@@ -893,10 +1168,12 @@
     <section class="hero">
       <canvas class="hero__canvas" aria-hidden="true"></canvas>
       <div class="container hero__content">
-        <h1 class="fade-up">Stop guessing what breaks when you ship</h1>
-        <p class="hero__metric fade-up fade-up-d1"><strong>&gt;€10M</strong> saved yearly by a European auto OEM</p>
-        <div class="hero__cta fade-up fade-up-d2">
-          <a href="/get-started" class="btn btn--primary">Contact Us</a>
+        <span class="eyebrow fade-up">Intelligence Layer for Engineering</span>
+        <h1 class="fade-up fade-up-d1">Ship Faster.<br>Break Nothing.<br><span class="highlight">Know Exactly Why.</span></h1>
+        <p class="hero__subline fade-up fade-up-d2">SPREAD connects your PLM, CAD, ERP, and ALM into a single intelligence layer. Find hidden dependencies in seconds, not sprint cycles.</p>
+        <div class="hero__ctas fade-up fade-up-d3">
+          <a href="/get-started" class="btn btn--primary">Request a Demo →</a>
+          <a href="#how-it-works" class="btn btn--outline">See How It Works</a>
         </div>
       </div>
     </section>
@@ -906,22 +1183,55 @@
          SECTION 2: TRUSTED BY
          ============================================ -->
     <section class="trusted">
-      <div class="container">
-        <div class="trusted__inner fade-up">
-        <p class="trusted__label">Trusted by</p>
+      <p class="trusted__label fade-up">Trusted by</p>
+      <!-- Track contains two identical sets of logos for seamless infinite scroll -->
+      <div class="trusted__track">
         <div class="trusted__logos">
-          <img src="../../images/Clients Logos/VW.svg" alt="Volkswagen" height="24">
-          <img src="../../images/Clients Logos/Mercedes.svg" alt="Mercedes-Benz" height="24">
-          <img src="../../images/Clients Logos/BMW.svg" alt="BMW" height="24">
-          <img src="../../images/Clients Logos/Ford.svg" alt="Ford" height="24">
-          <img src="../../images/Clients Logos/Rheinmetall.svg" alt="Rheinmetall" height="24">
-          <img src="../../images/Clients Logos/Bosch.svg" alt="Bosch" height="24">
-          <img src="../../images/Clients Logos/Audi.svg" alt="Audi" height="24">
-          <img src="../../images/Clients Logos/Porsche.svg" alt="Porsche" height="24">
-          <img src="../../images/Clients Logos/Daimler Truck.svg" alt="Daimler Truck" height="24">
-          <img src="../../images/Clients Logos/Stadler.svg" alt="Stadler" height="24">
-          <img src="../../images/Clients Logos/Mini.svg" alt="Mini" height="24">
+          <img src="../../images/Clients Logos/VW.svg" alt="Volkswagen">
+          <img src="../../images/Clients Logos/Mercedes.svg" alt="Mercedes-Benz">
+          <img src="../../images/Clients Logos/BMW.svg" alt="BMW">
+          <img src="../../images/Clients Logos/Ford.svg" alt="Ford">
+          <img src="../../images/Clients Logos/Rheinmetall.svg" alt="Rheinmetall">
+          <img src="../../images/Clients Logos/Bosch.svg" alt="Bosch">
+          <img src="../../images/Clients Logos/Audi.svg" alt="Audi">
+          <img src="../../images/Clients Logos/Porsche.svg" alt="Porsche">
+          <img src="../../images/Clients Logos/Daimler Truck.svg" alt="Daimler Truck">
+          <img src="../../images/Clients Logos/Stadler.svg" alt="Stadler">
+          <img src="../../images/Clients Logos/Mini.svg" alt="Mini">
         </div>
+        <div class="trusted__logos" aria-hidden="true">
+          <img src="../../images/Clients Logos/VW.svg" alt="Volkswagen">
+          <img src="../../images/Clients Logos/Mercedes.svg" alt="Mercedes-Benz">
+          <img src="../../images/Clients Logos/BMW.svg" alt="BMW">
+          <img src="../../images/Clients Logos/Ford.svg" alt="Ford">
+          <img src="../../images/Clients Logos/Rheinmetall.svg" alt="Rheinmetall">
+          <img src="../../images/Clients Logos/Bosch.svg" alt="Bosch">
+          <img src="../../images/Clients Logos/Audi.svg" alt="Audi">
+          <img src="../../images/Clients Logos/Porsche.svg" alt="Porsche">
+          <img src="../../images/Clients Logos/Daimler Truck.svg" alt="Daimler Truck">
+          <img src="../../images/Clients Logos/Stadler.svg" alt="Stadler">
+          <img src="../../images/Clients Logos/Mini.svg" alt="Mini">
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION: PLATFORM — 3-layer diagram
+         ============================================ -->
+    <section class="platform" id="platform">
+      <div class="container">
+        <div class="platform__header fade-up">
+          <span class="eyebrow">Platform</span>
+          <h2>One intelligence layer connecting your fragmented systems to the products your teams actually need.</h2>
+        </div>
+
+        <div class="platform__image fade-up fade-up-d1">
+          <img src="../../images/Platform.svg" alt="SPREAD platform architecture: fragmented systems feed into the Engineering Intelligence Graph, powering analytics, agents, and products">
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-2xl);">
+          <a href="/platform" class="text-link fade-up">Explore our platform</a>
         </div>
       </div>
     </section>
@@ -1048,89 +1358,142 @@
 
 
     <!-- ============================================
-         SECTION 6: TESTIMONIAL
+         STORIES SLIDER — Case studies + testimonials
          ============================================ -->
-    <section class="testimonial">
+    <section class="stories">
       <div class="container">
-        <div class="testimonial__inner fade-up">
-          <div class="testimonial__slides">
-            <div class="testimonial__slide active" data-index="0">
-              <p class="testimonial__quote">Together with our employees, SPREAD quickly develops exciting AI concepts to solve engineering problems and brings them live as practical applications, e.g. AI-based quality assurance in all our plants.</p>
-              <p class="testimonial__author">Valerij Asmus</p>
-              <p class="testimonial__role">Head of Artificial Intelligence Research at Mercedes-Benz</p>
+        <div class="stories__header fade-up">
+          <div class="stories__header-left">
+            <span class="eyebrow">Customers</span>
+            <h2>Engineering teams<br>that see everything ship faster</h2>
+          </div>
+        </div>
+
+        <div class="stories__subheader">
+          <a href="/customers" class="stories__case-link">All Case Studies <img src="../../images/Arrow.svg" alt=""></a>
+          <div class="stories__arrows">
+            <button class="stories__arrow stories__arrow--prev" aria-label="Previous">
+              <img src="../../images/Arrow.svg" alt="">
+            </button>
+            <button class="stories__arrow stories__arrow--next" aria-label="Next">
+              <img src="../../images/Arrow.svg" alt="">
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="stories__track-outer">
+        <div class="stories__track">
+          <!-- Card 1: Case Study (orange) -->
+          <a href="/customers/defense-oem" class="story-card story-card--case">
+            <span class="story-card__tag">Case Study</span>
+            <span class="story-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></span>
+            <h3>Accelerating time-to-market by 20% at a defense OEM</h3>
+            <div class="story-card__metrics">
+              <div class="story-card__metric"><strong>20%</strong><span>Faster development</span></div>
+              <div class="story-card__metric"><strong>+5%</strong><span>Revenue growth</span></div>
+              <div class="story-card__metric"><strong>60%</strong><span>Faster troubleshooting</span></div>
             </div>
-            <div class="testimonial__slide" data-index="1" style="display:none;">
-              <p class="testimonial__quote">It's great you can access lots of engineering knowledge instantly. At Rheinmetall, we will make product knowledge available to everyone when, where and how they need it with a digital product twin.</p>
-              <p class="testimonial__author">Dr. Marc Honikel</p>
-              <p class="testimonial__role">Chief Innovation Officer at Rheinmetall Air Defence</p>
+            <div class="story-card__footer">
+              <span class="story-card__company">European Defense System OEM</span>
             </div>
-            <div class="testimonial__slide" data-index="2" style="display:none;">
-              <p class="testimonial__quote">SPREAD pools technical knowledge and makes it accessible to all employees quickly, easily and comprehensibly. This brings powerful AI expertise to manufacturing industries.</p>
-              <p class="testimonial__author">Dr. Till Reuter</p>
-              <p class="testimonial__role">Former CEO of KUKA</p>
-            </div>
-            <div class="testimonial__slide" data-index="3" style="display:none;">
-              <p class="testimonial__quote">SPREAD doesn't talk about digital transformation. It delivers it by turning complex data into insights engineering teams can actually act on.</p>
-              <p class="testimonial__author">Dr. Christof Horn</p>
-              <p class="testimonial__role">Automotive Lead Europe</p>
+          </a>
+
+          <!-- Card 2: Testimonial -->
+          <div class="story-card story-card--quote">
+            <span class="story-card__tag">Testimonial</span>
+            <p class="story-card__quote">Together with our employees, SPREAD quickly develops exciting AI concepts to solve engineering problems and brings them live as practical applications, e.g. AI-based quality assurance in all our plants.</p>
+            <div class="story-card__author">
+              <p class="story-card__author-name">Valerij Asmus</p>
+              <p class="story-card__author-role">Head of AI Research, Mercedes-Benz</p>
             </div>
           </div>
-          <div class="testimonial__nav">
-            <button class="testimonial__dot active" data-index="0" aria-label="Quote 1"></button>
-            <button class="testimonial__dot" data-index="1" aria-label="Quote 2"></button>
-            <button class="testimonial__dot" data-index="2" aria-label="Quote 3"></button>
-            <button class="testimonial__dot" data-index="3" aria-label="Quote 4"></button>
+
+          <!-- Card 3: Testimonial -->
+          <div class="story-card story-card--quote">
+            <span class="story-card__tag">Testimonial</span>
+            <p class="story-card__quote">It's great you can access lots of engineering knowledge instantly. At Rheinmetall, we will make product knowledge available to everyone when, where and how they need it with a digital product twin.</p>
+            <div class="story-card__author">
+              <p class="story-card__author-name">Dr. Marc Honikel</p>
+              <p class="story-card__author-role">Chief Innovation Officer, Rheinmetall Air Defence</p>
+            </div>
+          </div>
+
+          <!-- Card 4: Testimonial -->
+          <div class="story-card story-card--quote">
+            <span class="story-card__tag">Testimonial</span>
+            <p class="story-card__quote">SPREAD pools technical knowledge and makes it accessible to all employees quickly, easily and comprehensibly. This brings powerful AI expertise to manufacturing industries.</p>
+            <div class="story-card__author">
+              <p class="story-card__author-name">Dr. Till Reuter</p>
+              <p class="story-card__author-role">Former CEO of KUKA</p>
+            </div>
+          </div>
+
+          <!-- Card 5: Testimonial -->
+          <div class="story-card story-card--quote">
+            <span class="story-card__tag">Testimonial</span>
+            <p class="story-card__quote">SPREAD doesn't talk about digital transformation. It delivers it by turning complex data into insights engineering teams can actually act on.</p>
+            <div class="story-card__author">
+              <p class="story-card__author-name">Dr. Christof Horn</p>
+              <p class="story-card__author-role">Automotive Lead Europe</p>
+            </div>
+          </div>
+
+          <!-- Duplicate first cards for seamless loop -->
+          <a href="/customers/defense-oem" class="story-card story-card--case" aria-hidden="true">
+            <span class="story-card__tag">Case Study</span>
+            <span class="story-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></span>
+            <h3>Accelerating time-to-market by 20% at a defense OEM</h3>
+            <div class="story-card__metrics">
+              <div class="story-card__metric"><strong>20%</strong><span>Faster development</span></div>
+              <div class="story-card__metric"><strong>+5%</strong><span>Revenue growth</span></div>
+              <div class="story-card__metric"><strong>60%</strong><span>Faster troubleshooting</span></div>
+            </div>
+            <div class="story-card__footer">
+              <span class="story-card__company">European Defense System OEM</span>
+            </div>
+          </a>
+
+          <div class="story-card story-card--quote" aria-hidden="true">
+            <span class="story-card__tag">Testimonial</span>
+            <p class="story-card__quote">Together with our employees, SPREAD quickly develops exciting AI concepts to solve engineering problems and brings them live as practical applications, e.g. AI-based quality assurance in all our plants.</p>
+            <div class="story-card__author">
+              <p class="story-card__author-name">Valerij Asmus</p>
+              <p class="story-card__author-role">Head of AI Research, Mercedes-Benz</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-
     <!-- ============================================
-         SECTION 7: CASE STUDIES
+         SECTION: SECURITY — Enterprise ready
          ============================================ -->
-    <section class="case-studies">
+    <section class="security">
       <div class="container">
-        <div class="section-header fade-up">
-          <span class="eyebrow">Customer Stories</span>
-          <h2>Engineering success in action</h2>
-          <p>See how industry leaders steer projects confidently and unlock innovation with SPREAD.</p>
+        <div class="security__header fade-up">
+          <span class="eyebrow">Security &amp; Reliability</span>
+          <h2>Enterprise ready</h2>
         </div>
-
-        <div class="cases__grid">
-          <div class="case-card fade-up">
-            <p class="case-card__eyebrow">Automotive OEM</p>
-            <h3>Mitigating €2B SOP risk</h3>
-            <div class="case-card__metrics">
-              <div class="case-card__metric"><strong>&gt;€20M</strong><span>error reduction</span></div>
-              <div class="case-card__metric"><strong>60%</strong><span>faster troubleshooting</span></div>
-            </div>
-            <a href="/customers/automotive-oem" class="text-link">Learn more</a>
+        <div class="security__grid fade-up fade-up-d1">
+          <div class="security__card">
+            <img src="../../images/Logo Security/SOC 2 Type II 1.png" alt="SOC 2 Type II">
+            <span>SOC2 Type II</span>
           </div>
-
-          <div class="case-card fade-up fade-up-d1">
-            <p class="case-card__eyebrow">Defense OEM</p>
-            <h3>Accelerating time-to-market by 20%</h3>
-            <div class="case-card__metrics">
-              <div class="case-card__metric"><strong>20%</strong><span>faster development</span></div>
-              <div class="case-card__metric"><strong>+5%</strong><span>revenue growth</span></div>
-            </div>
-            <a href="/customers/defense-oem" class="text-link">Learn more</a>
+          <div class="security__card">
+            <img src="../../images/Logo Security/iso.png" alt="ISO">
+            <span>ISO certified</span>
           </div>
-
-          <div class="case-card fade-up fade-up-d2">
-            <p class="case-card__eyebrow">Automotive OEM — Aftermarket</p>
-            <h3>Saving &gt;€10M yearly through faster troubleshooting</h3>
-            <div class="case-card__metrics">
-              <div class="case-card__metric"><strong>&gt;€10M</strong><span>saved annually</span></div>
-              <div class="case-card__metric"><strong>50%</strong><span>faster repairs</span></div>
-            </div>
-            <a href="/customers/automotive-oem-aftermarket" class="text-link">Learn more</a>
+          <div class="security__card">
+            <img src="../../images/Logo Security/gdpr.png" alt="GDPR">
+            <span>GDPR compliant</span>
+          </div>
+          <div class="security__card">
+            <img src="../../images/Logo Security/logo-tisax.png" alt="TISAX">
+            <span>TISAX certified</span>
           </div>
         </div>
-
         <div style="text-align: center; margin-top: var(--space-2xl);">
-          <a href="/customers" class="text-link fade-up">View all customer stories</a>
+          <a href="/security" class="btn btn--outline">Security &amp; Compliance</a>
         </div>
       </div>
     </section>
@@ -1178,9 +1541,10 @@
         <nav class="footer__nav">
           <h4>Solutions</h4>
           <ul>
-            <li><a href="/solutions/automotive">Automotive &amp; Mobility</a></li>
-            <li><a href="/solutions/aerospace-defense">Aerospace &amp; Defense</a></li>
-            <li><a href="/solutions/industrial-goods-machinery">Industrial Goods &amp; Machinery</a></li>
+            <li><a href="/solutions/automotive">Automotive</a></li>
+            <li><a href="/solutions/defence">Defence</a></li>
+            <li><a href="/solutions/aerospace">Aerospace</a></li>
+            <li><a href="/solutions/industrial-machines">Industrial Machines</a></li>
           </ul>
         </nav>
         <nav class="footer__nav">
@@ -1399,29 +1763,56 @@
         });
       });
 
-      // Testimonial slider
-      var slides = document.querySelectorAll('.testimonial__slide');
-      var dots = document.querySelectorAll('.testimonial__dot');
-      var currentSlide = 0;
+      // Gradient card — mouse-reactive glow
+      var gradientCard = document.querySelector('.story-card--case');
+      if (gradientCard) {
+        gradientCard.addEventListener('mousemove', function(e) {
+          var rect = gradientCard.getBoundingClientRect();
+          var x = ((e.clientX - rect.left) / rect.width) * 100;
+          var y = ((e.clientY - rect.top) / rect.height) * 100;
+          gradientCard.style.setProperty('--mouse-x', x + '%');
+          gradientCard.style.setProperty('--mouse-y', y + '%');
+        });
 
-      function showSlide(index) {
-        slides.forEach(function(s) { s.style.display = 'none'; });
-        dots.forEach(function(d) { d.classList.remove('active'); });
-        slides[index].style.display = 'block';
-        dots[index].classList.add('active');
-        currentSlide = index;
+        gradientCard.addEventListener('mouseleave', function() {
+          gradientCard.style.setProperty('--mouse-x', '30%');
+          gradientCard.style.setProperty('--mouse-y', '40%');
+        });
       }
 
-      dots.forEach(function(dot) {
-        dot.addEventListener('click', function() {
-          showSlide(parseInt(this.dataset.index));
-        });
-      });
+      // Stories slider — looped arrow navigation
+      var track = document.querySelector('.stories__track');
+      var prevBtn = document.querySelector('.stories__arrow--prev');
+      var nextBtn = document.querySelector('.stories__arrow--next');
 
-      // Auto-rotate testimonials every 6 seconds
-      setInterval(function() {
-        showSlide((currentSlide + 1) % slides.length);
-      }, 6000);
+      if (track && prevBtn && nextBtn) {
+        var cards = track.querySelectorAll('.story-card:not([aria-hidden])');
+        var totalOriginalWidth = 0;
+        cards.forEach(function(c) {
+          totalOriginalWidth += c.offsetWidth + 16;
+        });
+
+        nextBtn.addEventListener('click', function() {
+          var maxScroll = track.scrollWidth - track.clientWidth;
+          if (track.scrollLeft >= maxScroll - 20) {
+            track.style.scrollBehavior = 'auto';
+            track.scrollLeft = 0;
+            track.style.scrollBehavior = 'smooth';
+          } else {
+            track.scrollBy({ left: 480, behavior: 'smooth' });
+          }
+        });
+
+        prevBtn.addEventListener('click', function() {
+          if (track.scrollLeft <= 20) {
+            track.style.scrollBehavior = 'auto';
+            track.scrollLeft = totalOriginalWidth - track.clientWidth;
+            track.style.scrollBehavior = 'smooth';
+          } else {
+            track.scrollBy({ left: -480, behavior: 'smooth' });
+          }
+        });
+      }
 
     })();
   </script>
