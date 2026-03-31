@@ -74,7 +74,7 @@
       --color-orange-hover: #E85A33;
       --color-orange-light: #FFF1ED;
       --color-orange-mid: #FEA991;
-      --color-beige: #F9F5F0;
+      --color-beige: #F5F5F5;
       --color-dark: #272727;
       --color-gray-900: #1A1A1A;
       --color-gray-800: #272727;
@@ -174,7 +174,7 @@
       background: transparent;
       color: var(--color-dark);
       border: 1px solid var(--color-orange);
-      border-radius: 2px;
+      border-radius: 0;
       font-weight: 500;
     }
     .btn--outline:hover {
@@ -233,7 +233,7 @@
       transition: background var(--transition-base), box-shadow var(--transition-fast);
     }
     .site-header.scrolled {
-      background: rgba(249, 245, 240, 0.95);
+      background: rgba(245, 245, 245, 0.95);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       box-shadow: 0 1px 12px rgba(0,0,0,0.06);
@@ -413,7 +413,7 @@
     }
 
     .hero__ctas .btn {
-      border-radius: 6px;
+      border-radius: 0;
     }
 
     .hero__ctas .btn--primary {
@@ -586,53 +586,72 @@
 
     .steps {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--space-2xl);
-      counter-reset: step;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+      margin-top: var(--space-2xl);
     }
 
     .step {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--space-lg);
-      align-items: center;
+      position: relative;
+      padding: 0 var(--space-lg);
     }
 
-    .step__visual {
-      background: var(--color-gray-100);
-      border-radius: var(--border-radius-lg);
-      aspect-ratio: 16 / 10;
+    .step__number-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .step__visual-placeholder {
-      font-size: var(--font-size-small);
-      color: var(--color-gray-300);
-      font-weight: 500;
+      margin-bottom: var(--space-lg);
+      position: relative;
     }
 
     .step__number {
-      font-size: var(--font-size-metric);
-      font-weight: 900;
-      color: var(--color-orange-light);
-      line-height: 1;
-      margin-bottom: var(--space-xs);
+      width: 56px;
+      height: 56px;
+      border: 1.5px solid var(--color-orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-orange);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      background: var(--color-white);
+    }
+
+    .step__line {
+      flex: 1;
+      height: 1.5px;
+      background: var(--color-gray-200);
+    }
+
+    .step:last-child .step__line {
+      display: none;
     }
 
     .step h3 {
-      font-size: var(--font-size-h3);
+      font-size: 18px;
       font-weight: 500;
       color: var(--color-dark);
       margin-bottom: var(--space-xs);
     }
 
     .step p {
-      color: var(--color-gray-700);
+      color: var(--color-gray-500);
       font-size: var(--font-size-body-sm);
       line-height: 1.7;
+      max-width: 260px;
+    }
+
+    @media (max-width: 768px) {
+      .steps {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+      }
+      .step__line {
+        display: none;
+      }
     }
 
     /* ==============================================
@@ -1042,12 +1061,112 @@
     }
 
     /* ==============================================
+       SECTION: FAQ
+       ============================================== */
+    .faq {
+      padding: var(--space-section) 0;
+      background: var(--color-white);
+    }
+
+    .faq .section-header {
+      text-align: center;
+    }
+
+    .faq__list {
+      max-width: 800px;
+      margin: var(--space-2xl) auto 0;
+    }
+
+    .faq__item {
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .faq__question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg) 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-primary);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-dark);
+      text-align: left;
+      gap: var(--space-md);
+    }
+
+    .faq__question:hover {
+      color: var(--color-orange);
+    }
+
+    .faq__icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .faq__icon::before,
+    .faq__icon::after {
+      content: '';
+      position: absolute;
+      background: var(--color-dark);
+      transition: transform 0.3s ease;
+    }
+
+    .faq__icon::before {
+      width: 20px;
+      height: 1.5px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    .faq__icon::after {
+      width: 1.5px;
+      height: 20px;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    .faq__item.active .faq__icon::after {
+      transform: translateX(-50%) rotate(90deg);
+      opacity: 0;
+    }
+
+    .faq__answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+    }
+
+    .faq__answer p {
+      padding: 0 0 var(--space-lg);
+      color: var(--color-gray-500);
+      font-size: var(--font-size-body-sm);
+      line-height: 1.7;
+      max-width: 680px;
+    }
+
+    .faq__item.active .faq__answer {
+      max-height: 300px;
+    }
+
+    /* ==============================================
        SECTION 8: CTA
        ============================================== */
     .cta-section {
       padding: var(--space-section) 0;
       background: var(--color-gray-900);
-      text-align: center;
+    }
+
+    .cta-section .eyebrow {
+      color: var(--color-orange);
     }
 
     .cta-section h2 {
@@ -1057,16 +1176,19 @@
       margin-bottom: var(--space-sm);
     }
 
+    .cta-section h2 span {
+      color: var(--color-orange);
+    }
+
     .cta-section p {
       color: var(--color-gray-300);
       max-width: 500px;
-      margin: 0 auto var(--space-xl);
+      margin: 0 0 var(--space-xl);
     }
 
     .cta-section__buttons {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: var(--space-sm);
       flex-wrap: wrap;
     }
@@ -1330,7 +1452,7 @@
         </div>
 
         <div class="platform__image fade-up fade-up-d1">
-          <img src="../../images/Platform.svg" alt="SPREAD platform architecture: fragmented systems feed into the Engineering Intelligence Graph, powering analytics, agents, and products">
+          <img src="../../images/Platform V2.png" alt="SPREAD platform architecture: fragmented systems feed into the Engineering Intelligence Graph, powering analytics, agents, and products">
         </div>
 
         <div style="text-align: center; margin-top: var(--space-2xl);">
@@ -1345,49 +1467,47 @@
          ============================================ -->
     <section class="how-it-works" id="how-it-works">
       <div class="container">
-        <div class="section-header fade-up">
+        <div class="section-header fade-up" style="text-align: left;">
           <span class="eyebrow">How it works</span>
-          <h2>See how Engineering Intelligence works</h2>
-          <p>SPREAD turns fragmented product data into a living, graph-based functional model of how your product actually works.</p>
+          <h2>From connected to intelligent in days, not quarters.</h2>
         </div>
 
         <div class="steps">
           <div class="step fade-up">
-            <div class="step__visual">
-              <span class="step__visual-placeholder">Video / Animation placeholder</span>
+            <div class="step__number-row">
+              <div class="step__number">01</div>
+              <div class="step__line"></div>
             </div>
-            <div class="step__text">
-              <div class="step__number">1</div>
-              <h3>Rapid data ingestion</h3>
-              <p>Connect all of your structured and unstructured product data with our out-of-the-box connectors and AI-assisted mapper. PLM, ALM, CAD, ERP, MES — plus documents and logs.</p>
-            </div>
+            <h3>Connect</h3>
+            <p>Plug in your PLM, CAD, ERP, and ALM systems. SPREAD ingests and indexes your data without disrupting existing workflows.</p>
           </div>
 
           <div class="step fade-up">
-            <div class="step__visual">
-              <span class="step__visual-placeholder">Video / Animation placeholder</span>
+            <div class="step__number-row">
+              <div class="step__number">02</div>
+              <div class="step__line"></div>
             </div>
-            <div class="step__text">
-              <div class="step__number">2</div>
-              <h3>Product Twin</h3>
-              <p>Contextualize your product data into functional product twins with our leading knowledge graph and engineering ontology. See mechanical, electronic, and software relationships — even before a physical prototype exists.</p>
-            </div>
+            <h3>Map</h3>
+            <p>SPREAD automatically builds a dependency graph across your entire toolchain — surfacing relationships no one knew existed.</p>
           </div>
 
           <div class="step fade-up">
-            <div class="step__visual">
-              <span class="step__visual-placeholder">Video / Animation placeholder</span>
+            <div class="step__number-row">
+              <div class="step__number">03</div>
+              <div class="step__line"></div>
             </div>
-            <div class="step__text">
-              <div class="step__number">3</div>
-              <h3>ActionCloud</h3>
-              <p>Harness Engineering Intelligence in our open platform with out-of-the-box solutions and customizable applications. Deploy within weeks with real, scalable impact.</p>
-            </div>
+            <h3>Analyze</h3>
+            <p>Query the impact of any change in real time. Trace from requirement to component to test case to deployment in seconds.</p>
           </div>
-        </div>
 
-        <div style="text-align: center; margin-top: var(--space-2xl);">
-          <a href="/platform" class="text-link fade-up">Discover our platform <img src="../../images/Arrow.svg" alt=""></a>
+          <div class="step fade-up">
+            <div class="step__number-row">
+              <div class="step__number">04</div>
+              <div class="step__line"></div>
+            </div>
+            <h3>Ship</h3>
+            <p>Release with confidence. Know exactly what changed, what it affects, and that nothing was missed before it goes live.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -1569,6 +1689,71 @@
     </section>
 
     <!-- ============================================
+         SECTION: FAQ
+         ============================================ -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <div class="section-header fade-up">
+          <span class="eyebrow">FAQ</span>
+          <h2>Common questions, straight answers.</h2>
+        </div>
+
+        <div class="faq__list">
+          <div class="faq__item fade-up">
+            <button class="faq__question">
+              What systems does SPREAD integrate with?
+              <span class="faq__icon"></span>
+            </button>
+            <div class="faq__answer">
+              <p>SPREAD connects with major PLM, CAD, ERP, and ALM platforms out of the box — including Siemens Teamcenter, PTC Windchill, Jira, Azure DevOps, SAP, and more. Custom connectors are available for proprietary or legacy systems.</p>
+            </div>
+          </div>
+
+          <div class="faq__item fade-up">
+            <button class="faq__question">
+              How long does setup take?
+              <span class="faq__icon"></span>
+            </button>
+            <div class="faq__answer">
+              <p>Most teams are connected and seeing dependency maps within days. SPREAD's ingestion engine works with your existing data — no migration, no schema changes, no disruption to current workflows.</p>
+            </div>
+          </div>
+
+          <div class="faq__item fade-up">
+            <button class="faq__question">
+              Does SPREAD replace our existing tools?
+              <span class="faq__icon"></span>
+            </button>
+            <div class="faq__answer">
+              <p>No. SPREAD is an intelligence layer that sits on top of your current toolchain. Your teams keep using the tools they know. SPREAD connects them and makes the relationships between systems visible and queryable.</p>
+            </div>
+          </div>
+
+          <div class="faq__item fade-up">
+            <button class="faq__question">
+              How is SPREAD priced?
+              <span class="faq__icon"></span>
+            </button>
+            <div class="faq__answer">
+              <p>Pricing is based on the number of connected systems and users. We offer flexible plans for teams of all sizes. Contact us for a custom quote — we'll scope it based on your specific toolchain and needs.</p>
+            </div>
+          </div>
+
+          <div class="faq__item fade-up">
+            <button class="faq__question">
+              Is my data secure?
+              <span class="faq__icon"></span>
+            </button>
+            <div class="faq__answer">
+              <p>SPREAD can be deployed on-premise or in your private cloud. Data never leaves your environment. We're SOC 2 Type II compliant, and built for industries where security isn't optional — defense, aerospace, and regulated manufacturing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================
          SECTION: SECURITY — Enterprise ready
          ============================================ -->
     <section class="security">
@@ -1607,11 +1792,11 @@
          ============================================ -->
     <section class="cta-section">
       <div class="container">
-        <h2 class="fade-up">Ready to take control of your product complexity?</h2>
-        <p class="fade-up fade-up-d1">Discover the technology powering innovation at the world's leading manufacturers.</p>
+        <span class="eyebrow fade-up">Get started</span>
+        <h2 class="fade-up">Stop guessing. <span>Start seeing.</span></h2>
+        <p class="fade-up fade-up-d1">See how SPREAD connects your engineering systems into a single intelligence layer — live, with your data.</p>
         <div class="cta-section__buttons fade-up fade-up-d2">
-          <a href="/get-started" class="btn btn--primary">Book a Demo</a>
-          <a href="/customers" class="btn btn--outline-light">View Customer Stories</a>
+          <a href="/get-started" class="btn btn--primary">Request a Demo &nbsp;&rarr;</a>
         </div>
       </div>
     </section>
@@ -1701,13 +1886,31 @@
         var particles = [];
         var isResolved = false;
         var PARTICLE_COUNT = 180;
-        var CONNECTION_DIST = 120;
+        var CONNECTION_DIST = 160;
         var NODE_COLORS = [
           'rgba(255, 111, 71, 0.8)',
           'rgba(255, 111, 71, 0.4)',
           'rgba(255, 255, 255, 0.5)',
-          'rgba(255, 255, 255, 0.2)'
+          'rgba(255, 255, 255, 0.25)'
         ];
+
+        var NODE_TYPES = ['Component', 'Function', 'Requirement', 'Signal', 'Error', 'Module', 'Test Case', 'Interface', 'Parameter'];
+        var RELATION_TYPES = ['depends on →', 'triggers →', 'part of →', 'tested by →', 'linked to →', 'validates →'];
+
+        var mouseX = -1000, mouseY = -1000;
+        var hoveredParticle = null;
+        var tooltipFade = 0;
+        var HOVER_RADIUS = 30;
+
+        canvas.addEventListener('mousemove', function(e) {
+          var rect = canvas.getBoundingClientRect();
+          mouseX = (e.clientX - rect.left) * (W / rect.width);
+          mouseY = (e.clientY - rect.top) * (H / rect.height);
+        });
+        canvas.addEventListener('mouseleave', function() {
+          mouseX = -1000; mouseY = -1000;
+          canvas.style.cursor = 'default';
+        });
 
         function resize() {
           W = canvas.width = heroSection.offsetWidth;
@@ -1724,6 +1927,12 @@
           this.vy = (Math.random() - 0.5) * 1.8;
           this.tx = 0; this.ty = 0;
           this.progress = 0;
+          this.nodeType = NODE_TYPES[Math.floor(Math.random() * NODE_TYPES.length)];
+          this.isError = this.nodeType === 'Error';
+          if (this.isError) {
+            this.color = 'rgba(255, 111, 71, 0.9)';
+            this.size = Math.random() * 1.5 + 2;
+          }
         }
 
         Particle.prototype.update = function() {
@@ -1770,19 +1979,27 @@
           }
         }
 
+        var pulses = [];
+        var pulseTimer = 0;
+
+        function spawnPulse(x1, y1, x2, y2) {
+          pulses.push({ x1: x1, y1: y1, x2: x2, y2: y2, t: 0, speed: 0.015 + Math.random() * 0.01 });
+        }
+
         function drawConnections() {
+          if (!isResolved) return;
+          var now = Date.now();
           for (var i = 0; i < particles.length; i++) {
+            if (particles[i].progress < 0.4) continue;
             for (var j = i + 1; j < particles.length; j++) {
+              if (particles[j].progress < 0.4) continue;
               var dx = particles[i].x - particles[j].x;
               var dy = particles[i].y - particles[j].y;
               var dist = Math.sqrt(dx * dx + dy * dy);
               if (dist < CONNECTION_DIST) {
                 var alpha = 1 - dist / CONNECTION_DIST;
-                if (isResolved && particles[i].progress > 0.5) {
-                  ctx.strokeStyle = 'rgba(255,111,71,' + (alpha * 0.25 * particles[i].progress) + ')';
-                } else {
-                  ctx.strokeStyle = 'rgba(255,255,255,' + (alpha * 0.07) + ')';
-                }
+                var avgProgress = (particles[i].progress + particles[j].progress) / 2;
+                ctx.strokeStyle = 'rgba(255,111,71,' + (alpha * 0.17 * avgProgress) + ')';
                 ctx.lineWidth = 0.5;
                 ctx.beginPath();
                 ctx.moveTo(particles[i].x, particles[i].y);
@@ -1791,6 +2008,129 @@
               }
             }
           }
+
+          pulseTimer++;
+          if (pulseTimer % 8 === 0 && particles.length > 1) {
+            var a = Math.floor(Math.random() * particles.length);
+            var closest = -1, closestDist = Infinity;
+            for (var m = 0; m < particles.length; m++) {
+              if (m === a || particles[m].progress < 0.6) continue;
+              var pdx = particles[a].x - particles[m].x;
+              var pdy = particles[a].y - particles[m].y;
+              var pd = Math.sqrt(pdx * pdx + pdy * pdy);
+              if (pd < CONNECTION_DIST && pd < closestDist) { closest = m; closestDist = pd; }
+            }
+            if (closest >= 0 && particles[a].progress > 0.6) {
+              spawnPulse(particles[a].x, particles[a].y, particles[closest].x, particles[closest].y);
+            }
+          }
+
+          for (var p = pulses.length - 1; p >= 0; p--) {
+            var pulse = pulses[p];
+            pulse.t += pulse.speed;
+            if (pulse.t > 1) { pulses.splice(p, 1); continue; }
+            var px = pulse.x1 + (pulse.x2 - pulse.x1) * pulse.t;
+            var py = pulse.y1 + (pulse.y2 - pulse.y1) * pulse.t;
+            var glow = Math.sin(pulse.t * Math.PI);
+            ctx.beginPath();
+            ctx.arc(px, py, 2, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 111, 71, ' + (glow * 0.6) + ')';
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(px, py, 5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 111, 71, ' + (glow * 0.15) + ')';
+            ctx.fill();
+          }
+        }
+
+        function findHoveredParticle() {
+          if (!isResolved) return null;
+          var best = null, bestDist = HOVER_RADIUS;
+          for (var i = 0; i < particles.length; i++) {
+            if (particles[i].progress < 0.8) continue;
+            var dx = particles[i].x - mouseX;
+            var dy = particles[i].y - mouseY;
+            var d = Math.sqrt(dx * dx + dy * dy);
+            if (d < bestDist) { best = particles[i]; bestDist = d; }
+          }
+          return best;
+        }
+
+        function drawTooltip(p, label, bgColor, textColor, offsetX, offsetY) {
+          ctx.font = '500 11px "DIN Pro", sans-serif';
+          var tw = ctx.measureText(label).width;
+          var padX = 8, padY = 5;
+          var bw = tw + padX * 2;
+          var bh = 22;
+          var tx = p.x + offsetX;
+          var ty = p.y + offsetY;
+          if (tx + bw > W - 10) tx = p.x - bw - 8;
+          if (ty < 10) ty = p.y + 12;
+
+          ctx.fillStyle = bgColor;
+          ctx.beginPath();
+          ctx.moveTo(tx + 3, ty);
+          ctx.lineTo(tx + bw - 3, ty);
+          ctx.quadraticCurveTo(tx + bw, ty, tx + bw, ty + 3);
+          ctx.lineTo(tx + bw, ty + bh - 3);
+          ctx.quadraticCurveTo(tx + bw, ty + bh, tx + bw - 3, ty + bh);
+          ctx.lineTo(tx + 3, ty + bh);
+          ctx.quadraticCurveTo(tx, ty + bh, tx, ty + bh - 3);
+          ctx.lineTo(tx, ty + 3);
+          ctx.quadraticCurveTo(tx, ty, tx + 3, ty);
+          ctx.fill();
+
+          ctx.fillStyle = textColor;
+          ctx.fillText(label, tx + padX, ty + 15);
+        }
+
+        function drawHoverEffects() {
+          var hp = findHoveredParticle();
+          canvas.style.cursor = hp ? 'pointer' : 'default';
+          if (hp) {
+            tooltipFade = Math.min(1, tooltipFade + 0.08);
+          } else {
+            tooltipFade = Math.max(0, tooltipFade - 0.06);
+          }
+          if (tooltipFade <= 0) { hoveredParticle = null; return; }
+          if (hp) hoveredParticle = hp;
+          if (!hoveredParticle) return;
+
+          var p = hoveredParticle;
+          ctx.globalAlpha = tooltipFade;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+          ctx.fillStyle = p.isError ? 'rgba(255, 111, 71, 0.3)' : 'rgba(255, 255, 255, 0.15)';
+          ctx.fill();
+
+          var bgDark = 'rgba(30, 30, 30, 0.92)';
+          var bgOrange = 'rgba(196, 65, 26, 0.92)';
+          drawTooltip(p, p.nodeType, p.isError ? bgOrange : bgDark, '#fff', 12, -28);
+
+          var neighborCount = 0;
+          for (var j = 0; j < particles.length; j++) {
+            if (particles[j] === p || particles[j].progress < 0.8) continue;
+            var dx = p.x - particles[j].x;
+            var dy = p.y - particles[j].y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECTION_DIST && neighborCount < 3) {
+              ctx.strokeStyle = 'rgba(255, 111, 71, ' + (0.4 * tooltipFade) + ')';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+
+              var relLabel = RELATION_TYPES[neighborCount % RELATION_TYPES.length];
+              var mx = (p.x + particles[j].x) / 2;
+              var my = (p.y + particles[j].y) / 2;
+              drawTooltip({ x: mx, y: my }, relLabel, bgOrange, '#fff', -30, -24);
+              neighborCount++;
+            }
+          }
+
+          ctx.globalAlpha = 1;
         }
 
         function animate() {
@@ -1801,6 +2141,7 @@
             particles[k].update();
             particles[k].draw();
           }
+          drawHoverEffects();
           requestAnimationFrame(animate);
         }
 
@@ -1809,22 +2150,12 @@
         assignTargets();
         animate();
 
-        heroSection.addEventListener('click', function() {
-          isResolved = !isResolved;
-          if (isResolved) {
-            overlay.classList.add('resolved');
-            if (hint) hint.textContent = 'Click to scatter';
-            for (var i = 0; i < particles.length; i++) particles[i].progress = 0;
-          } else {
-            overlay.classList.remove('resolved');
-            if (hint) hint.textContent = 'Click to collapse';
-            for (var j = 0; j < particles.length; j++) {
-              particles[j].vx = (Math.random() - 0.5) * 3;
-              particles[j].vy = (Math.random() - 0.5) * 3;
-              particles[j].progress = 1;
-            }
-          }
-        });
+        setTimeout(function() {
+          isResolved = true;
+          overlay.classList.add('resolved');
+          if (hint) hint.style.display = 'none';
+          for (var i = 0; i < particles.length; i++) particles[i].progress = 0;
+        }, 2500);
 
         window.addEventListener('resize', resize);
       })();
@@ -1871,6 +2202,18 @@
           el.classList.add('is-visible');
         });
       }
+
+      // FAQ accordion
+      document.querySelectorAll('.faq__question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var item = this.closest('.faq__item');
+          var wasActive = item.classList.contains('active');
+          document.querySelectorAll('.faq__item.active').forEach(function(el) {
+            el.classList.remove('active');
+          });
+          if (!wasActive) item.classList.add('active');
+        });
+      });
 
       // Smooth scroll for anchors
       document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
