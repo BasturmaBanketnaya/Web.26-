@@ -705,14 +705,33 @@
     }
 
     .solution-card {
-      background: var(--color-gray-100);
+      background: var(--color-white);
       border-radius: var(--border-radius-lg);
-      padding: var(--space-xl);
+      overflow: hidden;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      border: 1px solid var(--color-gray-200);
     }
     .solution-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+
+    .solution-card__image {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: var(--color-gray-100);
+    }
+
+    .solution-card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .solution-card__body {
+      padding: var(--space-lg) var(--space-xl) var(--space-xl);
     }
 
     .solution-card h3 {
@@ -1558,21 +1577,36 @@
 
         <div class="solutions__grid">
           <div class="solution-card fade-up">
-            <h3>Requirements Manager</h3>
-            <p>Accelerate proposals by matching requirements to real product data. Instantly identify reusable components, estimate costs, and reduce variant complexity.</p>
-            <a href="/solutions/requirement-manager" class="text-link">Explore <img src="../../images/Arrow.svg" alt=""></a>
+            <div class="solution-card__image">
+              <img src="../../images/Requirements Manager.png" alt="Requirements Manager interface">
+            </div>
+            <div class="solution-card__body">
+              <h3>Requirements Manager</h3>
+              <p>Accelerate proposals by matching requirements to real product data. Instantly identify reusable components, estimate costs, and reduce variant complexity.</p>
+              <a href="/solutions/requirement-manager" class="text-link">Explore <img src="../../images/Arrow.svg" alt=""></a>
+            </div>
           </div>
 
           <div class="solution-card fade-up fade-up-d1">
-            <h3>Product Explorer</h3>
-            <p>Navigate product architectures to decode complexity. Map how each function is realized across components, software modules, and signals.</p>
-            <a href="/solutions/product-explorer" class="text-link">Explore <img src="../../images/Arrow.svg" alt=""></a>
+            <div class="solution-card__image">
+              <img src="../../images/Product Explorer.png" alt="Product Explorer interface">
+            </div>
+            <div class="solution-card__body">
+              <h3>Product Explorer</h3>
+              <p>Navigate product architectures to decode complexity. Map how each function is realized across components, software modules, and signals.</p>
+              <a href="/solutions/product-explorer" class="text-link">Explore <img src="../../images/Arrow.svg" alt=""></a>
+            </div>
           </div>
 
           <div class="solution-card fade-up fade-up-d2">
-            <h3>Error Inspector</h3>
-            <p>Find and solve issues earlier across the lifecycle. Link errors to dependencies, accelerate resolution, and improve product quality.</p>
-            <a href="/solutions/inspector" class="text-link">Explore <img src="../../images/Arrow.svg" alt=""></a>
+            <div class="solution-card__image">
+              <img src="../../images/Error Inspector.png" alt="Error Inspector interface">
+            </div>
+            <div class="solution-card__body">
+              <h3>Error Inspector</h3>
+              <p>Find and solve issues earlier across the lifecycle. Link errors to dependencies, accelerate resolution, and improve product quality.</p>
+              <a href="/solutions/inspector" class="text-link">Explore <img src="../../images/Arrow.svg" alt=""></a>
+            </div>
           </div>
 
         </div>
