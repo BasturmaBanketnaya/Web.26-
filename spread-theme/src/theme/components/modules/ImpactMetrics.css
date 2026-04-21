@@ -1,8 +1,35 @@
+/* =====================================================================
+   ImpactMetrics — three-column stat band
+   Two variants share layout, differ only in color:
+     • light — beige canvas, dark text (homepage default)
+     • dark  — #272727 canvas, white text, orange numbers, hairline
+               vertical dividers between cards (Platform page)
+   ===================================================================== */
+
 .impact-metrics {
-  background: var(--color-beige);
   padding: var(--space-section) 0;
 }
 
+/* ---- Variant: light (homepage) ------------------------------------- */
+.impact-metrics--light {
+  background: var(--color-beige);
+}
+
+/* ---- Variant: dark (Platform page) --------------------------------- */
+.impact-metrics--dark {
+  background: var(--color-dark);
+  color: var(--color-white);
+}
+
+.impact-metrics--dark .section-header h2 {
+  color: var(--color-white);
+}
+
+.impact-metrics--dark .eyebrow {
+  color: var(--color-orange);
+}
+
+/* ---- Grid ---------------------------------------------------------- */
 .impact-metrics__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -10,11 +37,29 @@
   margin-bottom: var(--space-2xl);
 }
 
+/* On the dark variant the cards are separated by hairline vertical
+   dividers — same language as the PlatformArchitectureBento, which
+   sits directly above this section on the Platform page. */
+.impact-metrics--dark .impact-metrics__grid {
+  gap: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .impact-metrics__card {
   text-align: center;
   padding: var(--space-2xl) var(--space-lg);
 }
 
+.impact-metrics--dark .impact-metrics__card {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.impact-metrics--dark .impact-metrics__card:last-child {
+  border-right: none;
+}
+
+/* ---- Typography ---------------------------------------------------- */
 .impact-metrics__value {
   display: block;
   font-size: var(--font-size-metric);
@@ -29,13 +74,40 @@
   color: var(--color-gray-600);
 }
 
+.impact-metrics--dark .impact-metrics__label {
+  color: var(--color-gray-300);
+}
+
+/* ---- CTA ----------------------------------------------------------- */
 .impact-metrics__cta {
   text-align: center;
 }
 
+.impact-metrics--dark .impact-metrics__cta .text-link {
+  color: var(--color-white);
+}
+
+.impact-metrics--dark .impact-metrics__cta .text-link:hover {
+  color: var(--color-orange);
+}
+
+/* ---- Responsive ---------------------------------------------------- */
 @media (max-width: 768px) {
   .impact-metrics__grid {
     grid-template-columns: 1fr;
     gap: var(--space-md);
+  }
+
+  /* On mobile, dark variant switches dividers from vertical to horizontal
+     so the stats still read as one connected group. */
+  .impact-metrics--dark .impact-metrics__grid {
+    gap: 0;
+  }
+  .impact-metrics--dark .impact-metrics__card {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .impact-metrics--dark .impact-metrics__card:last-child {
+    border-bottom: none;
   }
 }

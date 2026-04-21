@@ -5,6 +5,7 @@ import Footer from '../components/partials/Footer.jsx';
 import PageHero from '../components/modules/PageHero.jsx';
 import PlatformDiagram from '../components/modules/PlatformDiagram.jsx';
 import PlatformArchitectureBento from '../components/modules/PlatformArchitectureBento.jsx';
+import ImpactMetrics from '../components/modules/ImpactMetrics.jsx';
 import CTA from '../components/modules/CTA.jsx';
 
 /* --------------------------------------------------------------------------
@@ -40,6 +41,19 @@ const PLATFORM_HERO = {
   },
 };
 
+/* Platform-level stats — deliberately capability-oriented rather than
+   customer-specific, so they read as properties of the platform itself. */
+const PLATFORM_METRICS = {
+  eyebrow: 'Proof in numbers',
+  headline: 'Built for the scale of complex engineering.',
+  metrics: [
+    { value: '7+', label: 'Source systems unified into one Product Twin' },
+    { value: '10x', label: 'Faster impact analysis across the toolchain' },
+    { value: '<2 wk', label: 'From connection to first AI-assisted insight' },
+  ],
+  cta: { label: 'Read customer stories', href: '#' },
+};
+
 export default function PlatformPage() {
   return (
     <>
@@ -47,9 +61,9 @@ export default function PlatformPage() {
       <main>
         <PageHero {...PLATFORM_HERO} visual={<PlatformDiagram />} />
         <PlatformArchitectureBento />
+        <ImpactMetrics {...PLATFORM_METRICS} variant="dark" />
         {/* Upcoming sections (placeholders for the next phases):
             - Apps & Agents (reuse Solutions, card-style)
-            - Proof / ImpactMetrics (dark variant)
             - FAQ
          */}
         <CTA />
