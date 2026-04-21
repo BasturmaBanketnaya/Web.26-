@@ -1,60 +1,132 @@
 /* =====================================================================
-   ImpactMetrics — three-column stat band
-   Two variants:
-     • light — beige canvas, dark text (homepage default)
-     • dark  — white canvas, contained dark "bento" box with hairline
-               vertical dividers between stats (Platform page).
-               Mirrors the bento-grid language used in
-               PlatformArchitectureBento that sits above it on /platform.
+   ImpactMetrics — two layouts in one module
+     • light — centered beige stat band (homepage legacy)
+     • bento — left-aligned white bento grid (Platform page),
+               intro cell on the left, value row on top, label row below,
+               all separated by 1px hairline dividers in one rounded
+               container. Same language as PlatformArchitectureBento.
    ===================================================================== */
 
 .impact-metrics {
   padding: var(--space-section) 0;
 }
 
-/* ---- Variant: light (homepage) ------------------------------------- */
+/* ---- Light variant (homepage legacy) ------------------------------- */
 .impact-metrics--light {
   background: var(--color-beige);
 }
 
-/* ---- Variant: dark (Platform page) --------------------------------- */
-/* Section stays light so the dark block reads as a contained bento,
-   not a full-bleed band. */
-.impact-metrics--dark {
-  background: var(--color-white);
-}
-
-/* ---- Grid (shared layout) ------------------------------------------ */
-.impact-metrics__grid {
+.impact-metrics--light .impact-metrics__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-lg);
   margin-bottom: var(--space-2xl);
 }
 
-/* On the dark variant the grid becomes the bento box: dark background,
-   rounded, with a 1px gap that reveals a slightly-lighter divider color
-   as perfect hairline rules between the cells. */
-.impact-metrics--dark .impact-metrics__grid {
-  gap: 1px;
-  background: rgba(255, 255, 255, 0.08);   /* hairline divider color */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-/* ---- Card --------------------------------------------------------- */
 .impact-metrics__card {
   text-align: center;
   padding: var(--space-2xl) var(--space-lg);
 }
 
-.impact-metrics--dark .impact-metrics__card {
-  background: var(--color-dark);
-  padding: clamp(40px, 6vh, 64px) var(--space-lg);
+.impact-metrics__cta {
+  text-align: center;
 }
 
-/* ---- Typography ---------------------------------------------------- */
+/* ===================================================================== *
+ * Bento variant (Platform page)
+ * ===================================================================== */
+
+.impact-metrics--bento {
+  background: var(--color-white);
+}
+
+/* Grid container = the bento box.
+   1.5fr for intro + 3 equal value/label columns. Two rows (values / labels).
+   1px gap exposes the container's gray background as hairline dividers,
+   so we get exactly one line between every pair of cells without any
+   border math at the corners. */
+.impact-metrics__grid--bento {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.impact-metrics__cell {
+  background: var(--color-white);
+  padding: clamp(22px, 3vw, 32px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Intro cell: takes col 1, spans both rows ----------------------- */
+.impact-metrics__cell--intro {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(28px, 3.5vw, 40px);
+}
+
+.impact-metrics__cell--intro .eyebrow {
+  margin-bottom: 14px;
+}
+
+.impact-metrics__headline {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+  color: var(--color-dark);
+  margin: 0;
+  max-width: 18ch;
+}
+
+.impact-metrics__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-top: auto;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--color-dark);
+  text-decoration: none;
+  transition: color var(--transition-fast, 160ms ease);
+}
+.impact-metrics__link svg {
+  transition: transform var(--transition-fast, 160ms ease);
+}
+.impact-metrics__link:hover {
+  color: var(--color-orange);
+}
+.impact-metrics__link:hover svg {
+  transform: translateX(3px);
+}
+
+/* --- Value cells (top row, cols 2–4) -------------------------------- */
+.impact-metrics__cell--value {
+  justify-content: flex-end;
+  padding-top: clamp(28px, 3.5vw, 40px);
+  padding-bottom: clamp(16px, 2vw, 22px);
+}
+
+/* --- Label cells (bottom row, cols 2–4) ----------------------------- */
+.impact-metrics__cell--label {
+  justify-content: flex-start;
+  padding-top: clamp(16px, 2vw, 22px);
+  padding-bottom: clamp(28px, 3.5vw, 40px);
+}
+
+/* --- Typography ---------------------------------------------------- */
+/* Light variant values stay centered (legacy). Bento values are
+   left-aligned and a touch larger so they read as the hero of the cell. */
 .impact-metrics__value {
   display: block;
   font-size: var(--font-size-metric);
@@ -64,33 +136,51 @@
   margin-bottom: var(--space-sm);
 }
 
+.impact-metrics--bento .impact-metrics__value {
+  font-size: clamp(40px, 4.6vw, 64px);
+  margin-bottom: 0;
+  letter-spacing: -1px;
+}
+
 .impact-metrics__label {
   font-size: var(--font-size-body);
   color: var(--color-gray-600);
 }
 
-.impact-metrics--dark .impact-metrics__label {
-  color: var(--color-gray-300);
-}
-
-/* Section header stays on the light canvas above the dark bento —
-   same eyebrow/headline treatment as every other section on the page. */
-
-/* ---- CTA ----------------------------------------------------------- */
-.impact-metrics__cta {
-  text-align: center;
+.impact-metrics--bento .impact-metrics__label {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-gray-700);
+  margin: 0;
+  max-width: 22ch;
 }
 
 /* ---- Responsive ---------------------------------------------------- */
+@media (max-width: 960px) {
+  /* Bento: collapse to a single-column stack.
+     Intro first, then each value + label pair. Intro no longer spans rows. */
+  .impact-metrics__grid--bento {
+    grid-template-columns: 1fr;
+  }
+  .impact-metrics__cell--intro {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .impact-metrics__cell--value,
+  .impact-metrics__cell--label {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .impact-metrics--bento .impact-metrics__value {
+    font-size: clamp(36px, 8vw, 52px);
+  }
+}
+
 @media (max-width: 768px) {
-  .impact-metrics__grid {
+  .impact-metrics--light .impact-metrics__grid {
     grid-template-columns: 1fr;
     gap: var(--space-md);
-  }
-
-  /* Dark bento: keep it a single rounded container on mobile too,
-     just with horizontal hairlines instead of vertical ones. */
-  .impact-metrics--dark .impact-metrics__grid {
-    gap: 1px;
   }
 }
