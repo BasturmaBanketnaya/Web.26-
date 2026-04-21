@@ -5,6 +5,7 @@ import Footer from '../components/partials/Footer.jsx';
 import PageHero from '../components/modules/PageHero.jsx';
 import PlatformDiagram from '../components/modules/PlatformDiagram.jsx';
 import PlatformArchitectureBento from '../components/modules/PlatformArchitectureBento.jsx';
+import CTA from '../components/modules/CTA.jsx';
 
 /* --------------------------------------------------------------------------
  * PlatformPage — the "Our Platform" entry page.
@@ -50,8 +51,8 @@ export default function PlatformPage() {
             - Apps & Agents (reuse Solutions, card-style)
             - Proof / ImpactMetrics (dark variant)
             - FAQ
-            - CTA
          */}
+        <CTA />
       </main>
       <Footer />
     </>

@@ -32,6 +32,7 @@ export default function CTA() {
   return (
     <section
       ref={sectionRef}
+      id="cta"
       className={`cta${inView ? ' cta--in-view' : ''}`}
       aria-labelledby="cta-headline"
     >
