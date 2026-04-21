@@ -17,38 +17,44 @@
 /* -----------------------------------------------------------------
    Grid — 6-col × 3-row bento on desktop
    Row heights are content-driven; the big diagram cell stretches.
+
+   Single rounded container with internal dividers:
+     • Grid itself carries the outer border + radius + overflow clip.
+     • `gap: 1px` exposes the grid's gray background between cells,
+       which renders as perfect hairline dividers (no double borders,
+       no border-math for corners).
+     • Cells are solid white, borderless, touching their neighbours.
    ----------------------------------------------------------------- */
 .pa-bento__grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-auto-rows: minmax(0, auto);
-  gap: 12px;
+  gap: 1px;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
-/* Cells share the same white-card language used in PageHero's visual frame:
-   hairline border, 10px corner radius, generous padding. */
 .pa-bento__cell {
   position: relative;
   background: var(--color-white);
-  border: 1px solid var(--color-gray-100);
-  border-radius: 10px;
   padding: 24px;
   display: flex;
   flex-direction: column;
 
-  /* Scroll-in reveal — handled per cell with a stagger below. */
-  opacity: 0;
+  /* Scroll-in reveal — transform + blur only (no opacity).
+     Opacity is avoided here because the grid's gray background would
+     show through during the fade, causing an unwanted flash. */
   transform: translateY(10px);
   filter: blur(6px);
-  will-change: opacity, transform, filter;
+  will-change: transform, filter;
   transition:
-    opacity 900ms cubic-bezier(0.25, 1, 0.5, 1),
     transform 900ms cubic-bezier(0.25, 1, 0.5, 1),
     filter 900ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .pa-bento--in-view .pa-bento__cell {
-  opacity: 1;
   transform: translateY(0);
   filter: blur(0);
 }
@@ -231,7 +237,6 @@
    ----------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .pa-bento__cell {
-    opacity: 1 !important;
     transform: none !important;
     filter: none !important;
     transition: none !important;
