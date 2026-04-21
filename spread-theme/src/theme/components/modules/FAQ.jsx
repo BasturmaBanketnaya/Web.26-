@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './FAQ.css';
 import AccordionItem from '../islands/AccordionItem.jsx';
+import FaqPixelGame from '../partials/FaqPixelGame.jsx';
 
 /* --------------------------------------------------------------------------
  * FAQ
@@ -144,6 +145,10 @@ export default function FAQ({
                   </a>
                 </div>
               )}
+
+              {/* Ambient mini-scene that fills the empty bottom-left
+                  space of the intro cell. Pure decoration. */}
+              <FaqPixelGame />
             </div>
 
             {/* --- One cell per Q&A ---------------------------------------- */}
