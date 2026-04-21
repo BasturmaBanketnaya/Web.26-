@@ -5,37 +5,8 @@
   overflow: hidden;
 }
 
-.cta__bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cta__bg-image {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  object-position: center top;
-  opacity: 0.15;
-  filter: grayscale(1);
-}
-
-.cta__wash {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: rgba(255, 255, 255, 0.72);
-}
-
 .cta__container {
   position: relative;
-  z-index: 2;
 }
 
 .cta__content {
@@ -59,7 +30,10 @@
   letter-spacing: -1.44px;
   color: var(--color-dark);
   margin-bottom: var(--space-md);
-  white-space: pre-line;
+}
+
+.cta__headline-line {
+  display: block;
 }
 
 .cta__subline {
@@ -75,6 +49,67 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* ---- Text reveal — matches the hero's heroTextReveal exactly ----
+   Elements start hidden/blurred/offset, then animate in when the section
+   enters the viewport (JS adds .cta--in-view). Staggered delays mirror
+   the hero: headline lines first (0 / 0.2s), subline at 0.8s, button at 1.0s. */
+
+@keyframes ctaTextReveal {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(6px);
+  }
+  50% {
+    opacity: 0.85;
+    filter: blur(1px);
+    transform: translateY(1px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+.cta__eyebrow,
+.cta__headline-line,
+.cta__subline,
+.cta__actions {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(6px);
+  will-change: opacity, filter, transform;
+}
+
+.cta--in-view .cta__eyebrow {
+  animation: ctaTextReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.cta--in-view .cta__headline-line:nth-child(1) {
+  animation: ctaTextReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) 0.15s forwards;
+}
+.cta--in-view .cta__headline-line:nth-child(2) {
+  animation: ctaTextReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards;
+}
+.cta--in-view .cta__subline {
+  animation: ctaTextReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) 0.8s forwards;
+}
+.cta--in-view .cta__actions {
+  animation: ctaTextReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) 1s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta__eyebrow,
+  .cta__headline-line,
+  .cta__subline,
+  .cta__actions {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
 }
 
 @media (max-width: 768px) {

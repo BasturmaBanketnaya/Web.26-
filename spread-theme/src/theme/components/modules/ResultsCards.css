@@ -56,7 +56,7 @@
   background: var(--color-white);
   border: 1px solid #DCDCDC;
   border-radius: 12px;
-  padding: 40px;
+  overflow: hidden; /* clip the illustration panel to rounded corners */
   transition:
     transform var(--transition-base),
     box-shadow var(--transition-base);
@@ -65,6 +65,87 @@
 .results-cards__card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 32px rgba(39, 39, 39, 0.08);
+}
+
+/* ---- Illustration panel ----
+   Dark canvas with orange 1.5px wireframe drawings. The inner SVG is square
+   (viewBox 240×240, preserveAspectRatio xMidYMid meet) so nothing ever crops —
+   it just scales down to fit the panel width while staying fully visible. */
+
+.results-cards__illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background: var(--color-white);
+  border-bottom: 1px solid #DCDCDC;
+  overflow: hidden;
+}
+
+.results-cards__illustration svg {
+  /* Keep the square drawing inside the panel at all sizes; max-height caps
+     growth so wide cards don't blow the artwork past its panel. */
+  width: 100%;
+  height: 100%;
+  max-width: 170px;
+  max-height: 170px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* ---- Illustration animations ---- */
+
+/* Rotate children of a group around the SVG's center (120,120).
+   transform-box: fill-box + transform-origin on each <g> handles this. */
+@keyframes rc-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes rc-spin-reverse {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+@keyframes rc-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
+/* Cones — dashed center ring slowly rotates.
+   transform-origin is in SVG user-space (viewBox 240×240, center = 120,120). */
+.rc-illus--cones .rc-illus__dashed {
+  transform-origin: 120px 120px;
+  animation: rc-spin 22s linear infinite;
+}
+
+/* Orbits — each ring rotates around the SVG's center at a different speed.
+   The inline style on each <g> sets transform-origin: 120px 120px. */
+.rc-illus--orbits .rc-anim-spin-slow {
+  animation: rc-spin 28s linear infinite;
+}
+.rc-illus--orbits .rc-anim-spin-med {
+  animation: rc-spin-reverse 18s linear infinite;
+}
+.rc-illus--orbits .rc-anim-spin-fast {
+  animation: rc-spin 12s linear infinite;
+}
+
+/* Mesh — gentle breathing scale pulse around SVG center. */
+.rc-illus--mesh .rc-illus__mesh-breathe {
+  animation: rc-breathe 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-illus *,
+  .rc-illus {
+    animation: none !important;
+  }
+}
+
+.results-cards__card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 32px 40px 40px;
 }
 
 /* ---- Card header (author + date) ---- */

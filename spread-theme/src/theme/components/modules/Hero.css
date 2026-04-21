@@ -1,18 +1,129 @@
 .hero {
+  /* Two design goals in tension:
+        (1) Keep top and bottom gaps around the mockup equal at 150px.
+        (2) Keep a slice of the next section visible at rest so people
+            know the page scrolls.
+     On a ~900px viewport, 68 (header) + 150 + 547 (38vw mockup) + 150
+     = ~915px → taller than the viewport, no peek. So --hero-gap is
+     clamped (120px floor so it never looks cramped) and the hero's
+     min-height is min()'d against 88svh. On tall monitors you get the
+     full 150px gaps; on shorter viewports the hero caps at 88svh so the
+     next section always peeks through, and the gaps shrink together.
+     Because it's the SAME --hero-gap driving both top and bottom, the
+     two sides always stay equal, whatever the viewport. */
+  --hero-gap: clamp(120px, 18vh, 150px);
+  --hero-header-offset: 68px;
+  --hero-mockup-height: 38vw;
+
   position: relative;
   background: var(--color-white);
-  min-height: 100vh;
+  min-height: min(
+    calc(
+      var(--hero-header-offset) +
+      var(--hero-gap) +
+      var(--hero-mockup-height) +
+      var(--hero-gap)
+    ),
+    88svh
+  );
   overflow: hidden;
 }
 
 .hero__inner {
   position: relative;
-  min-height: 100vh;
+  min-height: 88vh;
+  min-height: 88svh;
+}
+
+/* --------------------------------------------------------------
+   Decorative frame — rounded bordered card with a subtle
+   rectangular grid pattern, monospace corner captions, and a
+   bouncing pixel runner on the bottom edge.
+
+   Positioned absolute behind the hero content so the existing
+   two-column layout (text + mockup peeking into next section)
+   continues to work untouched. The mockup is given a higher
+   z-index and deliberately bleeds through the frame's bottom
+   border — the frame provides composition, the mockup provides
+   the scroll cue.
+   -------------------------------------------------------------- */
+.hero__frame {
+  position: absolute;
+  /* Start just below the fixed header so the frame reads as a
+     framed hero BELOW the chrome, not the whole viewport. */
+  top: calc(var(--hero-header-offset) + 20px);
+  left: 24px;
+  right: 24px;
+  /* Stop the frame short of the hero bottom so the mockup (which
+     is positioned to bleed across the hero boundary) visibly
+     extends BEYOND the frame — mirrors how the PlatformArchitecture
+     illustration "sits in" the bento cell but is clearly its own
+     object. */
+  bottom: 20px;
+
+  border: 1px solid var(--color-gray-100);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 0;
+
+  /* Rectangular hairline grid — same 24px cell, same #EFEFEF stroke
+     as the PlatformArchitecture illustration's background, so the
+     two pages visually share the same "paper". */
+  background-image:
+    linear-gradient(to right, #EFEFEF 1px, transparent 1px),
+    linear-gradient(to bottom, #EFEFEF 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;  /* align first gridline with border */
+
+  /* Soft entrance that mirrors the hero text reveal, so nothing
+     feels bolted on. Starts slightly blurred and drifts in. */
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(6px);
+  will-change: opacity, filter, transform;
+  animation: heroTextReveal 2.4s cubic-bezier(0.25, 1, 0.5, 1) 0.2s forwards;
+}
+
+/* Tiny monospace corner captions — same treatment as PageHero */
+.hero__tech {
+  position: absolute;
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gray-300);
+  user-select: none;
+  white-space: nowrap;
+  z-index: 1;
+  /* Sit on top of the grid lines (tiny white pad so labels read
+     cleanly against the gridlines). */
+  background: var(--color-white);
+  padding: 0 4px;
+}
+.hero__tech--tl { top: -6px;    left: 16px;  }
+.hero__tech--tr { top: -6px;    right: 16px; }
+.hero__tech--bl { bottom: -6px; left: 16px;  }
+.hero__tech--br { bottom: -6px; right: 16px; }
+
+/* Runner track — aligns the PixelRunner's travel area with the frame's
+   bottom border. Lifted above .hero__layout so the runner isn't washed
+   out by the mockup's bottom gradient fade. */
+.hero__runner-track {
+  position: absolute;
+  left: 24px;            /* matches .hero__frame left */
+  right: 24px;           /* matches .hero__frame right */
+  bottom: 20px;          /* matches .hero__frame bottom */
+  height: 0;             /* the runner positions itself with bottom: -12px */
+  pointer-events: none;
+  z-index: 2;            /* above .hero__layout (z-index 1) */
 }
 
 .hero__layout {
   position: relative;
-  min-height: 100vh;
+  min-height: 88vh;
+  min-height: 88svh;
+  z-index: 1;  /* above the decorative frame */
 }
 
 .hero__content {
@@ -161,7 +272,14 @@
 .hero__visual {
   position: absolute;
   left: 41%;
-  top: clamp(120px, 25vh, 220px);
+  /* Center the mockup vertically in the hero, shifted down by half the
+     header height so the "center" is the middle of the visible (post-
+     header) area. Geometrically this is (hero_h + header - mockup_h) / 2,
+     which guarantees top gap == bottom gap no matter what hero_h actually
+     resolves to — whether we get the full calc() height or the 88svh cap. */
+  top: calc(
+    50% + (var(--hero-header-offset) - var(--hero-mockup-height)) / 2
+  );
   z-index: 1;
   opacity: 0;
   filter: blur(8px);
@@ -173,15 +291,42 @@
 .hero__image-wrap {
   width: 67vw;
   border-radius: 12px 12px 0 0;
-  box-shadow: 0 -2px 30px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   background: var(--color-white);
+  position: relative;
 }
 
 .hero__image {
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* Mockup wrapper — let the mockup's own .pm-frame provide the rounded
+   bordered card, drop the shadow entirely (matches the stroke-only
+   treatment of PageHero's visual frame and the PlatformArchitecture
+   bento). */
+.hero__image-wrap--mockup {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+}
+.hero__image-wrap--mockup .pm-frame {
+  border-radius: 12px 12px 0 0;
+  border: 1px solid var(--color-gray-100);
+  box-shadow: none;
+}
+
+/* Fade gets REMOVED for the mockup variant.
+
+   It existed to blend the mockup into a plain white hero background, but
+   now that the hero sits inside a grid-backed framed card the white wash
+   reads as a dirty smudge overlapping the grid. The mockup simply ends
+   where it ends — its own top-rounded .pm-frame border handles the
+   visual termination cleanly. */
+.hero__image-wrap--mockup .hero__image-fade {
+  display: none;
 }
 
 .hero__image-fade {
@@ -228,6 +373,13 @@
     padding-top: 100px;
     padding-bottom: 40px;
   }
+  /* Frame is a desktop-only composition device — on mobile the layout
+     stacks and the frame would either clip content or float oddly.
+     Hide it cleanly; the PixelRunner is already hidden at this width. */
+  .hero__frame,
+  .hero__runner-track {
+    display: none;
+  }
   .hero__inner {
     min-height: auto;
   }
@@ -238,21 +390,35 @@
   }
   .hero__content {
     padding: 0 24px;
-    order: 1;
+    order: 0;
   }
   .hero__visual {
     position: relative;
     left: auto;
     top: auto;
-    order: 0;
-    margin-bottom: var(--space-lg);
+    order: 1;
+    margin: var(--space-lg) 24px 0;
   }
   .hero__image-wrap {
     width: 100%;
     border-radius: 12px;
   }
+  .hero__image-wrap--mockup .pm-frame {
+    border-radius: 12px;
+  }
+  .hero__image-wrap--mockup .hero__image-fade {
+    display: none;
+  }
   .hero__headline {
     font-size: clamp(2rem, 8vw, 2.75rem);
     letter-spacing: -0.06em;
+  }
+}
+
+/* Very narrow screens: the mockup becomes decorative — hide the fine
+   details gracefully so it never looks broken. */
+@media (max-width: 480px) {
+  .hero__image-wrap--mockup {
+    opacity: 0.92;
   }
 }

@@ -1,6 +1,6 @@
 .trusted-logos {
   background: #F5F5F5;
-  padding: 32px 0 40px;
+  padding: 48px 0 56px;
   overflow: hidden;
 }
 
@@ -25,13 +25,13 @@
 .trusted-logos__track {
   display: flex;
   align-items: center;
-  gap: 64px;
+  gap: 96px;
   width: max-content;
-  animation: scroll-logos 50s linear infinite;
+  animation: scroll-logos 60s linear infinite;
 }
 
 .trusted-logos__logo {
-  height: 20px;
+  height: 28px;
   width: auto;
   flex-shrink: 0;
   filter: grayscale(1);
@@ -51,9 +51,9 @@
 
 @media (max-width: 640px) {
   .trusted-logos__track {
-    gap: 32px;
+    gap: 48px;
   }
   .trusted-logos__logo {
-    height: 16px;
+    height: 22px;
   }
 }

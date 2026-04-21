@@ -1,0 +1,97 @@
+/* ==============================================================
+   PixelRunner — bouncing pixel engineer along the bottom border.
+
+   Structure (two layers of motion, decoupled so they don't fight):
+     1. `.pixel-runner`         handles TRAVEL across the container
+                                 (left edge ↔ right edge, alternating).
+     2. `.pixel-runner__sprite` handles FACING direction
+                                 (scaleX flips when the traveller reverses).
+     3. Frame cycling happens inside the SVG via SMIL (see .jsx).
+
+   Keeping facing flip on the inner wrapper (not on `.pixel-runner` itself)
+   means the `left` animation on the outer element stays a pure, clean tween
+   with no transform composition weirdness.
+   ============================================================== */
+
+.pixel-runner {
+  /* Sized so the sprite sits comfortably just inside the frame's border.
+     28px tall gives enough vertical room to anchor on the bottom edge
+     without being clipped by the 1px frame border. */
+  --pr-width: 24px;
+  --pr-height: 34px;
+  --pr-inset: 18px;      /* how far from the frame's corners the path ends */
+  --pr-travel-dur: 18s;  /* a single one-way trip (left → right) */
+
+  position: absolute;
+  bottom: -12px;         /* straddle the frame's bottom edge — runner looks
+                            like it's jogging ON the border, not inside it */
+  left: var(--pr-inset);
+  width: var(--pr-width);
+  height: var(--pr-height);
+  pointer-events: none;
+  z-index: 2;
+
+  animation: pixel-runner-travel var(--pr-travel-dur) ease-in-out
+             infinite alternate;
+}
+
+.pixel-runner__sprite {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  /* Double the travel duration because a full facing cycle spans a there-
+     and-back trip (scaleX(1) while running right, scaleX(-1) while running
+     left). Kept in sync with the travel animation by matching timing. */
+  animation: pixel-runner-face calc(var(--pr-travel-dur) * 2) steps(1, end)
+             infinite;
+}
+
+.pixel-runner__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;  /* belt-and-braces clip to one frame (viewBox already
+                        clips, but some older browsers leak on fast scrolls) */
+}
+
+/* ---------- travel: slide from left inset to right inset and back --------- */
+@keyframes pixel-runner-travel {
+  from { left: var(--pr-inset); }
+  to   { left: calc(100% - var(--pr-width) - var(--pr-inset)); }
+}
+
+/* ---------- facing: flip horizontal scale at the midpoint of round-trip ---
+   0%  → 50%   : scaleX(1)   (running rightward, matches travel 0→end)
+   50% → 100%  : scaleX(-1)  (running leftward, matches travel end→0, the
+                              "alternate" half of the travel animation)
+   `steps(1, end)` ensures an instant flip at 50% with no interpolation. */
+@keyframes pixel-runner-face {
+  0%   { transform: scaleX(1); }
+  50%  { transform: scaleX(-1); }
+  100% { transform: scaleX(-1); }
+}
+
+/* ---------- accessibility: fully freeze the runner for reduced motion ----- */
+@media (prefers-reduced-motion: reduce) {
+  .pixel-runner,
+  .pixel-runner__sprite,
+  .pixel-runner__cels {
+    animation: none !important;
+  }
+  /* Hide on reduced motion — a static pixel runner just reads as a blob,
+     and the surrounding frame already does the job of signaling "this is
+     a structured, considered composition". */
+  .pixel-runner {
+    display: none;
+  }
+}
+
+/* ---------- responsive: hide on narrow viewports ------------------------
+   On mobile the hero layout restructures (mockup below text), the frame's
+   bottom border lands in the middle of the page flow, and the runner would
+   appear mid-content which reads as visual noise. Cleanest to just hide. */
+@media (max-width: 900px) {
+  .pixel-runner {
+    display: none;
+  }
+}

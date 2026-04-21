@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 
 function SpreadLogo() {
@@ -24,18 +24,229 @@ function SpreadLogo() {
 }
 
 const NAV_ITEMS = [
-  { label: 'Product', href: '#', active: true },
-  { label: 'Solutions', href: '#' },
-  { label: 'Customer', href: '#' },
-  { label: 'Resources', href: '#' },
-  { label: 'Company', href: '#' },
+  {
+    label: 'Product',
+    type: 'mega',
+    overview: {
+      eyebrow: 'Platform',
+      title: 'One intelligence layer',
+      description:
+        'Connect PLM, CAD, ERP and ALM into a single source of engineering truth.',
+      href: '/platform',
+    },
+    children: [
+      {
+        label: 'Our Platform',
+        href: '/platform',
+        description: 'Why Spread — the intelligence layer for engineering teams.',
+        icon: 'platform',
+      },
+      {
+        label: 'Requirement Manager',
+        href: '#',
+        description: 'Track, verify and connect requirements across systems.',
+        icon: 'requirements',
+      },
+      {
+        label: 'Product Explorer',
+        href: '#',
+        description: 'Navigate complex product structures with full context.',
+        icon: 'explorer',
+      },
+      {
+        label: 'Error Inspector',
+        href: '#',
+        description: 'Find and resolve issues before they reach production.',
+        icon: 'inspector',
+      },
+    ],
+  },
+  {
+    label: 'Solutions',
+    type: 'mega',
+    overview: {
+      eyebrow: 'Industries',
+      title: 'Built for complex engineering',
+      description:
+        'From automotive to aerospace — solutions tailored to your industry.',
+      href: '#',
+    },
+    children: [
+      {
+        label: 'Automotive & Mobility',
+        href: '#',
+        description: 'Accelerate vehicle development and compliance.',
+        icon: 'automotive',
+      },
+      {
+        label: 'Aerospace & Defense',
+        href: '#',
+        description: 'Mission-critical engineering intelligence.',
+        icon: 'aerospace',
+      },
+      {
+        label: 'Industrial Goods & Machinery',
+        href: '#',
+        description: 'Smarter factory and equipment design.',
+        icon: 'industrial',
+      },
+    ],
+  },
+  {
+    label: 'Customer Stories',
+    type: 'link',
+    href: '#',
+  },
+  {
+    label: 'Knowledge Hub',
+    type: 'dropdown',
+    children: [
+      { label: 'Documentation', href: '#' },
+      { label: 'Blog', href: '#' },
+      { label: 'Events', href: '#', disabled: true },
+    ],
+  },
+  {
+    label: 'Company',
+    type: 'dropdown',
+    children: [
+      { label: 'About us', href: '#' },
+      { label: 'Careers', href: '#' },
+      { label: 'Contact us', href: '#' },
+    ],
+  },
 ];
+
+function NavIcon({ name }) {
+  const common = {
+    width: 20,
+    height: 20,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': true,
+  };
+  switch (name) {
+    case 'platform':
+      return (
+        <svg {...common}>
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+        </svg>
+      );
+    case 'requirements':
+      return (
+        <svg {...common}>
+          <path d="M9 2h6a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+          <path d="M10 8h4" />
+          <path d="M10 12h4" />
+          <path d="M10 16h2" />
+        </svg>
+      );
+    case 'explorer':
+      return (
+        <svg {...common}>
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
+      );
+    case 'inspector':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
+        </svg>
+      );
+    case 'automotive':
+      return (
+        <svg {...common}>
+          <path d="M4 16h16" />
+          <path d="M5 16v-4l2-5h10l2 5v4" />
+          <circle cx="8" cy="17" r="1.5" />
+          <circle cx="16" cy="17" r="1.5" />
+        </svg>
+      );
+    case 'aerospace':
+      return (
+        <svg {...common}>
+          <path d="M21 12h-3l-4 6h-2l2-6H9l-2 2H5l1-3-1-3h2l2 2h5l-2-6h2l4 6h3a1.5 1.5 0 0 1 0 2z" />
+        </svg>
+      );
+    case 'industrial':
+      return (
+        <svg {...common}>
+          <path d="M4 20V10l5 3V10l5 3V10l5 3v7z" />
+          <path d="M4 20h16" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
+function ChevronIcon() {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m2.5 4 2.5 2.5L7.5 4" />
+    </svg>
+  );
+}
+
+const LANGUAGES = [
+  { code: 'EN', label: 'English' },
+  { code: 'DE', label: 'Deutsch' },
+  { code: 'FR', label: 'Français' },
+];
+
+function GlobeIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a13.5 13.5 0 0 1 0 18" />
+      <path d="M12 3a13.5 13.5 0 0 0 0 18" />
+    </svg>
+  );
+}
 
 export const meta = { label: 'Header' };
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState(null);
+  const [langOpen, setLangOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState('EN');
+  const [openMenu, setOpenMenu] = useState(null);
+  const closeTimer = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -49,26 +260,181 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    if (!langOpen) return;
+    const onClickOutside = (e) => {
+      if (!e.target.closest('.site-header__lang')) setLangOpen(false);
+    };
+    document.addEventListener('click', onClickOutside);
+    return () => document.removeEventListener('click', onClickOutside);
+  }, [langOpen]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpenMenu(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const handleMenuEnter = (label) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpenMenu(label);
+  };
+
+  const handleMenuLeave = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 120);
+  };
+
+  const selectLang = (code) => {
+    setCurrentLang(code);
+    setLangOpen(false);
+  };
+
+  const toggleMobileSection = (label) => {
+    setMobileExpanded((cur) => (cur === label ? null : label));
+  };
+
+  const closeAll = () => {
+    setOpenMenu(null);
+    setMobileOpen(false);
+    setMobileExpanded(null);
+  };
+
   return (
-    <header className={`site-header${scrolled ? ' site-header--scrolled' : ''}`} role="banner">
+    <header
+      className={`site-header${scrolled ? ' site-header--scrolled' : ''}${openMenu ? ' site-header--menu-open' : ''}`}
+      role="banner"
+      onMouseLeave={handleMenuLeave}
+    >
       <div className="site-header__inner">
         <a className="site-header__logo" href="/" aria-label="SPREAD home">
           <SpreadLogo />
         </a>
 
         <nav className="site-header__nav" aria-label="Main navigation">
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.label}
-              className={`site-header__nav-link${item.active ? ' site-header__nav-link--active' : ''}`}
-              href={item.href}
-            >
-              {item.label}
-            </a>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            if (item.type === 'link') {
+              return (
+                <a
+                  key={item.label}
+                  className={`site-header__nav-link${item.active ? ' site-header__nav-link--active' : ''}`}
+                  href={item.href}
+                  onMouseEnter={() => handleMenuEnter(null)}
+                >
+                  {item.label}
+                </a>
+              );
+            }
+
+            const isOpen = openMenu === item.label;
+            return (
+              <div
+                key={item.label}
+                className={`site-header__nav-item${isOpen ? ' site-header__nav-item--open' : ''}`}
+                onMouseEnter={() => handleMenuEnter(item.label)}
+              >
+                <button
+                  type="button"
+                  className={`site-header__nav-link site-header__nav-link--button${item.active ? ' site-header__nav-link--active' : ''}`}
+                  aria-expanded={isOpen}
+                  aria-haspopup="true"
+                  onClick={() => setOpenMenu(isOpen ? null : item.label)}
+                >
+                  {item.label}
+                </button>
+
+                {isOpen && item.type === 'mega' && (
+                  <div className="site-header__mega" role="menu">
+                    <div className="site-header__mega-inner">
+                      <div className="site-header__mega-overview">
+                        <span className="site-header__mega-eyebrow">{item.overview.eyebrow}</span>
+                        <h3 className="site-header__mega-title">{item.overview.title}</h3>
+                        <p className="site-header__mega-desc">{item.overview.description}</p>
+                        <a className="site-header__mega-link" href={item.overview.href}>
+                          Learn more
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M3 7h8" />
+                            <path d="m7 3 4 4-4 4" />
+                          </svg>
+                        </a>
+                      </div>
+                      <ul className="site-header__mega-list">
+                        {item.children.map((child) => (
+                          <li key={child.label}>
+                            <a className="site-header__mega-item" href={child.href}>
+                              <span className="site-header__mega-item-icon">
+                                <NavIcon name={child.icon} />
+                              </span>
+                              <span className="site-header__mega-item-text">
+                                <span className="site-header__mega-item-label">{child.label}</span>
+                                <span className="site-header__mega-item-desc">{child.description}</span>
+                              </span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {isOpen && item.type === 'dropdown' && (
+                  <ul className="site-header__dropdown" role="menu">
+                    {item.children.map((child) => (
+                      <li key={child.label}>
+                        {child.disabled ? (
+                          <span className="site-header__dropdown-item site-header__dropdown-item--disabled" aria-disabled="true">
+                            {child.label}
+                            <span className="site-header__dropdown-badge">Soon</span>
+                          </span>
+                        ) : (
+                          <a className="site-header__dropdown-item" href={child.href}>
+                            {child.label}
+                          </a>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
-        <a className="site-header__cta" href="#">Book a Demo</a>
+        <a className="site-header__cta" href="#" onMouseEnter={() => handleMenuEnter(null)}>Book a Demo</a>
+
+        <div className="site-header__lang">
+          <button
+            type="button"
+            className="site-header__lang-trigger"
+            aria-expanded={langOpen}
+            aria-haspopup="listbox"
+            aria-label="Change language"
+            onClick={() => setLangOpen((o) => !o)}
+          >
+            <GlobeIcon />
+            <span className="site-header__lang-code">{currentLang}</span>
+          </button>
+          {langOpen && (
+            <ul className="site-header__lang-menu" role="listbox">
+              {LANGUAGES.map((lang) => (
+                <li key={lang.code}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={currentLang === lang.code}
+                    className={`site-header__lang-option${currentLang === lang.code ? ' site-header__lang-option--active' : ''}`}
+                    onClick={() => selectLang(lang.code)}
+                  >
+                    <span className="site-header__lang-option-code">{lang.code}</span>
+                    <span className="site-header__lang-option-label">{lang.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <button
           type="button"
@@ -83,12 +449,74 @@ export default function Header() {
 
       {mobileOpen && (
         <div className="site-header__mobile">
-          {NAV_ITEMS.map((item) => (
-            <a key={item.label} className="site-header__mobile-link" href={item.href} onClick={() => setMobileOpen(false)}>
-              {item.label}
-            </a>
-          ))}
-          <a className="site-header__mobile-cta" href="#" onClick={() => setMobileOpen(false)}>Book a Demo</a>
+          {NAV_ITEMS.map((item) => {
+            if (item.type === 'link') {
+              return (
+                <a
+                  key={item.label}
+                  className="site-header__mobile-link"
+                  href={item.href}
+                  onClick={closeAll}
+                >
+                  {item.label}
+                </a>
+              );
+            }
+            const expanded = mobileExpanded === item.label;
+            return (
+              <div
+                key={item.label}
+                className={`site-header__mobile-section${expanded ? ' site-header__mobile-section--open' : ''}`}
+              >
+                <button
+                  type="button"
+                  className="site-header__mobile-link site-header__mobile-link--toggle"
+                  aria-expanded={expanded}
+                  onClick={() => toggleMobileSection(item.label)}
+                >
+                  <span>{item.label}</span>
+                  <ChevronIcon />
+                </button>
+                {expanded && (
+                  <div className="site-header__mobile-sub">
+                    {item.children.map((child) => (
+                      child.disabled ? (
+                        <span
+                          key={child.label}
+                          className="site-header__mobile-sub-link site-header__mobile-sub-link--disabled"
+                        >
+                          {child.label}
+                          <span className="site-header__dropdown-badge">Soon</span>
+                        </span>
+                      ) : (
+                        <a
+                          key={child.label}
+                          className="site-header__mobile-sub-link"
+                          href={child.href}
+                          onClick={closeAll}
+                        >
+                          {child.label}
+                        </a>
+                      )
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          <a className="site-header__mobile-cta" href="#" onClick={closeAll}>Book a Demo</a>
+          <div className="site-header__mobile-lang">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                type="button"
+                className={`site-header__mobile-lang-btn${currentLang === lang.code ? ' site-header__mobile-lang-btn--active' : ''}`}
+                onClick={() => { selectLang(lang.code); setMobileOpen(false); }}
+              >
+                {lang.code}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </header>

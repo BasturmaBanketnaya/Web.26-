@@ -1,0 +1,143 @@
+/* ==============================================
+   PlatformDiagram — simplified wireframe visual
+   Lives inside the PageHero visual frame.
+   ============================================== */
+
+.platform-diagram {
+  width: 100%;
+  height: auto;
+  max-width: 960px;
+  display: block;
+}
+
+/* ---------- column labels (tiny monospace) ---------- */
+.platform-diagram__col-label {
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  fill: var(--color-gray-300);
+  text-transform: uppercase;
+}
+
+.platform-diagram__col-label--center {
+  fill: var(--color-orange);
+}
+
+/* ---------- boxes (sources & apps) ---------- */
+.platform-diagram__box {
+  fill: var(--color-white);
+  stroke: var(--color-gray-200);
+  stroke-width: 1.2;
+}
+
+.platform-diagram__label {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  fill: var(--color-dark);
+}
+
+.platform-diagram__node {
+  opacity: 0;
+  transform: translateX(-8px);
+  transform-origin: center;
+  animation: pd-node-in 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.platform-diagram__node--app {
+  transform: translateX(8px);
+}
+
+@keyframes pd-node-in {
+  from { opacity: 0; transform: translateX(var(--pd-from, -8px)); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- center: product twin hexagon ---------- */
+.platform-diagram__halo {
+  opacity: 0;
+  animation: pd-halo 3.5s ease-in-out 0.8s infinite;
+}
+
+@keyframes pd-halo {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.8; }
+}
+
+.platform-diagram__hex {
+  fill: none;
+  stroke: var(--color-orange);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  opacity: 0;
+  animation: pd-fade-in 0.9s cubic-bezier(0.25, 1, 0.5, 1) 0.4s forwards;
+}
+
+.platform-diagram__hex-inner {
+  fill: none;
+  stroke: var(--color-orange);
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+  stroke-linejoin: round;
+  opacity: 0;
+  animation: pd-fade-in 0.9s cubic-bezier(0.25, 1, 0.5, 1) 0.55s forwards;
+}
+
+.platform-diagram__center-title {
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  fill: var(--color-orange);
+  opacity: 0;
+  animation: pd-fade-in 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.7s forwards;
+}
+
+/* ---------- connection lines ---------- */
+.platform-diagram__line {
+  fill: none;
+  stroke: var(--color-orange);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: pd-draw 1.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes pd-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ---------- connector dots ---------- */
+.platform-diagram__dot {
+  fill: var(--color-gray-200);
+  opacity: 0;
+  animation: pd-fade-in 0.4s ease-out 0.8s forwards;
+}
+
+.platform-diagram__dot--orange {
+  fill: var(--color-orange);
+  animation-delay: 0.9s;
+}
+
+@keyframes pd-fade-in {
+  to { opacity: 1; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .platform-diagram__line,
+  .platform-diagram__node,
+  .platform-diagram__hex,
+  .platform-diagram__hex-inner,
+  .platform-diagram__center-title,
+  .platform-diagram__dot,
+  .platform-diagram__halo {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+    transform: none !important;
+  }
+}

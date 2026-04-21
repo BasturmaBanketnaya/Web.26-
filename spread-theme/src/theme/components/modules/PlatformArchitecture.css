@@ -1,0 +1,301 @@
+/* ==============================================
+   PlatformArchitecture — symmetric front-elevation
+   Technical-drawing language, matches hero diagram.
+   ============================================== */
+
+.platform-arch {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ---------- Layer boundary rules (horizontal guide lines) ---------- */
+.pa-rule {
+  stroke: #D8D8D8;
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+/* ---------- Perimeter corner labels (the only chrome on the SVG) ---------- */
+.pa-corner-label text {
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  fill: var(--color-gray-300);
+}
+
+/* ---------- Sources (bottom row) ---------- */
+.pa-source__bg {
+  fill: var(--color-white);
+  stroke: var(--color-orange);
+  stroke-width: 1.5;
+}
+.pa-source__glyph {
+  color: var(--color-orange);
+}
+.pa-source__label {
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  fill: var(--color-dark);
+  text-transform: uppercase;
+}
+
+/* ---------- Graph edges ---------- */
+.pa-edge {
+  fill: none;
+  stroke-linecap: round;
+}
+.pa-edge--ambient {
+  stroke: var(--color-gray-200);
+  stroke-width: 1;
+}
+.pa-edge--primary {
+  stroke: var(--color-orange);
+  stroke-width: 1.5;
+}
+
+/* ---------- Graph nodes ---------- */
+.pa-node--ambient {
+  fill: var(--color-white);
+  stroke: #C9C9C9;
+  stroke-width: 1.2;
+}
+.pa-node--labeled {
+  fill: var(--color-white);
+  stroke: var(--color-orange);
+  stroke-width: 1.5;
+}
+
+/* ---------- Satellite labels ---------- */
+.pa-sat-label {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--color-dark);
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Relationship pills ---------- */
+.pa-pill__bg {
+  fill: var(--color-orange);
+  stroke: none;
+}
+.pa-pill__text {
+  font-family: var(--font-primary);
+  font-size: 10px;
+  font-weight: 500;
+  fill: var(--color-white);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Core Error node ---------- */
+.pa-core__halo {
+  fill: var(--color-orange);
+  opacity: 0.14;
+  transform-origin: center;
+}
+.pa-core__fill {
+  fill: var(--color-orange);
+  stroke: var(--color-white);
+  stroke-width: 2;
+}
+.pa-core__label {
+  font-family: var(--font-primary);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--color-white);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Flow / connection lines ---------- */
+.pa-flow-line {
+  fill: none;
+  stroke: var(--color-orange);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 3 4;
+  opacity: 0.55;
+}
+.pa-anchor {
+  fill: var(--color-orange);
+  stroke: none;
+}
+
+/* ---------- App frames (top row) ---------- */
+.pa-app__frame {
+  fill: var(--color-white);
+  stroke: var(--color-dark);
+  stroke-width: 1.2;
+}
+.pa-app__title {
+  font-family: var(--font-primary);
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--color-dark);
+  letter-spacing: 0.02em;
+}
+.pa-app__divider {
+  stroke: var(--color-gray-200);
+  stroke-width: 1;
+}
+.pa-app__role {
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  fill: var(--color-gray-500);
+  text-transform: uppercase;
+}
+
+/* app hint styling */
+.pa-app__hint line,
+.pa-app__hint path,
+.pa-app__hint rect,
+.pa-app__hint circle {
+  stroke: var(--color-gray-300);
+  stroke-width: 1;
+  fill: none;
+  stroke-linecap: round;
+}
+.pa-app__hint .pa-hint-dot {
+  fill: var(--color-gray-300);
+  stroke: none;
+}
+.pa-app__hint .pa-hint-dot--orange {
+  fill: var(--color-orange);
+  stroke: none;
+}
+.pa-app__hint .pa-hint-score--orange {
+  stroke: var(--color-orange);
+  stroke-width: 1.5;
+}
+.pa-app__hint .pa-hint-bubble--orange {
+  fill: #FFF4EF;
+  stroke: var(--color-orange);
+  stroke-width: 1;
+}
+
+/* ==============================================
+   ANIMATIONS — build bottom → middle → top
+   Tuned for smoothness: single soft easing curve, no overshoot,
+   longer durations. Feel: a technical drawing inking itself in.
+   ============================================== */
+
+/* Shared "smooth" ease — used everywhere so the whole sequence
+   reads as one continuous motion, not a series of pops. */
+.pa-rule {
+  opacity: 0;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation:
+    pa-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards,
+    pa-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+}
+
+.pa-corner-label text {
+  opacity: 0;
+  animation: pa-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+/* Sources ease in gently from below */
+.pa-source {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: pa-rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--pa-delay, 0s) forwards;
+  transform-origin: center;
+}
+
+/* Ambient background graph texture */
+.pa-edge--ambient,
+.pa-node--ambient {
+  opacity: 0;
+  animation: pa-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+}
+
+/* Primary edges draw themselves outward from center */
+.pa-edge--primary {
+  opacity: 0;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation:
+    pa-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) var(--pa-delay, 1s) forwards,
+    pa-draw 1s cubic-bezier(0.16, 1, 0.3, 1) var(--pa-delay, 1s) forwards;
+}
+
+/* Satellite nodes ease in along their edge vectors */
+.pa-satellite {
+  opacity: 0;
+  animation: pa-scale-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--pa-delay, 1.2s) forwards;
+  transform-origin: center;
+}
+
+/* Relationship pills gently fade on */
+.pa-pill {
+  opacity: 0;
+  animation: pa-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) var(--pa-delay, 1.4s) forwards;
+}
+
+/* Core Error node settles in last */
+.pa-core {
+  opacity: 0;
+  animation: pa-scale-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
+  transform-origin: center;
+}
+
+/* App frames drift upward into place */
+.pa-app {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: pa-rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--pa-delay, 1.6s) forwards;
+}
+
+@keyframes pa-fade-in {
+  to { opacity: 1; }
+}
+/* Gentle scale-in (0.92 → 1, no overshoot) */
+@keyframes pa-scale-in {
+  0%   { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+/* Rise-in: fade + translateY, used for sources and app frames */
+@keyframes pa-rise-in {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes pa-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Breathing halo on the Error core once everything's in place */
+@keyframes pa-halo-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.14; }
+  50%      { transform: scale(1.18); opacity: 0.22; }
+}
+.pa-core__halo {
+  animation: pa-halo-pulse 3.5s ease-in-out 2.3s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pa-rule,
+  .pa-corner-label text,
+  .pa-source,
+  .pa-edge--ambient,
+  .pa-node--ambient,
+  .pa-edge--primary,
+  .pa-satellite,
+  .pa-pill,
+  .pa-core,
+  .pa-app,
+  .pa-core__halo {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}

@@ -1,26 +1,46 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '../partials/Button.jsx';
-import heroProduct from '../../images/hero-product.png';
 import './CTA.css';
 
 export default function CTA() {
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    /* Match the hero reveal — but only once the section scrolls into view
+       so the animation plays when the user actually looks at it, not
+       silently below the fold on page load. */
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="cta" aria-labelledby="cta-headline">
-      <div className="cta__bg" aria-hidden="true">
-        <img
-          src={heroProduct}
-          alt=""
-          className="cta__bg-image"
-          width={1440}
-          height={900}
-        />
-      </div>
-      <div className="cta__wash" aria-hidden="true" />
+    <section
+      ref={sectionRef}
+      className={`cta${inView ? ' cta--in-view' : ''}`}
+      aria-labelledby="cta-headline"
+    >
       <div className="container cta__container">
         <div className="cta__content">
           <span className="eyebrow cta__eyebrow">Get started</span>
           <h2 id="cta-headline" className="cta__headline">
-            {`Built for the future.\nAvailable today.`}
+            <span className="cta__headline-line">Built for the future.</span>
+            <span className="cta__headline-line">Available today.</span>
           </h2>
           <p className="cta__subline">
             20-minute walkthrough. No slides, just your systems live.
