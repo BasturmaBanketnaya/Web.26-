@@ -1,9 +1,11 @@
 /* =====================================================================
    ImpactMetrics — three-column stat band
-   Two variants share layout, differ only in color:
+   Two variants:
      • light — beige canvas, dark text (homepage default)
-     • dark  — #272727 canvas, white text, orange numbers, hairline
-               vertical dividers between cards (Platform page)
+     • dark  — white canvas, contained dark "bento" box with hairline
+               vertical dividers between stats (Platform page).
+               Mirrors the bento-grid language used in
+               PlatformArchitectureBento that sits above it on /platform.
    ===================================================================== */
 
 .impact-metrics {
@@ -16,20 +18,13 @@
 }
 
 /* ---- Variant: dark (Platform page) --------------------------------- */
+/* Section stays light so the dark block reads as a contained bento,
+   not a full-bleed band. */
 .impact-metrics--dark {
-  background: var(--color-dark);
-  color: var(--color-white);
+  background: var(--color-white);
 }
 
-.impact-metrics--dark .section-header h2 {
-  color: var(--color-white);
-}
-
-.impact-metrics--dark .eyebrow {
-  color: var(--color-orange);
-}
-
-/* ---- Grid ---------------------------------------------------------- */
+/* ---- Grid (shared layout) ------------------------------------------ */
 .impact-metrics__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -37,26 +32,26 @@
   margin-bottom: var(--space-2xl);
 }
 
-/* On the dark variant the cards are separated by hairline vertical
-   dividers — same language as the PlatformArchitectureBento, which
-   sits directly above this section on the Platform page. */
+/* On the dark variant the grid becomes the bento box: dark background,
+   rounded, with a 1px gap that reveals a slightly-lighter divider color
+   as perfect hairline rules between the cells. */
 .impact-metrics--dark .impact-metrics__grid {
-  gap: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);   /* hairline divider color */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
+/* ---- Card --------------------------------------------------------- */
 .impact-metrics__card {
   text-align: center;
   padding: var(--space-2xl) var(--space-lg);
 }
 
 .impact-metrics--dark .impact-metrics__card {
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.impact-metrics--dark .impact-metrics__card:last-child {
-  border-right: none;
+  background: var(--color-dark);
+  padding: clamp(40px, 6vh, 64px) var(--space-lg);
 }
 
 /* ---- Typography ---------------------------------------------------- */
@@ -78,17 +73,12 @@
   color: var(--color-gray-300);
 }
 
+/* Section header stays on the light canvas above the dark bento —
+   same eyebrow/headline treatment as every other section on the page. */
+
 /* ---- CTA ----------------------------------------------------------- */
 .impact-metrics__cta {
   text-align: center;
-}
-
-.impact-metrics--dark .impact-metrics__cta .text-link {
-  color: var(--color-white);
-}
-
-.impact-metrics--dark .impact-metrics__cta .text-link:hover {
-  color: var(--color-orange);
 }
 
 /* ---- Responsive ---------------------------------------------------- */
@@ -98,16 +88,9 @@
     gap: var(--space-md);
   }
 
-  /* On mobile, dark variant switches dividers from vertical to horizontal
-     so the stats still read as one connected group. */
+  /* Dark bento: keep it a single rounded container on mobile too,
+     just with horizontal hairlines instead of vertical ones. */
   .impact-metrics--dark .impact-metrics__grid {
-    gap: 0;
-  }
-  .impact-metrics--dark .impact-metrics__card {
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .impact-metrics--dark .impact-metrics__card:last-child {
-    border-bottom: none;
+    gap: 1px;
   }
 }
