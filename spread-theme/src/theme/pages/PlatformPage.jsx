@@ -6,6 +6,7 @@ import PageHero from '../components/modules/PageHero.jsx';
 import PlatformDiagram from '../components/modules/PlatformDiagram.jsx';
 import PlatformArchitectureBento from '../components/modules/PlatformArchitectureBento.jsx';
 import ImpactMetrics from '../components/modules/ImpactMetrics.jsx';
+import FAQ from '../components/modules/FAQ.jsx';
 import CTA from '../components/modules/CTA.jsx';
 
 /* --------------------------------------------------------------------------
@@ -55,6 +56,53 @@ const PLATFORM_METRICS = {
   cta: { label: 'Read customer stories', href: '#' },
 };
 
+/* Platform-specific Q&As — focused on the platform's technical shape
+   (twin model, integration, deployment), not general company questions. */
+const PLATFORM_FAQ = {
+  eyebrow: 'The Platform',
+  headline: 'How the platform\nactually works.',
+  intro:
+    'Five questions we hear most often from engineering leaders evaluating SPREAD.',
+  cta: {
+    prompt: 'Need a deeper answer?',
+    label: 'Talk to an engineer',
+    href: '#cta',
+  },
+  items: [
+    {
+      question: 'What is the "Product Twin" exactly?',
+      answer:
+        'A live, queryable graph that mirrors your product across every source system. Errors, functions, requirements, signals and components are modeled as connected entities — not rows in a warehouse — so any app or agent can reason over relationships without re-implementing the joins.',
+    },
+    {
+      question: 'Which source systems can connect?',
+      answer:
+        'PLM (Teamcenter, Windchill, 3DEXPERIENCE), ERP (SAP, Oracle), ALM (Codebeamer, Polarion), CAD, MES, IoT, and document repositories out of the box. The ingestion layer normalises them into the twin without migration; your teams keep using their existing tools.',
+    },
+    {
+      question: 'How fast can a team get to first insight?',
+      answer:
+        'Typically under two weeks for the first three source systems. The connectors ship pre-built, so most of the setup is permissions and data mapping — not engineering.',
+    },
+    {
+      question: 'How do SPREAD\'s apps relate to the platform?',
+      answer:
+        'Error Inspector, Product Explorer, Requirements Manager and our AI agents all read from the same Product Twin. That means fixing data in one app corrects every other surface — there\'s one source of truth, not five reports that disagree.',
+    },
+    {
+      question: 'Can we build our own apps on top?',
+      answer:
+        'Yes. Every entity and relationship in the twin is exposed through a stable API. Internal teams can build custom dashboards, scripts, or AI workflows against it without re-indexing the source systems themselves.',
+    },
+  ],
+  techLabels: {
+    topLeft: 'FIG.04 — FAQ',
+    topRight: 'STATUS: OPEN',
+    bottomLeft: 'SPREAD / PLATFORM',
+    bottomRight: 'v. 2026.1',
+  },
+};
+
 export default function PlatformPage() {
   return (
     <>
@@ -63,9 +111,9 @@ export default function PlatformPage() {
         <PageHero {...PLATFORM_HERO} visual={<PlatformDiagram />} />
         <PlatformArchitectureBento />
         <ImpactMetrics {...PLATFORM_METRICS} variant="bento" />
-        {/* Upcoming sections (placeholders for the next phases):
+        <FAQ {...PLATFORM_FAQ} />
+        {/* Upcoming section (the last phase):
             - Apps & Agents (reuse Solutions, card-style)
-            - FAQ
          */}
         <CTA />
       </main>

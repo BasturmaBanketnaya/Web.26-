@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './FAQ.css';
 import AccordionItem from '../islands/AccordionItem.jsx';
 
-const faqs = [
+/* --------------------------------------------------------------------------
+ * FAQ
+ *
+ * Props-driven FAQ module rendered as a bento — intro cell on the left
+ * spans the full height, each Q&A is its own row-cell on the right,
+ * all wrapped in a single rounded container with hairline dividers.
+ * Same visual grammar as PlatformArchitectureBento and the bento
+ * ImpactMetrics variant, so pages using all three read as one system.
+ *
+ * The entire surface is data-driven — when we port to HubSpot this maps
+ * directly to a repeater field for `items` and text fields for the rest.
+ *
+ * Props:
+ *   eyebrow, headline, intro   — left cell copy
+ *   cta: { prompt, label, href }
+ *   items: [{ question, answer }]
+ *   techLabels: { topLeft, topRight, bottomLeft, bottomRight }
+ *   firstOpen (bool) — whether the first accordion item is open on load
+ * ------------------------------------------------------------------------ */
+
+const DEFAULT_ITEMS = [
   {
     question: 'What systems does SPREAD integrate with?',
     answer:
@@ -30,37 +50,116 @@ const faqs = [
   },
 ];
 
-export default function FAQ() {
+export default function FAQ({
+  eyebrow = 'FAQ',
+  headline = 'Common questions,\nstraight answers.',
+  intro = 'From fragmented toolchains to a single source of engineering truth — in four steps.',
+  cta = {
+    prompt: 'Still have questions?',
+    label: 'Talk to an Engineer',
+    href: '#contact',
+  },
+  items = DEFAULT_ITEMS,
+  techLabels = {
+    topLeft: 'FIG.04 — FAQ',
+    topRight: 'STATUS: OPEN',
+    bottomLeft: 'SPREAD / SUPPORT',
+    bottomRight: 'v. 2026.1',
+  },
+  firstOpen = true,
+}) {
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return undefined;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -80px 0px' }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <section className="faq" aria-labelledby="faq-headline">
+    <section
+      ref={sectionRef}
+      className={`faq${inView ? ' faq--in-view' : ''}`}
+      aria-labelledby="faq-headline"
+    >
       <div className="container">
-        <div className="faq__layout">
-          <div className="faq__intro">
-            <span className="faq__eyebrow">FAQ</span>
-            <h2 id="faq-headline" className="faq__headline">
-              {`Common questions,\nstraight answers.`}
-            </h2>
-            <p className="faq__subline">
-              From fragmented toolchains to a single source of engineering truth — in four steps.
-            </p>
-          </div>
-          <div className="faq__column">
-            <div className="faq__accordion">
-              {faqs.map((item, i) => (
+        <div className="faq__bento">
+          {techLabels?.topLeft && (
+            <span className="faq__tech faq__tech--tl">{techLabels.topLeft}</span>
+          )}
+          {techLabels?.topRight && (
+            <span className="faq__tech faq__tech--tr">{techLabels.topRight}</span>
+          )}
+          {techLabels?.bottomLeft && (
+            <span className="faq__tech faq__tech--bl">{techLabels.bottomLeft}</span>
+          )}
+          {techLabels?.bottomRight && (
+            <span className="faq__tech faq__tech--br">{techLabels.bottomRight}</span>
+          )}
+
+          <div className="faq__grid">
+            {/* --- Intro cell: left column, spans all rows ------------------ */}
+            <div className="faq__cell faq__cell--intro">
+              {eyebrow && <span className="faq__eyebrow">{eyebrow}</span>}
+              {headline && (
+                <h2 id="faq-headline" className="faq__headline">
+                  {headline}
+                </h2>
+              )}
+              {intro && <p className="faq__intro">{intro}</p>}
+
+              {cta?.label && (
+                <div className="faq__cta">
+                  {cta.prompt && <p className="faq__cta-prompt">{cta.prompt}</p>}
+                  <a href={cta.href} className="faq__cta-link">
+                    {cta.label}
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 7h8M7 3l4 4-4 4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* --- One cell per Q&A ---------------------------------------- */}
+            {items.map((item, i) => (
+              <div
+                key={item.question}
+                className="faq__cell faq__cell--item"
+                style={{ '--faq-item-index': i }}
+              >
                 <AccordionItem
-                  key={item.question}
                   question={item.question}
                   answer={item.answer}
-                  defaultOpen={i === 0}
+                  defaultOpen={firstOpen && i === 0}
                 />
-              ))}
-            </div>
-            <div className="faq__cta">
-              <p className="faq__cta-label">Still have questions?</p>
-              <a href="#contact" className="faq__cta-link">
-                Talk to an Engineer
-              </a>
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
