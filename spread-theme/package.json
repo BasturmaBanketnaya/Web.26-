@@ -1,0 +1,22 @@
+{
+  "name": "spread-cms-theme",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "preview": "vite",
+    "dev": "hs project dev",
+    "upload": "hs project upload"
+  },
+  "dependencies": {
+    "@hubspot/cms-components": "^0.18.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@hubspot/cli": "^8.3.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.7"
+  }
+}

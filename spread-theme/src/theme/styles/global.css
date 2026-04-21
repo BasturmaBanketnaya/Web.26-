@@ -1,0 +1,139 @@
+/* ==============================================
+   @FONT-FACE — DIN Pro
+   ============================================== */
+@font-face {
+  font-family: 'DIN Pro';
+  src: url('../Fonts/dinpro.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DIN Pro';
+  src: url('../Fonts/dinpro_medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DIN Pro';
+  src: url('../Fonts/dinpro_medium.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DIN Pro';
+  src: url('../Fonts/dinpro_bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DIN Pro';
+  src: url('../Fonts/dinpro_black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==============================================
+   DESIGN TOKENS
+   ============================================== */
+:root {
+  --color-orange: #FF6F47;
+  --color-orange-hover: #E85A33;
+  --color-orange-light: #FFF1ED;
+  --color-orange-mid: #FEA991;
+  --color-primary-700: #DA532F;
+  --color-beige: #F5F5F5;
+  --color-dark: #272727;
+  --color-black: #272727;
+  --color-gray-900: #1A1A1A;
+  --color-gray-800: #272727;
+  --color-gray-700: #474747;
+  --color-gray-600: #525252;
+  --color-gray-500: #5C5C5C;
+  --color-gray-300: #A9A9A9;
+  --color-gray-200: #B4B4B4;
+  --color-gray-100: #DCDCDC;
+  --color-gray-50: #F5F5F5;
+  --color-white: #FFFFFF;
+  --color-success-700: #027A48;
+  --color-success-50: #ECFDF3;
+  --color-error-50: #FEF1F1;
+
+  --font-primary: 'DIN Pro', sans-serif;
+  --font-size-display: clamp(2.5rem, 5.5vw, 4.5rem);
+  --font-size-h2: clamp(1.75rem, 3.5vw, 2.75rem);
+  --font-size-h3: clamp(1.25rem, 2vw, 1.5rem);
+  --font-size-h4: clamp(1.1rem, 1.5vw, 1.25rem);
+  --font-size-body: 1.0625rem;
+  --font-size-body-sm: 0.9375rem;
+  --font-size-small: 0.875rem;
+  --font-size-caption: 0.75rem;
+  --font-size-metric: clamp(2.5rem, 5vw, 4rem);
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-section: clamp(5rem, 10vw, 8rem);
+
+  --max-width: 1200px;
+  --max-width-narrow: 800px;
+  --border-radius: 8px;
+  --border-radius-lg: 16px;
+
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==============================================
+   RESET & BASE
+   ============================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-body);
+  line-height: 1.6;
+  color: var(--color-dark);
+  background: var(--color-white);
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+
+/* ==============================================
+   LAYOUT
+   ============================================== */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+.container--narrow { max-width: var(--max-width-narrow); }
+
+/* ==============================================
+   SCROLL ANIMATIONS
+   ============================================== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+.fade-up.is-visible { opacity: 1; transform: translateY(0); }
+.fade-up-d1 { transition-delay: 0.1s; }
+.fade-up-d2 { transition-delay: 0.2s; }
+.fade-up-d3 { transition-delay: 0.3s; }
+.fade-up-d4 { transition-delay: 0.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up { opacity: 1; transform: none; }
+}

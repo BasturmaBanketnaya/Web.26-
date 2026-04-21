@@ -1,0 +1,41 @@
+.impact-metrics {
+  background: var(--color-beige);
+  padding: var(--space-section) 0;
+}
+
+.impact-metrics__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.impact-metrics__card {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.impact-metrics__value {
+  display: block;
+  font-size: var(--font-size-metric);
+  font-weight: 700;
+  color: var(--color-orange);
+  line-height: 1;
+  margin-bottom: var(--space-sm);
+}
+
+.impact-metrics__label {
+  font-size: var(--font-size-body);
+  color: var(--color-gray-600);
+}
+
+.impact-metrics__cta {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .impact-metrics__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}

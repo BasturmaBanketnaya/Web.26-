@@ -1,0 +1,85 @@
+<!--
+  templateType: page
+  label: Homepage
+  isAvailableForNewContent: true
+  screenshotPath: ../../images/theme-screenshot.png
+-->
+{% extends "../layouts/base.html" %}
+
+{% block body %}
+  {% dnd_area "main_content"
+    label="Main Content"
+  %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/Hero"
+        label="Hero Section"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/TrustedLogos"
+        label="Trusted Logos"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/Platform"
+        label="Platform"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/HowItWorks"
+        label="How It Works"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/ImpactMetrics"
+        label="Impact Metrics"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/Solutions"
+        label="Solutions"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/StoriesSlider"
+        label="Stories Slider"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/FAQ"
+        label="FAQ"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/Security"
+        label="Security"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+    {% dnd_section %}
+      {% dnd_module
+        path="@components/modules/CTA"
+        label="Call to Action"
+      %}{% end_dnd_module %}
+    {% end_dnd_section %}
+
+  {% end_dnd_area %}
+{% endblock body %}

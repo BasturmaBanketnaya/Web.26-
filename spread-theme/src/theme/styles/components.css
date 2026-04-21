@@ -1,0 +1,108 @@
+/* ==============================================
+   SHARED COMPONENT STYLES
+   ============================================== */
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  line-height: 1.2;
+  color: var(--color-orange);
+  margin-bottom: 10px;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto var(--space-2xl);
+}
+.section-header h2 {
+  font-size: var(--font-size-h2);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--color-dark);
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.02em;
+}
+.section-header p {
+  color: var(--color-gray-700);
+  font-size: var(--font-size-body);
+}
+
+/* ==============================================
+   BUTTONS
+   ============================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-body-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background: var(--color-orange);
+  color: var(--color-white);
+  border-color: var(--color-orange);
+}
+.btn--primary:hover {
+  background: var(--color-orange-hover);
+  border-color: var(--color-orange-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255, 111, 71, 0.3);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--color-dark);
+  border: 1px solid var(--color-orange);
+  font-weight: 500;
+}
+.btn--outline:hover {
+  background: var(--color-orange);
+  color: var(--color-white);
+  border-color: transparent;
+}
+
+.btn--outline-light {
+  background: transparent;
+  color: var(--color-white);
+  border-color: rgba(255,255,255,0.3);
+}
+.btn--outline-light:hover {
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+.btn--sm {
+  padding: 0.5rem 1.25rem;
+  font-size: var(--font-size-small);
+}
+
+/* ==============================================
+   TEXT LINK
+   ============================================== */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 400;
+  font-size: var(--font-size-small);
+  color: var(--color-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: gap var(--transition-fast);
+}
+.text-link:hover { gap: 1rem; }
+.text-link img { width: 33px; height: 8px; }

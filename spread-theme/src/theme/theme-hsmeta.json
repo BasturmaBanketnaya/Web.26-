@@ -1,0 +1,18 @@
+{
+  "label": "SPREAD Theme",
+  "screenshot_path": "./images/theme-screenshot.png",
+  "responsive_breakpoints": [
+    {
+      "name": "mobile",
+      "mediaQuery": "(max-width: 767px)"
+    },
+    {
+      "name": "tablet",
+      "mediaQuery": "(min-width: 768px) and (max-width: 1023px)"
+    },
+    {
+      "name": "desktop",
+      "mediaQuery": "(min-width: 1024px)"
+    }
+  ]
+}

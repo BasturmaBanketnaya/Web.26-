@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="{{ html_lang }}" {{ html_lang_dir }}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{ standard_header_includes }}
+  {{ require_css("../../styles/global.css") }}
+  {{ require_css("../../styles/components.css") }}
+  {% block head %}{% endblock head %}
+</head>
+<body>
+  {% dnd_area "header" label="Header" %}
+    {% dnd_module
+      path="@components/partials/Header"
+      label="Site Header"
+    %}{% end_dnd_module %}
+  {% end_dnd_area %}
+
+  {% block body %}{% endblock body %}
+
+  {% dnd_area "footer" label="Footer" %}
+    {% dnd_module
+      path="@components/partials/Footer"
+      label="Site Footer"
+    %}{% end_dnd_module %}
+  {% end_dnd_area %}
+
+  {{ standard_footer_includes }}
+</body>
+</html>

@@ -1,0 +1,23 @@
+[
+  {
+    "type": "color",
+    "name": "primary_color",
+    "label": "Primary Brand Color",
+    "default": { "color": "#FF6F47" }
+  },
+  {
+    "type": "color",
+    "name": "dark_color",
+    "label": "Dark Color",
+    "default": { "color": "#272727" }
+  },
+  {
+    "type": "font",
+    "name": "primary_font",
+    "label": "Primary Font",
+    "default": {
+      "font": "DIN Pro",
+      "font_set": "CUSTOM"
+    }
+  }
+]

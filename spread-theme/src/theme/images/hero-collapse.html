@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: #0D0D0D;
+    overflow: hidden;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  /* --- Hero content layered on top of canvas --- */
+  .hero-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #FF6F47;
+    margin-bottom: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+  }
+
+  h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 1.05;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;
+  }
+
+  .subline {
+    font-size: clamp(14px, 1.8vw, 18px);
+    color: #999;
+    margin-top: 20px;
+    text-align: center;
+    max-width: 500px;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
+  }
+
+  .cta-row {
+    margin-top: 32px;
+    display: flex;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease 0.9s, transform 0.8s ease 0.9s;
+    pointer-events: auto;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: #FF6F47; color: #fff; }
+  .btn-outline { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.3); }
+
+  /* State when "resolved" — text fades in */
+  .hero-overlay.resolved .eyebrow,
+  .hero-overlay.resolved h1,
+  .hero-overlay.resolved .subline,
+  .hero-overlay.resolved .cta-row {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Instruction hint */
+  .hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: #666;
+    font-size: 13px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    transition: opacity 0.5s ease;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div class="hero-overlay" id="overlay">
+  <span class="eyebrow">AI for Engineering</span>
+  <h1>Know your product<br>inside out</h1>
+  <p class="subline">Engineering Intelligence that turns fragmented product data into confident decisions.</p>
+  <div class="cta-row">
+    <button class="btn btn-primary">Get started</button>
+    <button class="btn btn-outline">See how it works</button>
+  </div>
+</div>
+
+<div class="hint" id="hint">Click anywhere to collapse</div>
+
+<script>
+// ============================================
+// THE COLLAPSE — Hero Animation Prototype
+// 
+// Concept: Particles start in chaotic motion,
+// then on click they "collapse" into an 
+// organized grid — chaos to clarity.
+// A second click scatters them again.
+// ============================================
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
+const hint = document.getElementById('hint');
+
+let W, H;
+let particles = [];
+let isResolved = false;   // tracks current state
+let animating = false;
+
+// --- SPREAD brand palette ---
+const ORANGE = '#FF6F47';
+const ORANGE_DIM = 'rgba(255, 111, 71, 0.15)';
+const WHITE_DIM = 'rgba(255, 255, 255, 0.06)';
+const NODE_COLORS = [
+  'rgba(255, 111, 71, 0.8)',   // orange
+  'rgba(255, 111, 71, 0.4)',   // orange dim
+  'rgba(255, 255, 255, 0.5)',  // white
+  'rgba(255, 255, 255, 0.2)',  // white dim
+];
+
+const PARTICLE_COUNT = 180;
+const CONNECTION_DIST = 120;
+
+// --- Resize handler ---
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', () => {
+  resize();
+  // Recalculate target positions on resize
+  assignTargets();
+});
+resize();
+
+// --- Particle class ---
+class Particle {
+  constructor(i) {
+    this.i = i;
+    // Start at random chaotic positions
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.size = Math.random() * 2.5 + 1;
+    this.color = NODE_COLORS[Math.floor(Math.random() * NODE_COLORS.length)];
+    
+    // Chaotic velocity
+    this.vx = (Math.random() - 0.5) * 1.8;
+    this.vy = (Math.random() - 0.5) * 1.8;
+    
+    // Target position (set by assignTargets)
+    this.tx = 0;
+    this.ty = 0;
+    
+    // Animation progress (0 = chaotic, 1 = resolved)
+    this.progress = 0;
+  }
+
+  update() {
+    if (isResolved) {
+      // Animate toward target — eased interpolation
+      this.progress = Math.min(1, this.progress + 0.025);
+      let ease = this.progress * this.progress * (3 - 2 * this.progress); // smoothstep
+      this.x += (this.tx - this.x) * 0.04 * (1 + ease);
+      this.y += (this.ty - this.y) * 0.04 * (1 + ease);
+      
+      // Dampen chaotic velocity
+      this.vx *= 0.96;
+      this.vy *= 0.96;
+      this.x += this.vx * (1 - ease);
+      this.y += this.vy * (1 - ease);
+    } else {
+      // Chaotic state — drift with slight randomness
+      this.progress = Math.max(0, this.progress - 0.02);
+      
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // Slight random wobble
+      this.vx += (Math.random() - 0.5) * 0.1;
+      this.vy += (Math.random() - 0.5) * 0.1;
+      
+      // Clamp velocity
+      let speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+      if (speed > 2) {
+        this.vx = (this.vx / speed) * 2;
+        this.vy = (this.vy / speed) * 2;
+      }
+
+      // Wrap around edges
+      if (this.x < -20) this.x = W + 20;
+      if (this.x > W + 20) this.x = -20;
+      if (this.y < -20) this.y = H + 20;
+      if (this.y > H + 20) this.y = -20;
+    }
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+}
+
+// --- Create organized target positions ---
+// Hexagonal grid centered on screen, 
+// representing "structured data"
+function assignTargets() {
+  // Calculate a grid that fits particles into 
+  // a centered rectangular area
+  let cols = Math.ceil(Math.sqrt(PARTICLE_COUNT * (W / H)));
+  let rows = Math.ceil(PARTICLE_COUNT / cols);
+  let spacingX = Math.min(40, W / (cols + 4));
+  let spacingY = Math.min(40, H / (rows + 4));
+  
+  let gridW = cols * spacingX;
+  let gridH = rows * spacingY;
+  let startX = (W - gridW) / 2 + spacingX / 2;
+  let startY = (H - gridH) / 2 + spacingY / 2;
+
+  for (let i = 0; i < particles.length; i++) {
+    let col = i % cols;
+    let row = Math.floor(i / cols);
+    // Hex offset — every other row shifts right
+    let offsetX = (row % 2) * (spacingX / 2);
+    particles[i].tx = startX + col * spacingX + offsetX;
+    particles[i].ty = startY + row * spacingY;
+  }
+}
+
+// --- Draw connections between nearby particles ---
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      let dx = particles[i].x - particles[j].x;
+      let dy = particles[i].y - particles[j].y;
+      let dist = Math.sqrt(dx * dx + dy * dy);
+      
+      if (dist < CONNECTION_DIST) {
+        let alpha = (1 - dist / CONNECTION_DIST);
+        // In resolved state, connections are stronger/orange
+        if (isResolved && particles[i].progress > 0.5) {
+          ctx.strokeStyle = `rgba(255, 111, 71, ${alpha * 0.25 * particles[i].progress})`;
+        } else {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.07})`;
+        }
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+// --- Initialize ---
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  particles.push(new Particle(i));
+}
+assignTargets();
+
+// --- Animation loop ---
+function animate() {
+  // Semi-transparent clear for slight trail effect
+  ctx.fillStyle = 'rgba(13, 13, 13, 0.3)';
+  ctx.fillRect(0, 0, W, H);
+
+  drawConnections();
+
+  for (let p of particles) {
+    p.update();
+    p.draw();
+  }
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+// --- Click to toggle collapse/scatter ---
+document.addEventListener('click', () => {
+  isResolved = !isResolved;
+  
+  if (isResolved) {
+    overlay.classList.add('resolved');
+    hint.textContent = 'Click to scatter';
+    // Reset progress so animation plays fresh
+    for (let p of particles) p.progress = 0;
+  } else {
+    overlay.classList.remove('resolved');
+    hint.textContent = 'Click to collapse';
+    // Give particles new random velocities to scatter
+    for (let p of particles) {
+      p.vx = (Math.random() - 0.5) * 3;
+      p.vy = (Math.random() - 0.5) * 3;
+      p.progress = 1;
+    }
+  }
+});
+</script>
+</body>
+</html>

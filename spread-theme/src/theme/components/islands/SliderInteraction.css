@@ -1,0 +1,10 @@
+.slider-interaction {
+  overflow: hidden;
+  width: 100%;
+}
+
+.slider-interaction__track-wrapper {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}

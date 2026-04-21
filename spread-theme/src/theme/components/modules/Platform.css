@@ -1,0 +1,30 @@
+.platform {
+  background: var(--color-white);
+  padding: var(--space-section) 0;
+}
+
+.platform__header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto var(--space-2xl);
+}
+
+.platform__headline {
+  font-size: var(--font-size-h2);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-dark);
+}
+
+.platform__image {
+  margin-bottom: var(--space-lg);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.platform__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}

@@ -6,8 +6,14 @@ Thumbs.db
 .cursor/
 .vscode/
 
-# Node modules (if added later)
+# Node modules
 node_modules/
+
+# Build output
+dist/
+
+# Archives
+*.zip
 
 # HubSpot local config
 hubspot.config.yml
