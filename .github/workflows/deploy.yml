@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+
+# Runs automatically on every push to `main`, and can also be kicked off
+# manually from the Actions tab via "Run workflow".
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Only keep the most recent run in-flight. If we push twice in a row,
+# the older run is cancelled so we don't race deployments.
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    # `peaceiris/actions-gh-pages` pushes to the `gh-pages` branch
+    # using the workflow's built-in GITHUB_TOKEN, so we need write
+    # permission on the repo's contents.
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: spread-theme/package-lock.json
+
+      - name: Install dependencies
+        working-directory: spread-theme
+        run: npm ci
+
+      - name: Build (with GitHub Pages base path)
+        working-directory: spread-theme
+        env:
+          GITHUB_PAGES: '1'
+        run: npx vite build
+
+      # Publish the freshly-built `spread-theme/dist/` to the
+      # `gh-pages` branch — which is what Pages is configured to
+      # serve from. No manual steps required after this.
+      - name: Publish to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: spread-theme/dist
+          publish_branch: gh-pages
+          commit_message: 'Deploy to GitHub Pages (${{ github.sha }})'
