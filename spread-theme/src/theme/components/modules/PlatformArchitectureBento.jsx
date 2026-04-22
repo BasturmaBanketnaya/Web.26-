@@ -152,33 +152,39 @@ export default function PlatformArchitectureBento({
       className={`pa-bento${inView ? ' pa-bento--in-view' : ''}`}
     >
       <div className="pa-bento__container container">
-        <div className="pa-bento__grid">
-          {/* --- Big diagram cell ------------------------------------------------ */}
-          <div className="pa-bento__cell pa-bento__cell--diagram">
-            {techLabels?.topLeft && (
-              <span className="pa-bento__tech pa-bento__tech--tl">
-                {techLabels.topLeft}
-              </span>
-            )}
-            {techLabels?.topRight && (
-              <span className="pa-bento__tech pa-bento__tech--tr">
-                {techLabels.topRight}
-              </span>
-            )}
-            <div className="pa-bento__diagram">
-              <PlatformArchitecture />
+        {/* Wrap hosts the bento grid + the tech labels as siblings.
+            Labels live outside the grid (which has `overflow: hidden` for
+            the rounded-corner mask) so they straddle the grid's outer
+            border without being clipped. */}
+        <div className="pa-bento__wrap">
+          {techLabels?.topLeft && (
+            <span className="pa-bento__tech pa-bento__tech--tl">
+              {techLabels.topLeft}
+            </span>
+          )}
+          {techLabels?.topRight && (
+            <span className="pa-bento__tech pa-bento__tech--tr">
+              {techLabels.topRight}
+            </span>
+          )}
+          {techLabels?.bottomLeft && (
+            <span className="pa-bento__tech pa-bento__tech--bl">
+              {techLabels.bottomLeft}
+            </span>
+          )}
+          {techLabels?.bottomRight && (
+            <span className="pa-bento__tech pa-bento__tech--br">
+              {techLabels.bottomRight}
+            </span>
+          )}
+
+          <div className="pa-bento__grid">
+            {/* --- Big diagram cell ------------------------------------------------ */}
+            <div className="pa-bento__cell pa-bento__cell--diagram">
+              <div className="pa-bento__diagram">
+                <PlatformArchitecture />
+              </div>
             </div>
-            {techLabels?.bottomLeft && (
-              <span className="pa-bento__tech pa-bento__tech--bl">
-                {techLabels.bottomLeft}
-              </span>
-            )}
-            {techLabels?.bottomRight && (
-              <span className="pa-bento__tech pa-bento__tech--br">
-                {techLabels.bottomRight}
-              </span>
-            )}
-          </div>
 
           {/* --- Intro cell (eyebrow + headline) -------------------------------- */}
           <div className="pa-bento__cell pa-bento__cell--intro">
@@ -226,6 +232,7 @@ export default function PlatformArchitectureBento({
               </div>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </section>

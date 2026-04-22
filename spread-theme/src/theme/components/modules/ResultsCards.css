@@ -1,233 +1,327 @@
-.results-cards {
+/* =====================================================================
+   Newsroom — 2 × 2 bento.
+
+   Every token (fonts, eyebrow, headline, CTA pill, card surface) is
+   pulled from `HowItWorks.css` so the two sections share a visual
+   voice. Nothing in the layout animates on hover — only colours — so
+   the whole block is flicker-proof.
+   ===================================================================== */
+
+.newsroom {
   background: var(--color-white);
   padding: var(--space-section) 0;
 }
 
-/* ---- Header area ---- */
-
-.results-cards__top {
+/* ── Intro ──────────────────────────────────────────────────────── */
+.newsroom__top {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: var(--space-2xl);
+  gap: 32px;
+  margin-bottom: clamp(32px, 4vw, 56px);
 }
 
-.results-cards__header {
-  max-width: 42rem;
-  text-align: left;
-}
-
-.results-cards__headline {
-  font-family: var(--font-primary);
-  font-size: 36px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.72px;
-  color: var(--color-dark);
-  margin-bottom: 14px;
-}
-
-.results-cards__subline {
-  font-size: 17px;
-  line-height: 1.4;
-  letter-spacing: -0.16px;
-  color: var(--color-dark);
-  max-width: 440px;
-}
-
-.results-cards__link {
-  flex-shrink: 0;
-  margin-top: 0.25rem;
-}
-
-/* ---- Grid ---- */
-
-.results-cards__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-lg);
-}
-
-/* ---- Card ---- */
-
-.results-cards__card {
+.newsroom__intro {
   display: flex;
   flex-direction: column;
-  background: var(--color-white);
-  border: 1px solid #DCDCDC;
-  border-radius: 12px;
-  overflow: hidden; /* clip the illustration panel to rounded corners */
+  gap: 14px;
+  max-width: 620px;
+}
+
+/* Eyebrow — mono orange, matches `.hiw__eyebrow` exactly. Replaces
+   the older global `.eyebrow` class (DIN Pro 12 px) that was too
+   heavy here and felt different from the section above it. */
+.newsroom__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-orange);
+  line-height: 1.2;
+}
+
+/* Section headline — mirrors `.hiw__headline`. */
+.newsroom__headline {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: clamp(32px, 3.4vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-dark);
+  margin: 0;
+}
+
+.newsroom__subline {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-gray-600, #555);
+  max-width: 48ch;
+  margin: 0;
+}
+
+/* Top CTA — dark mono pill, same as `.hiw__intro-cta`. Replaces the
+   previous `.text-link` style that felt like a leftover from the old
+   design. */
+.newsroom__top-cta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 11px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  background: var(--color-dark);
+  color: var(--color-white);
+  border-radius: 5px;
+  white-space: nowrap;
   transition:
-    transform var(--transition-base),
-    box-shadow var(--transition-base);
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+.newsroom__top-cta:hover,
+.newsroom__top-cta:focus-visible {
+  background: var(--color-orange);
+  color: var(--color-white);
+  outline: none;
 }
 
-.results-cards__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(39, 39, 39, 0.08);
+/* ── 2 × 2 bento grid ───────────────────────────────────────────── */
+/* 1 px shared gray gap = the same hairline-divider grammar HowItWorks
+   uses; the cards read as tiles of one continuous surface rather than
+   four detached elements. */
+.newsroom__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
-/* ---- Illustration panel ----
-   Dark canvas with orange 1.5px wireframe drawings. The inner SVG is square
-   (viewBox 240×240, preserveAspectRatio xMidYMid meet) so nothing ever crops —
-   it just scales down to fit the panel width while staying fully visible. */
+/* ── Card ────────────────────────────────────────────────────────── */
+.newsroom__card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(20px, 2.4vw, 36px);
+  align-items: start;
+  padding: clamp(32px, 3vw, 44px);
+  background: var(--color-white);
+  text-decoration: none;
+  color: inherit;
+  min-height: 320px;
+  transition: background var(--transition-fast);
+}
+.newsroom__card:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: -2px;
+}
 
-.results-cards__illustration {
+/* ── Body column ────────────────────────────────────────────────── */
+.newsroom__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.2vw, 18px);
+  min-width: 0;
+  height: 100%;
+}
+
+/* Card eyebrow — same mono grammar as the section eyebrow and as
+   `.hiw__step-tag`, but the `category` stays orange while the date
+   cools to gray so the category is still the dominant colour hit. */
+.newsroom__card-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+}
+.newsroom__card-cat {
+  color: var(--color-orange);
+}
+.newsroom__card-sep {
+  color: var(--color-gray-300, #c7c7c7);
+}
+.newsroom__card-date {
+  color: var(--color-gray-500, #8b8b8b);
+}
+
+/* Card headline — matches `.hiw__step-title` EXACTLY (no italic, no
+   uppercase). This is the key fix: the title now looks like a
+   sibling of "Map dependencies" from HowItWorks. */
+.newsroom__card-title {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: clamp(20px, 1.6vw, 24px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-dark);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.newsroom__card-excerpt {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--color-gray-600, #555);
+  margin: 0;
+  /* Clamp to 3 lines so the 4 cards stay uniformly sized regardless
+     of how long each excerpt is. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card footer: `Learn more` pill on the left, mono byline on the
+   right. Pill borrows from `.hiw__product-link` but without the
+   glyph slot — the arrow is the only chrome we need here. */
+.newsroom__card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: clamp(16px, 1.6vw, 22px);
+}
+
+.newsroom__card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-dark);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200, var(--color-gray-100));
+  border-radius: 6px;
+  text-decoration: none;
+  line-height: 1;
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.newsroom__card-cta-arrow {
+  width: 14px;
+  height: 7px;
+  display: block;
+  transition: transform var(--transition-fast);
+}
+
+.newsroom__card-byline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gray-500, #8b8b8b);
+  line-height: 1;
+  text-align: right;
+}
+
+/* ── Illustration column ─────────────────────────────────────────── */
+.newsroom__card-illus {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 200px;
-  background: var(--color-white);
-  border-bottom: 1px solid #DCDCDC;
-  overflow: hidden;
+  width: clamp(120px, 12vw, 160px);
+  aspect-ratio: 1 / 1;
+  align-self: start;
+  margin-top: 6px;
 }
-
-.results-cards__illustration svg {
-  /* Keep the square drawing inside the panel at all sizes; max-height caps
-     growth so wide cards don't blow the artwork past its panel. */
+.nr-illus {
   width: 100%;
   height: 100%;
-  max-width: 170px;
-  max-height: 170px;
-  padding: 12px;
-  box-sizing: border-box;
+  display: block;
 }
 
-/* ---- Illustration animations ---- */
-
-/* Rotate children of a group around the SVG's center (120,120).
-   transform-box: fill-box + transform-origin on each <g> handles this. */
-@keyframes rc-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-@keyframes rc-spin-reverse {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(-360deg); }
-}
-@keyframes rc-breathe {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.04); }
-}
-
-/* Cones — dashed center ring slowly rotates.
-   transform-origin is in SVG user-space (viewBox 240×240, center = 120,120). */
-.rc-illus--cones .rc-illus__dashed {
-  transform-origin: 120px 120px;
-  animation: rc-spin 22s linear infinite;
-}
-
-/* Orbits — each ring rotates around the SVG's center at a different speed.
-   The inline style on each <g> sets transform-origin: 120px 120px. */
-.rc-illus--orbits .rc-anim-spin-slow {
-  animation: rc-spin 28s linear infinite;
-}
-.rc-illus--orbits .rc-anim-spin-med {
-  animation: rc-spin-reverse 18s linear infinite;
-}
-.rc-illus--orbits .rc-anim-spin-fast {
-  animation: rc-spin 12s linear infinite;
-}
-
-/* Mesh — gentle breathing scale pulse around SVG center. */
-.rc-illus--mesh .rc-illus__mesh-breathe {
-  animation: rc-breathe 5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rc-illus *,
-  .rc-illus {
-    animation: none !important;
+/* ====================================================================
+   Hover — colour-only, no layout movement.
+   ==================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  .newsroom__card:hover {
+    background: var(--color-gray-50, #f7f7f7);
+  }
+  .newsroom__card:hover .newsroom__card-cta {
+    background: var(--color-dark);
+    color: var(--color-white);
+    border-color: var(--color-dark);
+  }
+  .newsroom__card:hover .newsroom__card-cta-arrow {
+    transform: translateX(4px);
   }
 }
 
-.results-cards__card-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 32px 40px 40px;
+/* ====================================================================
+   Tablet
+   ==================================================================== */
+@media (max-width: 1100px) {
+  .newsroom__card {
+    min-height: 280px;
+    padding: clamp(26px, 3vw, 36px);
+  }
+  .newsroom__card-illus {
+    width: clamp(96px, 12vw, 130px);
+  }
 }
 
-/* ---- Card header (author + date) ---- */
-
-.results-cards__card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-md);
-}
-
-.results-cards__author-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.results-cards__avatar {
-  width: 33px;
-  height: 33px;
-  border-radius: 50%;
-  background: var(--color-orange-light);
-  flex-shrink: 0;
-}
-
-.results-cards__author-name {
-  font-family: var(--font-primary);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-dark);
-}
-
-.results-cards__date {
-  font-family: var(--font-primary);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--color-gray-500);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-/* ---- Card body ---- */
-
-.results-cards__title {
-  font-family: var(--font-primary);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: var(--color-dark);
-  margin-bottom: var(--space-md);
-}
-
-.results-cards__excerpt {
-  font-family: var(--font-primary);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.65;
-  color: var(--color-gray-600);
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  flex: 1;
-}
-
-.results-cards__read-more {
-  margin-top: var(--space-lg);
-}
-
-/* ---- Mobile ---- */
-
-@media (max-width: 900px) {
-  .results-cards__top {
+/* ====================================================================
+   Mobile — single column, illustration above the body so the text is
+   still the dominant element.
+   ==================================================================== */
+@media (max-width: 720px) {
+  .newsroom__top {
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-md);
   }
-
-  .results-cards__grid {
+  .newsroom__grid {
     grid-template-columns: 1fr;
+  }
+  .newsroom__card {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: clamp(22px, 5vw, 30px);
+  }
+  .newsroom__card-illus {
+    order: -1;
+    align-self: flex-start;
+    width: 96px;
+  }
+  .newsroom__card-foot {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .newsroom__card-byline {
+    text-align: left;
+  }
+}
+
+/* ====================================================================
+   Reduced motion
+   ==================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .newsroom__card,
+  .newsroom__card-cta,
+  .newsroom__card-cta-arrow,
+  .newsroom__top-cta {
+    transition: none !important;
   }
 }

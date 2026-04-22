@@ -33,21 +33,44 @@
 
 /* ==============================================
    BUTTONS
+
+   Single typographic source of truth for every filled/outlined
+   "action" button on the site. Hero, PageHero, CTA module, and the
+   generic <Button /> partial all now share these exact values:
+
+       font-family:     DIN Pro (primary)
+       font-size:       13px
+       font-weight:     500       (NOT 700 — flat, modern, matches hero)
+       letter-spacing:  0.5px
+       text-transform:  uppercase
+       height:          52px      (via padding + line-height)
+       border-radius:   4px
+       border:          none      (primary) / 1px (outlines)
+
+   Header "Book a Demo" and Footer "Subscribe" use a separate mono /
+   compact variant on purpose — they live in navigation chrome and
+   need to match the monospace schematic voice of the nav/footer grid.
+   All *content-area* buttons should use this `.btn` family.
    ============================================== */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.875rem 2rem;
+  height: 52px;
+  padding: 0 32px;
   font-family: var(--font-primary);
-  font-size: var(--font-size-body-sm);
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.5px;
   border-radius: 4px;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
   white-space: nowrap;
 }
 
@@ -56,38 +79,45 @@
   color: var(--color-white);
   border-color: var(--color-orange);
 }
-.btn--primary:hover {
+.btn--primary:hover,
+.btn--primary:focus-visible {
   background: var(--color-orange-hover);
   border-color: var(--color-orange-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(255, 111, 71, 0.3);
+  outline: none;
 }
 
 .btn--outline {
   background: transparent;
   color: var(--color-dark);
-  border: 1px solid var(--color-orange);
-  font-weight: 500;
+  border-color: var(--color-orange);
 }
-.btn--outline:hover {
+.btn--outline:hover,
+.btn--outline:focus-visible {
   background: var(--color-orange);
   color: var(--color-white);
-  border-color: transparent;
+  border-color: var(--color-orange);
+  outline: none;
 }
 
 .btn--outline-light {
   background: transparent;
   color: var(--color-white);
-  border-color: rgba(255,255,255,0.3);
+  border-color: rgba(255, 255, 255, 0.3);
 }
-.btn--outline-light:hover {
+.btn--outline-light:hover,
+.btn--outline-light:focus-visible {
   background: var(--color-white);
   color: var(--color-dark);
+  border-color: var(--color-white);
+  outline: none;
 }
 
+/* Compact variant — still 500 weight, still 13px, just tighter
+   padding. Used for inline dense layouts (e.g. dense tables). */
 .btn--sm {
-  padding: 0.5rem 1.25rem;
-  font-size: var(--font-size-small);
+  height: 40px;
+  padding: 0 20px;
+  font-size: 12px;
 }
 
 /* ==============================================

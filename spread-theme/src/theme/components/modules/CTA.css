@@ -1,7 +1,12 @@
 .cta {
   position: relative;
   background: var(--color-white);
-  padding: var(--space-section) 0;
+  /* Both top AND bottom padding halved vs. --space-section — the
+     headline tucks closer to FAQ above, the dome tucks closer to
+     the footer below. The footer's own top padding was also cut
+     to match (Footer.css), so the overall gap between the equator
+     of the dome and the footer nav is now tight, not cavernous. */
+  padding: calc(var(--space-section) * 0.5) 0;
   overflow: hidden;
 }
 
@@ -41,20 +46,67 @@
   font-size: 1rem;
   line-height: 1.6;
   color: var(--color-gray-500);
-  margin-bottom: var(--space-xl);
+  /* No button row below the subline anymore (the CTA now lives at
+     the apex of the graph), so the large bottom margin is gone —
+     the tight gap we want between text + graph is controlled by
+     .cta__visual's top margin instead. */
+  margin-bottom: 0;
   max-width: 28rem;
 }
 
-.cta__actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ---- Visual (Intelligence Graph + apex CTA) ------------------------
+   The graph is the closing hero of the section. The Book a Demo
+   button is NOT a separate .cta__actions row above — it sits at the
+   apex of the dome, becoming the visual "hub" of the knowledge graph
+   (every arc terminates at it). That's why this container is a
+   positioning context: the button is absolutely placed on top of
+   the graph's pole point, which in the SVG viewBox is at x=50%,
+   y=APEX_Y_RATIO (131/560 ≈ 23.4% from the top). */
+.cta__visual {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  /* NEGATIVE margins — the SVG has ~23% empty pixels ABOVE the apex
+     (the hub-dot was removed) and ~9% empty pixels BELOW the equator
+     (nothing is drawn in the lower hemisphere), so both the subline
+     above and the footer below can safely overlap those blank
+     regions. This dramatically closes the subline→button gap AND
+     the equator→footer gap without clipping any real graph content.
+     Scales with viewport so the effect stays proportional:
+       top (pull into subline):     -100px → -20px
+       bottom (pull into footer):    -60px → -12px */
+  margin:
+    clamp(-100px, -6vw, -20px)
+    auto
+    clamp(-60px, -4vw, -12px);
+  padding: 0 clamp(16px, 3vw, 40px);
+  box-sizing: border-box;
+}
+
+/* Apex CTA — sits on the pole of the dome, so every hairline in the
+   graph appears to radiate outward FROM the button. The y-offset is
+   derived directly from the SVG: apex point = (500, 131) within a
+   viewBox of 1000 × 560 → y = 131/560 ≈ 23.4%. Because .cta__visual
+   has the same aspect ratio via .igraph, the percentage places the
+   button exactly over the apex at any rendered size. */
+.cta__visual-cta {
+  position: absolute;
+  left: 50%;
+  top: 23.4%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
 }
 
 /* ---- Text reveal — matches the hero's heroTextReveal exactly ----
    Elements start hidden/blurred/offset, then animate in when the section
-   enters the viewport (JS adds .cta--in-view). Staggered delays mirror
-   the hero: headline lines first (0 / 0.2s), subline at 0.8s, button at 1.0s. */
+   enters the viewport (JS adds .cta--in-view). Staggered cascade:
+     eyebrow  → 0s
+     h-line 1 → 0.15s
+     h-line 2 → 0.3s
+     subline  → 0.8s
+     graph    → 1.0s (dome arrives under the text)
+     apex CTA → 1.3s (button lands AFTER the dome has rendered, so it
+                      reads as "the hub snapping into place") */
 
 @keyframes ctaTextReveal {
   0% {
@@ -74,13 +126,43 @@
   }
 }
 
+/* The apex CTA uses translate(-50%, -50%) for centring on the dome
+   pole — its reveal needs a dedicated keyframe so the centring isn't
+   clobbered by a plain translateY animation. */
+@keyframes ctaApexReveal {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate(-50%, calc(-50% + 6px));
+  }
+  50% {
+    opacity: 0.85;
+    filter: blur(1px);
+    transform: translate(-50%, calc(-50% + 1px));
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translate(-50%, -50%);
+  }
+}
+
 .cta__eyebrow,
 .cta__headline-line,
 .cta__subline,
-.cta__actions {
+.cta__visual {
   opacity: 0;
   filter: blur(8px);
   transform: translateY(6px);
+  will-change: opacity, filter, transform;
+}
+
+.cta__visual-cta {
+  opacity: 0;
+  filter: blur(8px);
+  /* Centring-preserving initial offset — matches the 6px Y offset
+     used by the other reveals but keeps the -50% X centring intact. */
+  transform: translate(-50%, calc(-50% + 6px));
   will-change: opacity, filter, transform;
 }
 
@@ -96,18 +178,27 @@
 .cta--in-view .cta__subline {
   animation: ctaTextReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) 0.8s forwards;
 }
-.cta--in-view .cta__actions {
-  animation: ctaTextReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) 1s forwards;
+.cta--in-view .cta__visual {
+  animation: ctaTextReveal 2.6s cubic-bezier(0.25, 1, 0.5, 1) 1s forwards;
+}
+.cta--in-view .cta__visual-cta {
+  animation: ctaApexReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) 1.3s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cta__eyebrow,
   .cta__headline-line,
   .cta__subline,
-  .cta__actions {
+  .cta__visual {
     opacity: 1 !important;
     filter: none !important;
     transform: none !important;
+    animation: none !important;
+  }
+  .cta__visual-cta {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: translate(-50%, -50%) !important;
     animation: none !important;
   }
 }

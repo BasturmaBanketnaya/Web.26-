@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Button from '../partials/Button.jsx';
+import IntelligenceGraph from '../partials/IntelligenceGraph.jsx';
 import './CTA.css';
 
 export default function CTA() {
@@ -46,11 +47,25 @@ export default function CTA() {
           <p className="cta__subline">
             20-minute walkthrough. No slides, just your systems live.
           </p>
-          <div className="cta__actions">
-            <Button href="#" variant="primary">
-              Book a Demo
-            </Button>
-          </div>
+        </div>
+      </div>
+
+      {/* Closing visual — tilted-hemisphere "intelligence graph"
+          with the CTA button anchored at the apex. The button
+          literally replaces the hub node of the graph, so every
+          connection arc terminates AT it — reading as "everything
+          in the graph converges on this action". The graph lives
+          OUTSIDE the section's inner container so it can take a
+          wider max-width than the text column above. */}
+      <div className="cta__visual">
+        <IntelligenceGraph />
+        {/* Apex CTA — positioned absolutely on top of the graph's
+            pole point by CTA.css (left 50%, top matches the APEX
+            Y ratio inside the SVG viewBox). */}
+        <div className="cta__visual-cta">
+          <Button href="#" variant="primary">
+            Book a Demo
+          </Button>
         </div>
       </div>
     </section>

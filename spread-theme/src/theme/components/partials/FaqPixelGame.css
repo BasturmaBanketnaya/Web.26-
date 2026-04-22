@@ -1,127 +1,190 @@
 /* =====================================================================
-   FaqPixelGame — ambient mini-scene inside the FAQ intro cell.
-   Monochrome orange pixel sprites on a dashed "floor", slow 8s loop.
-   Full cycle:
-     t=0s  Q1 starts falling from the top
-     t=0s  Runner A enters from the left, running right at ground level
-     t=2s  Q1 hits the floor; Runner A catches it (Q1 fades out)
-     t=4s  Runner A exits to the right
-     t=4s  Q2 starts falling; Runner B enters from the right
-     t=6s  Q2 is caught; Runner B continues left
-     t=8s  Runner B exits; cycle repeats
+   FaqPixelGame
+   Fluid-width ambient pixel scene. Runners walk along the floor line
+   that spans the full width of the intro cell; "?" sprites fall from
+   above, get caught, and get carried away by the runners.
+   All horizontal motion is percentage-based so the animation scales
+   cleanly to whatever width the intro cell happens to be.
    ===================================================================== */
 
 .fpg {
-  width: 100%;
-  max-width: 260px;
-  margin-top: 16px;          /* small breathing gap below the CTA;
-                                 the CTA's own `margin-top: auto` already
-                                 pushes the cta+game pair to the bottom
-                                 of the intro cell. */
-  margin-left: -4px;         /* bleed the floor line to the edge */
-  aspect-ratio: 220 / 110;
+  /* Breaks out of the intro cell's padding so the dashed floor lines up
+     with the cell's actual bottom edge (the bento's horizontal divider),
+     and the runners traverse the full width of the cell rather than just
+     the padded content area.
+     `--faq-cell-pad` is set on the intro cell (see FAQ.css); the fallback
+     keeps things sensible if FaqPixelGame ever lands in another container. */
+  --fpg-inset: var(--faq-cell-pad, 32px);
+  width: calc(100% + 2 * var(--fpg-inset));
+  margin-top: 16px;
+  margin-left: calc(-1 * var(--fpg-inset));
+  margin-right: calc(-1 * var(--fpg-inset));
+  margin-bottom: calc(-1 * var(--fpg-inset));
   pointer-events: none;
   user-select: none;
 }
 
-.fpg__svg {
+/* ----- Scene --- *
+   The scene sets all the shared sprite dimensions as custom properties
+   so positions are expressed in a single place and stay consistent. */
+.fpg__scene {
+  --fpg-scene-h: 84px;
+  --fpg-runner-w: 22px;
+  --fpg-runner-h: 30px;
+  --fpg-q-w: 14px;
+  --fpg-q-h: 18px;
+  --fpg-off-edge: 4px;  /* how far runners go past each edge before vanishing */
+
+  position: relative;
+  width: 100%;
+  height: var(--fpg-scene-h);
+  overflow: hidden;
+}
+
+/* ===================================================================== *
+ * Runners
+ * ===================================================================== */
+
+.fpg__runner {
+  position: absolute;
+  /* Feet flush with the scene's bottom edge, which coincides with the
+     intro cell's bottom border (the bento's horizontal divider line) —
+     so the runner literally walks on the bento border. */
+  bottom: 0;
+  width: var(--fpg-runner-w);
+  height: var(--fpg-runner-h);
+  opacity: 0;
+  will-change: left, opacity;
+}
+
+/* The sprite wrapper exists so Runner B can apply scaleX(-1) to flip
+   the character without affecting the runner's `left`-based motion or
+   the carry-? (which needs to render un-mirrored). */
+.fpg__runner-sprite {
+  width: 100%;
+  height: 100%;
+}
+.fpg__runner-sprite--mirror {
+  transform: scaleX(-1);
+}
+.fpg__runner-svg {
   width: 100%;
   height: 100%;
   display: block;
-  overflow: visible;
 }
 
-/* ---- Floor ---- */
-.fpg__floor {
-  stroke: var(--color-gray-100);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
+/* Carry-?: child of the runner, so it inherits horizontal motion
+   automatically. Starts invisible, pops in at the catch moment. */
+.fpg__q-carry {
+  position: absolute;
+  top: -20px;  /* sits just above the runner's head */
+  left: 50%;
+  width: var(--fpg-q-w);
+  height: var(--fpg-q-h);
+  transform: translateX(-50%);
+  opacity: 0;
+  will-change: opacity;
 }
 
-/* ---- Question marks ---- */
-.fpg__q {
-  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
-  font-size: 13px;
-  font-weight: 700;
-  fill: var(--color-orange);
-  opacity: 0;                /* hidden by default; keyframes turn on */
-  will-change: transform, opacity;
+.fpg__q-carry .fpg__q-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-/* Q1 falls during 0–2s of the loop, gets caught at 2s, hidden afterwards.
-   Q2 runs on the same keyframes with a 4s delay so it falls 4–6s. */
-.fpg__q--1 {
-  animation: fpg-q-fall 8s cubic-bezier(0.55, 0.05, 0.6, 0.35) infinite;
+/* Runner A: off-left → catch point (50%) → off-right.
+   Horizontal position is animated via `left` (percentage-aware) so the
+   travel distance scales with the scene's actual width. */
+.fpg__runner--a {
+  animation: fpg-run-a 10s linear infinite;
 }
-.fpg__q--2 {
-  animation: fpg-q-fall 8s cubic-bezier(0.55, 0.05, 0.6, 0.35) infinite;
-  animation-delay: -4s;      /* phase-shift so it falls 4s after Q1 */
+@keyframes fpg-run-a {
+  0%    { left: calc(-1 * var(--fpg-runner-w) - var(--fpg-off-edge)); opacity: 1; }
+  20%   { left: calc(50% - var(--fpg-runner-w) / 2); opacity: 1; }
+  25%   { left: calc(50% - var(--fpg-runner-w) / 2); opacity: 1; }  /* pickup pause */
+  50%   { left: calc(100% + var(--fpg-off-edge)); opacity: 1; }
+  50.01% { opacity: 0; }
+  100%  { left: calc(100% + var(--fpg-off-edge)); opacity: 0; }
+}
+
+/* Runner B: off-right → catch point (50%) → off-left. Delay -5s so it
+   runs in the second half of the 10s loop. */
+.fpg__runner--b {
+  animation: fpg-run-b 10s linear infinite;
+  animation-delay: -5s;
+}
+@keyframes fpg-run-b {
+  0%    { left: calc(100% + var(--fpg-off-edge)); opacity: 1; }
+  20%   { left: calc(50% - var(--fpg-runner-w) / 2); opacity: 1; }
+  25%   { left: calc(50% - var(--fpg-runner-w) / 2); opacity: 1; }
+  50%   { left: calc(-1 * var(--fpg-runner-w) - var(--fpg-off-edge)); opacity: 1; }
+  50.01% { opacity: 0; }
+  100%  { left: calc(-1 * var(--fpg-runner-w) - var(--fpg-off-edge)); opacity: 0; }
+}
+
+/* Carry-? timings. Both runners share the same keyframes; B gets the
+   -5s delay so its grab moment syncs with its own arrival. */
+.fpg__runner--a .fpg__q-carry {
+  animation: fpg-q-carry 10s linear infinite;
+}
+.fpg__runner--b .fpg__q-carry {
+  animation: fpg-q-carry 10s linear infinite;
+  animation-delay: -5s;
+}
+
+@keyframes fpg-q-carry {
+  0%    { opacity: 0; }
+  20%   { opacity: 0; }         /* hidden until pickup */
+  22%   { opacity: 1; }         /* pops in as the fall-? vanishes */
+  50%   { opacity: 1; }         /* rides with the runner all the way out */
+  50.01% { opacity: 0; }
+  100%  { opacity: 0; }
+}
+
+/* ===================================================================== *
+ * Falling ?s — absolute-positioned at the catch point (50%), only animate
+ * their vertical position + opacity. They vanish the instant the runner
+ * grabs them and the carry-? takes over.
+ * ===================================================================== */
+
+.fpg__q-fall {
+  position: absolute;
+  left: calc(50% - var(--fpg-q-w) / 2);
+  width: var(--fpg-q-w);
+  height: var(--fpg-q-h);
+  opacity: 0;
+  will-change: bottom, opacity;
+}
+
+.fpg__q-fall .fpg__q-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.fpg__q-fall--1 { animation: fpg-q-fall 10s linear infinite; }
+.fpg__q-fall--2 {
+  animation: fpg-q-fall 10s linear infinite;
+  animation-delay: -5s;
 }
 
 @keyframes fpg-q-fall {
-  0%   { transform: translateY(-6px); opacity: 0; }
-  3%   { transform: translateY(-6px); opacity: 1; }
-  25%  { transform: translateY(76px); opacity: 1; }   /* hits ground at 2s */
-  28%  { transform: translateY(76px); opacity: 0; }   /* caught → vanish */
-  100% { transform: translateY(76px); opacity: 0; }
+  0%    { bottom: 100%;  opacity: 0; }
+  2%    { bottom: 100%;  opacity: 1; }
+  20%   { bottom: 2px;   opacity: 1; }   /* landed on the floor line */
+  22%   { bottom: 2px;   opacity: 0; }   /* fade out as carry-? appears */
+  100%  { bottom: 2px;   opacity: 0; }
 }
 
-/* ---- Runners ---- */
-.fpg__char rect {
-  fill: var(--color-orange);
-}
-
-.fpg__runner {
-  will-change: transform, opacity;
-  opacity: 0;
-}
-
-/* Runner A: left → right during 0–4s of the 8s loop */
-.fpg__runner--a {
-  animation: fpg-runner-lr 8s linear infinite;
-}
-
-@keyframes fpg-runner-lr {
-  0%   { transform: translate(-14px, 88px); opacity: 1; }
-  50%  { transform: translate(228px, 88px); opacity: 1; }
-  50.01% { opacity: 0; }
-  100% { transform: translate(228px, 88px); opacity: 0; }
-}
-
-/* Runner B: right → left during 4–8s of the 8s loop.
-   Achieved with a negative delay so it's "half-way through" its loop at t=0. */
-.fpg__runner--b {
-  animation: fpg-runner-rl 8s linear infinite;
-  animation-delay: -4s;
-  transform-origin: 3px 5px;  /* center of the sprite for the mirror */
-}
-
-@keyframes fpg-runner-rl {
-  0%   { transform: translate(228px, 88px) scaleX(-1); opacity: 1; }
-  50%  { transform: translate(-14px, 88px) scaleX(-1); opacity: 1; }
-  50.01% { opacity: 0; }
-  100% { transform: translate(-14px, 88px) scaleX(-1); opacity: 0; }
-}
-
-/* ---- Subtle "run cycle": bob the runner slightly to imply motion ----
-   A small ±0.5px vertical tick on a 240ms loop gives the pixel character
-   just enough life without needing multiple animation frames. */
-.fpg__char {
-  animation: fpg-char-bob 0.24s steps(2, end) infinite;
-}
-
-@keyframes fpg-char-bob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-0.5px); }
-}
-
-/* ---- Accessibility & responsive ---- */
+/* ===================================================================== *
+ * Accessibility & responsive
+ * ===================================================================== */
 @media (prefers-reduced-motion: reduce) {
   .fpg { display: none; }
 }
 
-/* On narrow viewports the intro cell stacks and the empty-space opportunity
-   disappears, so hide the scene rather than squeeze it awkwardly. */
 @media (max-width: 960px) {
+  /* Intro cell stacks on mobile — the extra bottom space disappears
+     and squeezing the animation into the narrower flow reads as noise. */
   .fpg { display: none; }
 }

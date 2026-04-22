@@ -64,6 +64,9 @@
   --color-error-50: #FEF1F1;
 
   --font-primary: 'DIN Pro', sans-serif;
+  /* Technical / schematic voice — tech labels, nav, status annotations,
+     FIG.XX captions. Kept in a token so the fallback stack stays consistent. */
+  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
   --font-size-display: clamp(2.5rem, 5.5vw, 4.5rem);
   --font-size-h2: clamp(1.75rem, 3.5vw, 2.75rem);
   --font-size-h3: clamp(1.25rem, 2vw, 1.5rem);
@@ -81,7 +84,12 @@
   --space-xl: 3rem;
   --space-2xl: 4rem;
   --space-3xl: 6rem;
-  --space-section: clamp(5rem, 10vw, 8rem);
+  /* Tightened ~1.8x vs. the previous clamp(5rem, 10vw, 8rem) (80-128px).
+     The old rhythm left too much air between sections and made the
+     page feel sparse; this pulls adjacent sections into a denser,
+     more editorial cadence (44-72px) while still reading as a clear
+     break between blocks. */
+  --space-section: clamp(2.75rem, 5.5vw, 4.5rem);
 
   --max-width: 1200px;
   --max-width-narrow: 800px;

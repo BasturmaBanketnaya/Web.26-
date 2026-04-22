@@ -112,12 +112,25 @@ export default function FAQ({
           )}
 
           <div className="faq__grid">
-            {/* --- Intro cell: left column, spans all rows ------------------ */}
+            {/* --- Intro cell: left column ---------------------------------- */}
             <div className="faq__cell faq__cell--intro">
               {eyebrow && <span className="faq__eyebrow">{eyebrow}</span>}
               {headline && (
+                /* Line-by-line reveal (same choreography as the homepage
+                   Hero headline): split on '\n', wrap each line in an
+                   overflow-hidden clip, animate the inner line. Stagger
+                   delay is driven by the --line-i custom property. */
                 <h2 id="faq-headline" className="faq__headline">
-                  {headline}
+                  {headline.split('\n').map((line, i) => (
+                    <span key={`${line}-${i}`} className="faq__headline-clip">
+                      <span
+                        className="faq__headline-line"
+                        style={{ '--line-i': i }}
+                      >
+                        {line}
+                      </span>
+                    </span>
+                  ))}
                 </h2>
               )}
               {intro && <p className="faq__intro">{intro}</p>}
@@ -151,20 +164,25 @@ export default function FAQ({
               <FaqPixelGame />
             </div>
 
-            {/* --- One cell per Q&A ---------------------------------------- */}
-            {items.map((item, i) => (
-              <div
-                key={item.question}
-                className="faq__cell faq__cell--item"
-                style={{ '--faq-item-index': i }}
-              >
-                <AccordionItem
-                  question={item.question}
-                  answer={item.answer}
-                  defaultOpen={firstOpen && i === 0}
-                />
-              </div>
-            ))}
+            {/* --- Accordion column: one single grid cell hosting all Q&As *
+                Items are separated by their own 1px dividers (see CSS); no
+                more per-item grid rows, so the grid can't stretch a single
+                question to an odd size. */}
+            <div className="faq__cell faq__cell--items">
+              {items.map((item, i) => (
+                <div
+                  key={item.question}
+                  className="faq__item-wrap"
+                  style={{ '--faq-item-index': i }}
+                >
+                  <AccordionItem
+                    question={item.question}
+                    answer={item.answer}
+                    defaultOpen={firstOpen && i === 0}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -348,17 +348,15 @@ export default function Header() {
                 {isOpen && item.type === 'mega' && (
                   <div className="site-header__mega" role="menu">
                     <div className="site-header__mega-inner">
+                      {/* Overview panel: eyebrow + title + description. The
+                          former "Learn more →" CTA was removed across all
+                          mega menus — the child items on the right ARE the
+                          call to action, and a redundant overview link made
+                          the panel feel over-directed. */}
                       <div className="site-header__mega-overview">
                         <span className="site-header__mega-eyebrow">{item.overview.eyebrow}</span>
                         <h3 className="site-header__mega-title">{item.overview.title}</h3>
                         <p className="site-header__mega-desc">{item.overview.description}</p>
-                        <a className="site-header__mega-link" href={item.overview.href}>
-                          Learn more
-                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M3 7h8" />
-                            <path d="m7 3 4 4-4 4" />
-                          </svg>
-                        </a>
                       </div>
                       <ul className="site-header__mega-list">
                         {item.children.map((child) => (

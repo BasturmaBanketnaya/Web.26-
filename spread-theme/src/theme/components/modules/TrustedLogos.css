@@ -1,33 +1,77 @@
+/* =====================================================================
+   TrustedLogos — full-bleed gray divider band.
+
+     • Edge-to-edge light gray (#F5F5F5) background — no container, no
+       rounded corners, no hairline border. This section is visual
+       *connective tissue* between the hero and the next content block,
+       not a data card.
+     • Fixed-width left column holds the "Trusted by" eyebrow (mono,
+       matches the schematic chrome voice used in the nav, corner
+       captions, and footer tech labels).
+     • Right column is a soft-masked horizontal conveyor of client
+       logos, muted grayscale until hovered.
+   ===================================================================== */
+
 .trusted-logos {
+  /* Full-viewport-width gray band. Using a plain background on the
+     section (no container) lets the color reach the browser edges
+     cleanly without relying on negative margins. */
   background: #F5F5F5;
-  padding: 48px 0 56px;
+  /* Tightened ~1.8x (was 56/88 → now 32/52) to match the denser
+     section rhythm set by --space-section globally. */
+  padding: clamp(32px, 4vh, 52px) 0;
   overflow: hidden;
 }
 
+/* Inner row — left label column + right logo conveyor. Uses the same
+   horizontal padding as the site header / footer so the composition
+   lines up with the rest of the page. */
+.trusted-logos__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(32px, 4vw, 64px);
+  padding: 0 5.5vw;
+}
+
+/* --- Left label -------------------------------------------------- */
 .trusted-logos__label {
-  display: block;
-  text-align: center;
-  font-size: 10px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--color-gray-400);
-  margin-bottom: 24px;
+  color: var(--color-gray-500, #6a6a6a);
+  white-space: nowrap;
 }
 
+/* --- Right conveyor --------------------------------------------- */
 .trusted-logos__track-wrapper {
   position: relative;
-  width: 100%;
-  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  flex: 1;
+  min-width: 0; /* allow flex child to shrink below content size */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 4%,
+    black 96%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 4%,
+    black 96%,
+    transparent
+  );
 }
 
 .trusted-logos__track {
   display: flex;
   align-items: center;
-  gap: 96px;
+  gap: clamp(56px, 6vw, 96px);
   width: max-content;
-  animation: scroll-logos 60s linear infinite;
+  animation: trusted-logos-scroll 60s linear infinite;
 }
 
 .trusted-logos__logo {
@@ -35,21 +79,38 @@
   width: auto;
   flex-shrink: 0;
   filter: grayscale(1);
-  opacity: 0.45;
-  transition: opacity var(--transition-fast), filter var(--transition-fast);
+  opacity: 0.55;
+  transition:
+    opacity var(--transition-fast),
+    filter var(--transition-fast);
 }
-
 .trusted-logos__logo:hover {
   filter: grayscale(0);
   opacity: 1;
 }
 
-@keyframes scroll-logos {
-  0% { transform: translateX(0); }
+@keyframes trusted-logos-scroll {
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-@media (max-width: 640px) {
+/* --- Responsive -------------------------------------------------- */
+@media (max-width: 760px) {
+  /* On narrow screens, stack the label above the conveyor and
+     center it — a one-row horizontal band compresses awkwardly
+     when there's no room for both the label column and the logos. */
+  .trusted-logos {
+    /* Stacked mobile variant — tightened ~1.7x (was 40/64 → now 24/36). */
+    padding: clamp(24px, 3.5vh, 36px) 0;
+  }
+  .trusted-logos__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+  .trusted-logos__label {
+    text-align: center;
+  }
   .trusted-logos__track {
     gap: 48px;
   }

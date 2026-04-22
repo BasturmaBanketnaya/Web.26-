@@ -1,143 +1,542 @@
-/* Site footer — tokens from global.css */
+/* =====================================================================
+   Site footer — FAQ/HowItWorks bento grammar.
+
+     • White section, airy vertical padding
+     • 6-col bento grid: brand (spans 2) + 4 nav cells + full-width meta row
+     • Hairline dividers, rounded outer container, no shadows
+     • Monospace tech labels straddle the outer border line (FIG.99, STATUS,
+       SPREAD / FOOTER, version) — mirrors the rest of the site
+     • Logo rendered in its native orange on white (no invert filter)
+
+   The <nav> wrapper uses `display: contents` so its four children become
+   real grid items while the <nav> stays in the a11y tree.
+   ===================================================================== */
 
 .site-footer {
-  background: var(--color-gray-900);
-  color: var(--color-gray-100);
-  padding: var(--space-2xl) 0 var(--space-lg);
+  background: var(--color-white);
+  color: var(--color-dark);
+  /* Top padding tightened ~2.5x (was 96-160px → now 40-64px) so the
+     footer hugs the CTA dome instead of floating far below it.
+     Bottom padding is unchanged — it controls the breathing room
+     between the copyright row and the viewport edge. */
+  padding: clamp(40px, 5vh, 64px) 0 clamp(48px, 6vh, 72px);
 }
 
-.site-footer__top {
+/* Matches the site header's horizontal padding (5.5vw, no max-width cap),
+   so the footer stretches to the same edges as the sticky nav. */
+.site-footer__inner {
+  padding: 0 5.5vw;
+}
+
+/* Positioning wrap for the corner tech labels + pixel runner. */
+.site-footer__wrap {
+  position: relative;
+}
+
+/* --- Tech corner labels ------------------------------------------------- */
+.site-footer__tech {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gray-300);
+  background: var(--color-white);
+  padding: 0 4px;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 2;
+}
+.site-footer__tech--tl { top: -6px;    left: 16px;  }
+.site-footer__tech--tr { top: -6px;    right: 16px; }
+.site-footer__tech--bl { bottom: -6px; left: 16px;  }
+.site-footer__tech--br { bottom: -6px; right: 16px; }
+
+/* --- Bento grid --------------------------------------------------------- */
+.site-footer__grid {
   display: grid;
-  gap: var(--space-xl);
-  padding-bottom: var(--space-xl);
-  border-bottom: 1px solid var(--color-gray-700);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, auto);
+  gap: 1px;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) {
-  .site-footer__top {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr);
-    align-items: start;
-    gap: var(--space-2xl);
-  }
+/* The <nav> wrapper is invisible to the grid — its 4 child cells become
+   real grid items. Keeps the semantic nav landmark for assistive tech. */
+.site-footer__nav {
+  display: contents;
 }
 
-.site-footer__brand {
-  max-width: 20rem;
+/* --- Shared cell ------------------------------------------------------- */
+.site-footer__cell {
+  background: var(--color-white);
+  padding: clamp(32px, 3vw, 48px);
+  display: flex;
+  flex-direction: column;
 }
 
-.site-footer__logo {
-  display: inline-block;
-  margin-bottom: var(--space-md);
+/* --- Brand cell (spans 2, tall, airy) ----------------------------------
+   Holds the footer "manifesto" — a large typographic statement instead
+   of a logo mark. The sticky header already carries the SPREAD logo;
+   doubling it here would be redundant. Here the brand speaks with
+   voice (headline + tagline) rather than with a mark. */
+.site-footer__cell--brand {
+  grid-column: span 2;
+  grid-row: span 1;
+  min-height: 280px;
+  justify-content: space-between;
+  gap: 24px;
 }
 
-.site-footer__logo img {
-  height: 2rem;
-  width: auto;
-  filter: brightness(0) invert(1);
+.site-footer__manifesto {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: clamp(36px, 4vw, 52px);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--color-dark);
+  margin: 0;
 }
 
 .site-footer__tagline {
-  font-size: var(--font-size-body);
-  line-height: 1.55;
-  color: var(--color-gray-300);
-  font-weight: 400;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: -0.16px;
+  color: var(--color-gray-700);
+  max-width: 32ch;
+  margin: 0;
 }
 
-.site-footer__columns {
-  display: grid;
-  gap: var(--space-lg);
-}
-
-@media (min-width: 480px) {
-  .site-footer__columns {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .site-footer__columns {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-md);
-  }
+/* --- Nav cells (1 col each) -------------------------------------------- */
+.site-footer__cell--nav {
+  grid-column: span 1;
+  min-height: 280px;
+  gap: 18px;
 }
 
 .site-footer__col-title {
-  font-size: var(--font-size-small);
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-white);
-  margin-bottom: var(--space-sm);
+  letter-spacing: 0.12em;
+  color: var(--color-orange);
+  margin: 0 0 6px;
+  line-height: 1.2;
 }
 
 .site-footer__col-list {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.site-footer__col-list li {
-  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .site-footer__col-list a {
-  font-size: var(--font-size-body-sm);
-  color: var(--color-gray-300);
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.15px;
+  line-height: 1.4;
+  color: var(--color-dark);
   transition: color var(--transition-fast);
 }
-
 .site-footer__col-list a:hover,
 .site-footer__col-list a:focus-visible {
   color: var(--color-orange);
   outline: none;
 }
 
-.site-footer__bottom {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding-top: var(--space-lg);
-}
-
-@media (min-width: 768px) {
-  .site-footer__bottom {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.site-footer__copyright {
-  font-size: var(--font-size-small);
-  color: var(--color-gray-300);
-}
-
-.site-footer__social {
-  display: flex;
+/* --- CTA row ------------------------------------------------------------
+   Three side-by-side cells that each behave as one big tappable target:
+   Subscribe (primary, spans 4 cols, dark-filled) + YouTube + LinkedIn
+   (secondary, 1 col each, outlined in hairline). Hairline dividers come
+   for free from the grid gap. Cells fill cleanly on hover without
+   needing shadows or lift. */
+.site-footer__cell--cta {
+  grid-column: span 1;
+  flex-direction: row;
   align-items: center;
-  gap: var(--space-sm);
-}
-
-.site-footer__social-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: var(--font-size-small);
-  font-weight: 600;
+  justify-content: center;
+  gap: 12px;
+  min-height: 96px;
+  padding: 28px 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-white);
-  transition: color var(--transition-fast);
+  letter-spacing: 0.12em;
+  color: var(--color-dark);
+  text-align: center;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
 }
 
-.site-footer__social-link:hover,
-.site-footer__social-link:focus-visible {
+/* Primary — Subscribe. Dark fill makes it stand out as the clear
+   next-step action without relying on shadows or gradients. */
+.site-footer__cell--cta-primary {
+  grid-column: span 4;
+  background: var(--color-dark);
+  color: var(--color-white);
+  font-size: 13px;
+}
+.site-footer__cell--cta-primary:hover,
+.site-footer__cell--cta-primary:focus-visible {
+  background: var(--color-orange);
+  color: var(--color-white);
+  outline: none;
+}
+.site-footer__cell--cta-primary:hover .site-footer__cta-arrow {
+  transform: translateX(4px);
+}
+
+/* Secondary — social CTAs. White fill tinted softly on hover. */
+.site-footer__cell--cta-secondary:hover,
+.site-footer__cell--cta-secondary:focus-visible {
+  background: var(--color-gray-50, #f5f5f5);
   color: var(--color-orange);
   outline: none;
 }
 
-.site-footer__social-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+.site-footer__cta-label {
+  font: inherit;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.site-footer__cta-icon {
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  color: currentColor;
+}
+
+.site-footer__cta-arrow {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+/* --- Trust row ----------------------------------------------------------
+   Three credibility statements, each in its own cell (spans 2 cols).
+   Tiny mono tag on top reads like a CAD attribute; DIN Pro body
+   statement sits below. Keeps the schematic voice consistent with the
+   rest of the site. */
+.site-footer__cell--trust {
+  grid-column: span 2;
+  min-height: 128px;
+  gap: 12px;
+  justify-content: center;
+}
+
+.site-footer__trust-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-orange);
+  line-height: 1;
+}
+
+.site-footer__trust-text {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.14px;
+  color: var(--color-gray-700);
+  margin: 0;
+  max-width: 34ch;
+}
+
+/* --- Meta cell (full-width bottom row) ---------------------------------
+   Extra-generous padding-bottom. This cell sits flush with the bento's
+   bottom border, and the pixel engineer/jet scene runs along that
+   border with its sprite extending UP into the cell. The tall bottom
+   padding (a) gives the © 2026… line more breathing room ("more air")
+   and (b) keeps the pixel sprites from overlapping any text. */
+.site-footer__cell--meta {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 28px;
+  padding-bottom: 64px;
+  min-height: 0;
+}
+
+.site-footer__copyright {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+.site-footer__legal {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-footer__legal-link {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-gray-500);
+  transition: color var(--transition-fast);
+}
+.site-footer__legal-link:hover,
+.site-footer__legal-link:focus-visible {
+  color: var(--color-orange);
+  outline: none;
+}
+
+/* --- Pixel runner track -------------------------------------------------
+   The same engineer character that lives on the homepage Hero's bottom
+   frame runs here along the footer bento's bottom border. Positioned
+   absolutely inside .site-footer__wrap so it doesn't participate in the
+   grid layout — it just sits on top of the bottom hairline as a
+   decorative flourish. The runner itself uses bottom: -12px internally
+   so its "feet" land exactly on the border line. */
+.site-footer__runner-track {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Hide the runner on narrow screens — there isn't enough horizontal
+   travel for the animation to read, and the footer stacks vertically. */
+@media (max-width: 900px) {
+  .site-footer__runner-track { display: none; }
+}
+
+/* =====================================================================
+   Scroll-in text reveal — LINE BY LINE, same blur+rise+fade cadence as
+   the hero headline. Kicked by the IntersectionObserver in Footer.jsx
+   (adds `.site-footer--in-view` when the footer enters the viewport).
+
+   Unlike the previous block-level reveal, every targeted element here
+   represents a single readable line:
+     1. Manifesto lines  ─ "Engineering" then "Intelligence." (--line-i)
+     2. Tagline          ─ supporting line under the manifesto
+     3. Nav column title ─ one line per column (--reveal-i sweeps cols)
+     4. Nav links        ─ each <li> its own line (--link-i within col)
+     5. CTA cells        ─ Subscribe / YouTube / LinkedIn (--reveal-i)
+     6. Trust tag + text ─ tag line then statement line (--reveal-i)
+     7. Copyright, legal ─ closing lines of the page
+
+   Each line starts in the same occluded state (blur 8px, y+8px,
+   opacity 0) and resolves via the shared `footerReveal` keyframe.
+   `forwards` is essential — without it they'd snap back to invisible
+   after the keyframe completes.
+   ===================================================================== */
+
+@keyframes footerReveal {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(8px);
+  }
+  55% {
+    opacity: 0.9;
+    filter: blur(1px);
+    transform: translateY(1px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* Stack the manifesto lines so each sits on its own row — we replaced
+   the hard `<br/>` with two spans so the reveal can stagger them. */
+.site-footer__manifesto-line {
+  display: block;
+}
+
+/* Base occluded state — every line joining the cascade starts here.
+   IMPORTANT: we never animate the cell tiles themselves. The grid uses
+   `gap: 1px` over a gray backdrop to draw hairline dividers, so if we
+   faded a cell's opacity the gray backdrop would bleed through its
+   whole footprint and read as a "gray loading box". Instead we only
+   animate the content INSIDE each cell (labels, icons, text), leaving
+   the cell backgrounds — including the dark Subscribe tile — always
+   fully opaque. Same pattern as the FAQ bento fix. */
+.site-footer__manifesto-line,
+.site-footer__tagline,
+.site-footer__cell--nav .site-footer__col-title,
+.site-footer__cell--nav .site-footer__col-list li,
+.site-footer__cell--cta > *,
+.site-footer__cell--trust .site-footer__trust-tag,
+.site-footer__cell--trust .site-footer__trust-text,
+.site-footer__copyright,
+.site-footer__legal {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(8px);
+  will-change: opacity, filter, transform;
+}
+
+/* When the footer is in view, every line resolves via the shared
+   keyframe. Individual selectors below just supply delays. */
+.site-footer--in-view .site-footer__manifesto-line,
+.site-footer--in-view .site-footer__tagline,
+.site-footer--in-view .site-footer__cell--nav .site-footer__col-title,
+.site-footer--in-view .site-footer__cell--nav .site-footer__col-list li,
+.site-footer--in-view .site-footer__cell--cta > *,
+.site-footer--in-view .site-footer__cell--trust .site-footer__trust-tag,
+.site-footer--in-view .site-footer__cell--trust .site-footer__trust-text,
+.site-footer--in-view .site-footer__copyright,
+.site-footer--in-view .site-footer__legal {
+  animation: footerReveal 1.1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Stagger delays — tuned to read as one continuous reading wave. Each
+   line waits its turn. Within each tier the relevant custom property
+   (--line-i, --reveal-i, --link-i) walks children forward one beat at
+   a time so the whole thing feels like natural typography, not a pop. */
+
+/* Manifesto: two big lines, "Engineering" → "Intelligence." */
+.site-footer--in-view .site-footer__manifesto-line {
+  animation-delay: calc(var(--line-i, 0) * 160ms);
+}
+
+/* Tagline: supporting line under the manifesto. */
+.site-footer--in-view .site-footer__tagline {
+  animation-delay: 360ms;
+}
+
+/* Nav column titles: sweep left → right, one after the other. */
+.site-footer--in-view .site-footer__cell--nav .site-footer__col-title {
+  animation-delay: calc(500ms + var(--reveal-i, 0) * 70ms);
+}
+
+/* Nav links: each <li> cascades within its column (via --link-i) while
+   later columns start slightly later (via --reveal-i). Gives a real
+   reading-column-by-column feel instead of a block flash. */
+.site-footer--in-view .site-footer__cell--nav .site-footer__col-list li {
+  animation-delay: calc(
+    560ms + var(--reveal-i, 0) * 70ms + var(--link-i, 0) * 45ms
+  );
+}
+
+/* CTA row: Subscribe + two socials, cell-by-cell. The stagger is
+   driven by the `--reveal-i` set on each cell in Footer.jsx; all
+   direct children of a given cell inherit that index and animate
+   together, so each tile's content appears in sequence. */
+.site-footer--in-view .site-footer__cell--cta > * {
+  animation-delay: calc(960ms + var(--reveal-i, 0) * 80ms);
+}
+
+/* Trust row: tag line first, then its statement line ~40ms later, per
+   cell. Reads as "GDPR · EU HOSTED" → "GDPR-compliant. Hosted in
+   Europe." in sequence, like a spec sheet being filled in. */
+.site-footer--in-view .site-footer__cell--trust .site-footer__trust-tag {
+  animation-delay: calc(1200ms + var(--reveal-i, 0) * 80ms);
+}
+.site-footer--in-view .site-footer__cell--trust .site-footer__trust-text {
+  animation-delay: calc(1240ms + var(--reveal-i, 0) * 80ms);
+}
+
+/* Meta closes the reveal: copyright line, then legal row. */
+.site-footer--in-view .site-footer__copyright { animation-delay: 1460ms; }
+.site-footer--in-view .site-footer__legal     { animation-delay: 1520ms; }
+
+/* Respect reduced-motion — just show everything in its final state
+   with no transitions, same approach the hero uses. */
+@media (prefers-reduced-motion: reduce) {
+  .site-footer__manifesto-line,
+  .site-footer__tagline,
+  .site-footer__cell--nav .site-footer__col-title,
+  .site-footer__cell--nav .site-footer__col-list li,
+  .site-footer__cell--cta > *,
+  .site-footer__cell--trust .site-footer__trust-tag,
+  .site-footer__cell--trust .site-footer__trust-text,
+  .site-footer__copyright,
+  .site-footer__legal {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* --- Tablet (up to 1100px): 2-col grid ---------------------------------
+   • brand spans full row
+   • 4 nav cells form a 2x2
+   • CTA row: primary takes the full row, YouTube + LinkedIn share the
+     next row (1fr each)
+   • Trust row: 1 statement per row (stacked) so the text has room to
+     breathe without getting cropped */
+@media (max-width: 1100px) {
+  .site-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .site-footer__cell--brand {
+    grid-column: 1 / -1;
+    min-height: 200px;
+  }
+  .site-footer__cell--nav {
+    grid-column: span 1;
+    min-height: 220px;
+  }
+  .site-footer__cell--cta-primary {
+    grid-column: 1 / -1;
+  }
+  .site-footer__cell--cta-secondary {
+    grid-column: span 1;
+  }
+  .site-footer__cell--trust {
+    grid-column: 1 / -1;
+    min-height: 0;
+    padding: 24px clamp(24px, 3vw, 40px);
+  }
+  .site-footer__cell--meta {
+    grid-column: 1 / -1;
+  }
+}
+
+/* --- Mobile: single column ------------------------------------------- */
+@media (max-width: 600px) {
+  .site-footer__grid {
+    grid-template-columns: 1fr;
+  }
+  .site-footer__cell--brand,
+  .site-footer__cell--nav,
+  .site-footer__cell--cta,
+  .site-footer__cell--trust {
+    grid-column: 1;
+    min-height: 0;
+  }
+  .site-footer__cell--cta {
+    padding: 22px 20px;
+  }
+  .site-footer__cell--meta {
+    grid-column: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  /* Corner captions get too cramped on narrow viewports. */
+  .site-footer__tech { display: none; }
 }

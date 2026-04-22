@@ -1,70 +1,110 @@
 import React from 'react';
+import PixelSprite from './PixelSprite.jsx';
 import './FaqPixelGame.css';
 
 /* --------------------------------------------------------------------------
- * FaqPixelGame
+ * FaqPixelGame — ambient pixel scene for the bottom of the FAQ intro cell.
  *
- * A tiny ambient pixel scene that lives in the empty space at the bottom
- * of the FAQ intro cell. Question marks fall from above like Tetris
- * blocks; a pixel character runs in, catches one, and runs off screen.
- * Then a second character enters from the opposite side and catches the
- * next falling question mark. Loops forever, purely decorative.
+ * Structure
+ * ---------
+ * The scene stretches to the full width of its container. Runners walk
+ * along the intro cell's actual bottom border — no custom floor line
+ * is drawn; the bento's own border serves as the ground.
+ *   • Two "?" sprites that fall from above during phases 1 and 2.
+ *   • Two runners. Each runner has its own child "carry-?" sprite that
+ *     only becomes visible at the catch moment, above the runner's head.
+ *     Because the carry-? is a child of the runner, it automatically
+ *     inherits the runner's horizontal motion — no separate animation to
+ *     stay in sync. The falling "?" fades out at the same instant the
+ *     carry-? fades in, reading as "the runner picked it up".
  *
- * Visual language matches the homepage Hero's PixelRunner: thin-line,
- * single-color orange pixels on a white "floor". Motion is slow and
- * quiet so it reads as personality, not distraction.
+ * 10-second loop
+ * --------------
+ *   0.0–2.0s  ?₁ falls; runner A walks in from the left.
+ *   2.0–2.5s  Catch: fall-?₁ vanishes, carry-?₁ appears over A's head.
+ *   2.5–5.0s  Runner A continues right and exits with the ? in tow.
+ *   5.0–7.0s  ?₂ falls; runner B walks in from the right (mirrored).
+ *   7.0–7.5s  Catch on B.
+ *   7.5–10s   Runner B exits left with its ?.
  *
- * aria-hidden: true — it's ambient decoration; screen readers skip it.
+ * All positioning is percentage- or calc-based, so the scene can be any
+ * width and the animation stretches cleanly.
+ * aria-hidden — pure decoration.
  * ------------------------------------------------------------------------ */
 
-function Character() {
-  // A 6×10 pixel figure: head, body, legs. Drawn in SVG user units so
-  // it stays crisp at any size.
+/* ----- Pixel-art question mark -------------------------------------------
+ * 9×12 grid, 2-pixel strokes, single color. Chunky "?" matching the
+ * reference image — same visual weight as the character sprite. */
+const Q_MARK_PIXELS = [
+  // top bar
+  [2, 0], [3, 0], [4, 0], [5, 0],
+  [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1],
+  // left + right ticks of the hook
+  [0, 2], [1, 2],
+  [5, 2], [6, 2],
+  // right side going down
+  [5, 3], [6, 3],
+  [4, 4], [5, 4],
+  // diagonal tail
+  [3, 5], [4, 5],
+  [3, 6], [4, 6],
+  [3, 7], [4, 7],
+  // row 8 intentionally empty — "dot" gap
+  // dot at the bottom
+  [3, 10], [4, 10],
+  [3, 11], [4, 11],
+];
+
+function PixelQuestionMark() {
   return (
-    <g className="fpg__char">
-      <rect x="1" y="0" width="4" height="3" />{/* head */}
-      <rect x="0" y="3" width="6" height="4" />{/* torso */}
-      <rect x="1" y="7" width="2" height="3" />{/* left leg */}
-      <rect x="3" y="7" width="2" height="3" />{/* right leg */}
-    </g>
+    <svg
+      viewBox="0 0 9 12"
+      shapeRendering="crispEdges"
+      className="fpg__q-svg"
+      aria-hidden="true"
+    >
+      <g fill="var(--color-orange)">
+        {Q_MARK_PIXELS.map(([x, y], i) => (
+          <rect key={i} x={x} y={y} width="1" height="1" />
+        ))}
+      </g>
+    </svg>
   );
 }
 
 export default function FaqPixelGame() {
   return (
     <div className="fpg" aria-hidden="true">
-      <svg
-        className="fpg__svg"
-        viewBox="0 0 220 110"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Dashed floor — the "ground" the runner follows. */}
-        <line
-          x1="4"
-          y1="100"
-          x2="216"
-          y2="100"
-          className="fpg__floor"
-        />
+      <div className="fpg__scene">
+        {/* Falling ?s — absolute-positioned at the catch point, visible
+            only during their phase, then hidden once the runner grabs them. */}
+        <div className="fpg__q-fall fpg__q-fall--1">
+          <PixelQuestionMark />
+        </div>
+        <div className="fpg__q-fall fpg__q-fall--2">
+          <PixelQuestionMark />
+        </div>
 
-        {/* --- Falling question marks ---
-            Two marks on a shared 8s loop, offset 4s apart so there's
-            always exactly one visible at a time. */}
-        <text className="fpg__q fpg__q--1" x="80" y="14">?</text>
-        <text className="fpg__q fpg__q--2" x="140" y="14">?</text>
+        {/* Runner A — enters from left, carries ? out to the right. */}
+        <div className="fpg__runner fpg__runner--a">
+          <div className="fpg__runner-sprite">
+            <PixelSprite className="fpg__runner-svg" />
+          </div>
+          <div className="fpg__q-carry">
+            <PixelQuestionMark />
+          </div>
+        </div>
 
-        {/* --- Two runners, alternating sides ---
-            Runner A enters from the left, runs right, catches Q1.
-            Runner B enters from the right, runs left, catches Q2.
-            Both share an 8s loop, offset 4s apart. */}
-        <g className="fpg__runner fpg__runner--a">
-          <Character />
-        </g>
-        <g className="fpg__runner fpg__runner--b">
-          <Character />
-        </g>
-      </svg>
+        {/* Runner B — enters from right (mirrored), carries ? out to the left. */}
+        <div className="fpg__runner fpg__runner--b">
+          <div className="fpg__runner-sprite fpg__runner-sprite--mirror">
+            <PixelSprite className="fpg__runner-svg" />
+          </div>
+          <div className="fpg__q-carry">
+            <PixelQuestionMark />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -19,8 +19,15 @@
 
 /* ------------------------------------------------------------------
    Visual frame — the bordered card that hosts the diagram/mockup.
-   Tech labels sit inside the frame edges, like callouts on a spec.
+   Tech labels sit on the frame's border line as siblings (see __visual-wrap
+   below) so they don't get clipped by the frame's own overflow rule.
    ------------------------------------------------------------------ */
+
+/* The wrap is a positioning container only — no visual styling. Hosts
+   the frame + the tech labels as siblings. */
+.page-hero__visual-wrap {
+  position: relative;
+}
 
 .page-hero__visual-frame {
   position: relative;
@@ -54,7 +61,11 @@
   width: 100%;
 }
 
-/* Tiny monospace corner captions — "FIG.01 / PLATFORM", "STATUS: LIVE", etc. */
+/* Tiny monospace corner captions — "FIG.01 / PLATFORM", "STATUS: LIVE", etc.
+   Straddle the frame's border line (white background "breaks" the line
+   underneath, reading like a datum annotation on a technical drawing).
+   Same treatment is used on the homepage Hero, PlatformArchitectureBento,
+   and FAQ so every framed section reads as one visual grammar. */
 .page-hero__tech {
   position: absolute;
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
@@ -63,15 +74,18 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-gray-300);
+  background: var(--color-white);
+  padding: 0 4px;
   pointer-events: none;
   user-select: none;
   white-space: nowrap;
+  z-index: 2;
 }
 
-.page-hero__tech--tl { top: 14px;    left: 16px;  }
-.page-hero__tech--tr { top: 14px;    right: 16px; }
-.page-hero__tech--bl { bottom: 14px; left: 16px;  }
-.page-hero__tech--br { bottom: 14px; right: 16px; }
+.page-hero__tech--tl { top: -6px;    left: 16px;  }
+.page-hero__tech--tr { top: -6px;    right: 16px; }
+.page-hero__tech--bl { bottom: -6px; left: 16px;  }
+.page-hero__tech--br { bottom: -6px; right: 16px; }
 
 /* ------------------------------------------------------------------
    Text block — editorial 2-column split below the frame.

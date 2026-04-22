@@ -65,7 +65,11 @@ export default function PageHero({
       className={`page-hero${inView ? ' page-hero--in-view' : ''}`}
     >
       <div className="container page-hero__container">
-        <div className="page-hero__visual-frame">
+        {/* Wrap exists purely so the straddling tech labels can be
+            positioned relative to the visual frame's outer edges without
+            being clipped by the frame's own `overflow: hidden` (which
+            keeps the diagram's own overflow tidy). */}
+        <div className="page-hero__visual-wrap">
           {hasLabels && (
             <>
               {topLeft && (
@@ -90,7 +94,9 @@ export default function PageHero({
               )}
             </>
           )}
-          <div className="page-hero__visual">{visual}</div>
+          <div className="page-hero__visual-frame">
+            <div className="page-hero__visual">{visual}</div>
+          </div>
         </div>
 
         <div className="page-hero__text">

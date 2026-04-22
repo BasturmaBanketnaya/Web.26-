@@ -14,6 +14,13 @@
   /* `container` class provides max-width + horizontal padding. */
 }
 
+/* Positioning wrap — hosts the grid + corner tech labels as siblings.
+   Labels live outside the grid (which clips for rounded corners) so
+   they can straddle the outer border without being cut off. */
+.pa-bento__wrap {
+  position: relative;
+}
+
 /* -----------------------------------------------------------------
    Grid — 6-col × 3-row bento on desktop
    Row heights are content-driven; the big diagram cell stretches.
@@ -94,8 +101,9 @@
   display: block;
 }
 
-/* Tiny monospace corner captions — identical treatment to PageHero so the
-   spec-sheet feeling carries from the hero into this section. */
+/* Tiny monospace corner captions — straddle the bento's border line with
+   a white "mask" that breaks the line underneath, matching the Hero,
+   PageHero, and FAQ sections. */
 .pa-bento__tech {
   position: absolute;
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
@@ -104,15 +112,17 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-gray-300);
+  background: var(--color-white);
+  padding: 0 4px;
   pointer-events: none;
   user-select: none;
   white-space: nowrap;
-  z-index: 1;
+  z-index: 2;
 }
-.pa-bento__tech--tl { top: 14px;    left: 16px;  }
-.pa-bento__tech--tr { top: 14px;    right: 16px; }
-.pa-bento__tech--bl { bottom: 14px; left: 16px;  }
-.pa-bento__tech--br { bottom: 14px; right: 16px; }
+.pa-bento__tech--tl { top: -6px;    left: 16px;  }
+.pa-bento__tech--tr { top: -6px;    right: 16px; }
+.pa-bento__tech--bl { bottom: -6px; left: 16px;  }
+.pa-bento__tech--br { bottom: -6px; right: 16px; }
 
 /* -----------------------------------------------------------------
    Intro cell (eyebrow + headline) — top-right, 2 cols × 1 row

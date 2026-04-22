@@ -5,13 +5,16 @@
   right: 0;
   z-index: 1000;
   background: transparent;
-  transition: background var(--transition-base), box-shadow var(--transition-base);
+  /* Flat aesthetic — shadow replaced with a hairline bottom border when scrolled,
+     matching the "technical drawing" grammar used across bento sections. */
+  transition: background var(--transition-base), border-color var(--transition-base);
+  border-bottom: 1px solid transparent;
 }
 .site-header--scrolled {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 1px 0 var(--color-gray-100);
+  border-bottom-color: var(--color-gray-100);
 }
 
 .site-header__inner {
@@ -52,14 +55,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 9px 16px;
-  font-family: var(--font-primary);
-  font-size: 13px;
+  padding: 8px 14px;
+  /* Technical voice — matches the FIG.XX corner labels, the Platform page
+     diagram captions, and the FAQ bento tags. Uppercase + small size +
+     tracking is the CAD/datasheet reading the rest of the site now speaks. */
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
-  text-transform: capitalize;
-  letter-spacing: 0.3px;
-  line-height: 15.6px;
-  color: #272727;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--color-dark);
   border: 1px solid transparent;
   border-radius: 6px;
   background: transparent;
@@ -98,7 +104,7 @@
   color: var(--color-orange);
 }
 
-/* Mega menu (Product, Solutions) */
+/* Mega menu (Product, Solutions) — flat, hairline-bounded, schematic feel. */
 .site-header__mega {
   position: fixed;
   top: 68px;
@@ -107,7 +113,6 @@
   background: #fff;
   border-top: 1px solid var(--color-gray-100, #EBEBEB);
   border-bottom: 1px solid var(--color-gray-100, #EBEBEB);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
   animation: megaFade 0.18s ease-out;
   z-index: 5;
 }
@@ -135,10 +140,11 @@
 }
 
 .site-header__mega-eyebrow {
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.12em;
   color: var(--color-orange);
 }
 
@@ -159,22 +165,6 @@
   margin: 0;
 }
 
-.site-header__mega-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: auto;
-  padding-top: 16px;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.26px;
-  color: var(--color-orange);
-  transition: gap var(--transition-fast);
-}
-.site-header__mega-link:hover {
-  gap: 10px;
-}
-
 .site-header__mega-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -184,33 +174,37 @@
   padding: 0;
 }
 
+/* Mega menu items — flat tiles, hairline border on hover, icon switches
+   to orange on hover (no filled colored square). Reads like a schematic
+   index row instead of a colorful app launcher. */
 .site-header__mega-item {
   display: flex;
   align-items: flex-start;
   gap: 14px;
   padding: 14px 16px;
   border-radius: 6px;
-  transition: background var(--transition-fast);
+  border: 1px solid transparent;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
 }
 .site-header__mega-item:hover {
-  background: #F7F7F7;
+  background: var(--color-white);
+  border-color: var(--color-gray-100);
 }
 
 .site-header__mega-item-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
-  border-radius: 6px;
-  background: #F5F5F5;
-  color: var(--color-dark);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  color: var(--color-gray-300);
+  transition: color var(--transition-fast);
 }
 .site-header__mega-item:hover .site-header__mega-item-icon {
-  background: var(--color-orange);
-  color: #fff;
+  color: var(--color-orange);
 }
 
 .site-header__mega-item-text {
@@ -233,57 +227,78 @@
   color: var(--color-gray-600, #6a6a6a);
 }
 
-/* Simple dropdown (Knowledge Hub, Company) */
+/* Simple dropdown (Knowledge Hub, Company) — flat, hairline-bordered card
+   matching the bento grammar used elsewhere on the site. */
 .site-header__dropdown {
   position: absolute;
   top: calc(100% + 4px);
   left: 12px;
-  min-width: 200px;
+  min-width: 220px;
   margin: 0;
   padding: 6px;
   list-style: none;
   background: #fff;
   border: 1px solid var(--color-gray-100, #EBEBEB);
-  border-radius: 6px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
   z-index: 10;
   animation: megaFade 0.18s ease-out;
 }
 
+/* Hover treatment matches the mega-menu tiles (Product / Solutions):
+   transparent fill + hairline border appears on the current row. This
+   keeps the dropdown visually consistent with the mega menu and the
+   rest of the "technical schematic" language — items look outlined on
+   hover instead of filled, so all three menu types share one grammar. */
 .site-header__dropdown-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 10px 12px;
-  font-family: var(--font-primary);
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--color-dark);
+  border: 1px solid transparent;
   border-radius: 4px;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 }
-.site-header__dropdown-item:hover {
-  background: #F5F5F5;
-  color: var(--color-orange);
+.site-header__dropdown-item:hover,
+.site-header__dropdown-item:focus-visible {
+  background: transparent;
+  border-color: var(--color-gray-100);
+  color: var(--color-dark);
+  outline: none;
 }
 
 .site-header__dropdown-item--disabled {
-  color: var(--color-gray-400, #a5a5a5);
+  color: var(--color-gray-300);
   cursor: not-allowed;
 }
-.site-header__dropdown-item--disabled:hover {
+/* Disabled rows stay flat on hover — no border, no color shift,
+   so a "coming soon" row doesn't look interactive. */
+.site-header__dropdown-item--disabled:hover,
+.site-header__dropdown-item--disabled:focus-visible {
   background: transparent;
-  color: var(--color-gray-400, #a5a5a5);
+  border-color: transparent;
+  color: var(--color-gray-300);
 }
 
 .site-header__dropdown-badge {
-  font-size: 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--color-gray-400, #a5a5a5);
-  background: var(--color-gray-100, #EBEBEB);
-  padding: 3px 6px;
+  letter-spacing: 0.12em;
+  color: var(--color-gray-300);
+  background: transparent;
+  border: 1px solid var(--color-gray-100);
+  padding: 2px 6px;
   border-radius: 3px;
 }
 
@@ -292,18 +307,18 @@
   align-items: center;
   justify-content: center;
   padding: 0 18px;
-  height: 45px;
-  min-width: 129px;
+  height: 38px;
+  min-width: 120px;
   margin-left: 16px;
   background: var(--color-orange);
   color: var(--color-white);
-  font-family: var(--font-primary);
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
-  line-height: 15.6px;
+  line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
-  border-radius: 4px;
+  letter-spacing: 0.12em;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   transition: background var(--transition-fast);
@@ -329,17 +344,18 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 40px;
+  height: 38px;
   padding: 0 10px;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 4px;
-  color: #272727;
-  font-family: var(--font-primary);
-  font-size: 13px;
+  border-radius: 6px;
+  color: var(--color-dark);
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
-  line-height: 15.6px;
-  letter-spacing: 0.3px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   cursor: pointer;
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
@@ -349,10 +365,12 @@
 }
 
 .site-header__lang-code {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
-  line-height: 15.6px;
-  letter-spacing: 0.3px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 .site-header__lang-menu {
@@ -365,8 +383,7 @@
   list-style: none;
   background: #fff;
   border: 1px solid var(--color-gray-100, #EBEBEB);
-  border-radius: 6px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
   z-index: 10;
 }
 
@@ -380,28 +397,35 @@
   border: none;
   border-radius: 4px;
   color: var(--color-dark);
-  font-family: var(--font-primary);
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   text-align: left;
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 .site-header__lang-option:hover {
-  background: var(--color-gray-100, #EBEBEB);
+  background: rgba(39, 39, 39, 0.04);
 }
 .site-header__lang-option--active {
   color: var(--color-orange);
 }
 
 .site-header__lang-option-code {
+  font-family: var(--font-mono);
   font-weight: 500;
-  letter-spacing: 0.5px;
-  font-size: 12px;
+  letter-spacing: 0.12em;
+  font-size: 11px;
   min-width: 22px;
 }
 
 .site-header__lang-option-label {
-  font-weight: 400;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: none;
 }
 
 .site-header__mobile-lang {
@@ -481,8 +505,11 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-sm) 0;
-  font-size: 1.125rem;
+  font-family: var(--font-mono);
+  font-size: 13px;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--color-dark);
   border-bottom: 1px solid var(--color-gray-100);
   background: transparent;
@@ -491,7 +518,6 @@
   border-top: none;
   width: 100%;
   text-align: left;
-  font-family: inherit;
   cursor: pointer;
 }
 .site-header__mobile-link--toggle svg {
@@ -529,9 +555,10 @@
   padding: 14px 24px;
   background: var(--color-orange);
   color: var(--color-white);
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.39px;
-  border-radius: 4px;
+  letter-spacing: 0.12em;
+  border-radius: 6px;
 }

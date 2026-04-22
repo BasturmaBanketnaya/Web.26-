@@ -1,0 +1,275 @@
+/* =====================================================================
+ * IntelligenceGraph — styles
+ *
+ * Our design system uses hairline gray strokes on white, with orange
+ * reserved for accents. The globe follows the same palette:
+ *   - gray-200/300 strokes for the dome scaffolding (latitudes,
+ *     meridians)
+ *   - slightly more opaque gray for active connection edges between
+ *     nodes (so edges read above the dome grid)
+ *   - white-filled nodes with gray borders (neutral "artifacts")
+ *   - orange traveling pulses on a subset of edges (the one place
+ *     colour earns its volume)
+ *
+ * The central SPREAD "hub" node at the apex is NOT drawn here — the
+ * CTA button from the parent section (CTA.css) is positioned directly
+ * over the pole point, so the button itself plays the role of the hub.
+ * Every edge arc therefore reads as radiating outward from the button.
+ *
+ * Keyframes `igraph-pulse-travel` uses `offset-path` so each pulse
+ * follows its edge curve precisely. `offset-distance` is animated 0%→
+ * 100% with opacity ramping in and out at the endpoints, so pulses
+ * "emerge" near the source node and "arrive" at the destination.
+ * ================================================================== */
+
+/* Wider max-width than the previous 1000px so the dome feels more
+   like a real closing "feature" rather than a small supporting
+   diagram. Coupled with the CTA button anchored at the apex, the
+   graph now reads as the hero of the section. */
+.igraph {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  aspect-ratio: 1000 / 560;
+}
+
+.igraph__svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+/* ---- Dome scaffolding ---------------------------------------------- */
+
+.igraph__grid-line {
+  fill: none;
+  /* --color-gray-100 (#DCDCDC) is the palest line token in the
+     project — matches the hairlines used between bento cells and
+     keeps the dome scaffolding quietly schematic. */
+  stroke: var(--color-gray-100);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Equator reads as the "horizon" — give it a touch more weight so the
+   dome has a clearly defined base when you squint. */
+.igraph__grid-line--equator {
+  stroke: var(--color-gray-200);
+}
+
+/* Note: the central "hub" node + its radial glow were removed — the
+   CTA button now sits at the apex and acts as the visual hub. Edges
+   radiate outward from (and terminate at) the button's position. */
+
+/* ---- Connection edges ---------------------------------------------- */
+
+.igraph__edge {
+  fill: none;
+  /* Edges sit ABOVE the dome grid — a step darker than the grid
+     lines so the connection pattern reads cleanly on top. */
+  stroke: var(--color-gray-200);
+  stroke-width: 1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.75;
+}
+
+/* ---- Traveling pulses ---------------------------------------------- *
+   Each <circle class="igraph__pulse"> lives at the SVG origin (0,0)
+   and is carried along its assigned edge path via `offset-path`.
+   Vendor prefix is included for Safari <16; graceful fallback (pulse
+   renders as a static dot at 0,0) for ancient engines. */
+.igraph__pulse {
+  fill: var(--color-orange);
+  /* Soft orange halo around each pulse — matches the brand's orange
+     (#FF6F47) in the glow so it reads as "same material, glowing"
+     rather than a different accent color. */
+  filter: drop-shadow(0 0 6px rgba(255, 111, 71, 0.55));
+  offset-distance: 0%;
+  -webkit-offset-distance: 0%;
+  animation: igraph-pulse-travel 6s cubic-bezier(0.55, 0, 0.45, 1) infinite;
+  /* will-change is scoped tightly so the GPU promotes only pulse
+     elements, not the whole SVG. */
+  will-change: offset-distance, opacity;
+}
+
+@keyframes igraph-pulse-travel {
+  0% {
+    offset-distance:   0%;
+    -webkit-offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    -webkit-offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* ---- Nodes ---------------------------------------------------------- */
+
+/* Breathing ring — subtle scale + opacity loop on every node so even
+   the nodes not currently receiving a pulse have a gentle heartbeat.
+   Using a transparent stroke ring rather than an outer shadow keeps
+   it cheap to render and plays nicely with the hairline aesthetic. */
+.igraph__node-ring {
+  fill: none;
+  stroke: var(--color-gray-200);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: igraph-node-breathe 3.6s ease-in-out infinite;
+}
+
+.igraph__node-dot {
+  fill: var(--color-white);
+  stroke: var(--color-gray-500);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Artifact nodes — the main ring (Requirement / CAD / Sim / Test /
+   Document / Ticket). Solid gray-500 stroke for the "primary" weight. */
+.igraph__node--artifact .igraph__node-dot {
+  stroke: var(--color-gray-500);
+}
+
+/* Upstream system nodes (PLM / ERP) get a dashed stroke in a lighter
+   gray so they read as "supporting" — connected to, not core to,
+   the engineering artifact graph. */
+.igraph__node--system .igraph__node-dot {
+  stroke: var(--color-gray-300);
+  stroke-dasharray: 3 2;
+}
+
+/* Breathing ring — each node has a ~3.6s cycle. Distinct delays per
+   node kind keep them from all thumping in unison (which would read
+   as "loading spinners", not "living graph"). */
+@keyframes igraph-node-breathe {
+  0%, 100% { opacity: 0;   transform: scale(0.9); }
+  50%      { opacity: 0.4; transform: scale(1.6); }
+}
+
+.igraph__node--system .igraph__node-ring { animation-delay: 1.2s; }
+.igraph__node--artifact:nth-of-type(odd) .igraph__node-ring { animation-delay: 0.6s; }
+.igraph__node--artifact:nth-of-type(even) .igraph__node-ring { animation-delay: 1.8s; }
+
+/* ---- Labels --------------------------------------------------------- */
+
+.igraph__label {
+  fill: var(--color-gray-600);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Upstream systems get a lighter label colour so they read as
+   secondary to the main artifact ring. */
+.igraph__label--system {
+  fill: var(--color-gray-300);
+}
+
+/* ---- Status chip ---------------------------------------------------- *
+   Small monospaced pill — mirrors the Vercel reference's `deployed`
+   chip, reframed for our product voice ("NODES … LINKS … SYNCED …").
+   Positioned INSIDE the lower hemisphere (between the DOCUMENT /
+   TICKET nodes above and the PLM / ERP equator nodes below), so it
+   reads as a live-data annotation on the graph itself rather than a
+   caption hanging underneath it. The 23% bottom offset places it at
+   ~y=430 in the 1000 × 560 viewBox, which is where the equator arcs
+   converge visually. */
+.igraph__status {
+  position: absolute;
+  left: 50%;
+  bottom: 23%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gray-600);
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(39, 39, 39, 0.04);
+}
+
+.igraph__status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-orange);
+  box-shadow: 0 0 8px rgba(255, 111, 71, 0.5);
+  animation: igraph-status-blink 1.6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes igraph-status-blink {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%      { opacity: 0.35; transform: scale(0.85); }
+}
+
+/* ---- Responsive ----------------------------------------------------- *
+   On tablet the labels start overlapping with the equator nodes, so
+   we hide the lighter "system" labels (PLM / ERP) and shrink the
+   remaining ones. Dome geometry stays untouched because SVG scales
+   itself via viewBox — only text + status need media queries. */
+@media (max-width: 760px) {
+  .igraph__label {
+    font-size: 9px;
+  }
+  .igraph__label--system {
+    display: none;
+  }
+  .igraph__status {
+    font-size: 10px;
+    padding: 7px 12px;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (max-width: 520px) {
+  /* On phones the graph becomes very small — drop the non-primary
+     labels entirely so the composition reads cleanly as pure
+     schematic rather than cramped text. */
+  .igraph__label {
+    display: none;
+  }
+}
+
+/* ---- Reduced motion ------------------------------------------------- *
+   Kill every animation and show the final resting state: node rings
+   hidden, pulses invisible (they'd otherwise sit at the origin), the
+   grid and edges all static. Mirrors the approach we use elsewhere. */
+@media (prefers-reduced-motion: reduce) {
+  .igraph__node-ring,
+  .igraph__pulse,
+  .igraph__status-dot {
+    animation: none !important;
+  }
+  .igraph__pulse {
+    opacity: 0 !important;
+  }
+  .igraph__node-ring {
+    opacity: 0 !important;
+  }
+}

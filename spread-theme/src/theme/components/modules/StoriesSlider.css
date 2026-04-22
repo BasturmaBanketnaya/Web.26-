@@ -1,25 +1,42 @@
+/* =====================================================================
+   Customers section (file still named StoriesSlider.*)
+
+   Two rows inside one section:
+     Row 1 — Case Studies  (three stacked WIDE bento cards — same grammar
+                            as the Platform page ImpactMetrics bento:
+                            1.5fr intro + 3 stat columns, hairline
+                            dividers via 1px grid gap, rounded container)
+     Row 2 — Testimonials  ("invisible" auto-rotating pair slider — no
+                            card, no arrows, no dots; quotes just appear
+                            on the gray section bg and fade between pairs)
+
+   Shared bento grammar with HowItWorks / FAQ / Footer: flat surfaces,
+   hairline borders, monospace uppercase chrome, orange reserved for
+   accents. Section sits on a light-gray band (#F5F5F5) to differentiate
+   it from HowItWorks above and ResultsCards below.
+   ===================================================================== */
+
 .ss {
-  background: var(--color-gray-50, #F5F5F5);
-  padding: 80px 0 100px;
-  overflow: hidden;
+  background: #f5f5f5;
+  padding: 44px 0 56px;
 }
 
-/* ── Header ── */
+/* ── Section header ────────────────────────────────────────────── */
 .ss__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 48px;
+  gap: 32px;
+  margin-bottom: 40px;
 }
-.ss__header-copy {
-  max-width: 413px;
-}
+.ss__header-copy { max-width: 520px; }
 .ss__eyebrow {
   display: block;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.12em;
   color: var(--color-orange);
   margin-bottom: 10px;
   line-height: 1.2;
@@ -43,308 +60,426 @@
   display: inline-flex;
   align-items: center;
   gap: 15px;
-  font-family: var(--font-primary);
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.56px;
+  letter-spacing: 0.12em;
   color: var(--color-dark);
   white-space: nowrap;
   transition: gap var(--transition-fast);
   flex-shrink: 0;
+  text-decoration: none;
 }
 .ss__header-link:hover { gap: 20px; }
 .ss__header-link img { width: 33px; height: 8px; }
 
-/* ── Slider ── */
-.ss__slider-area {
-  position: relative;
-}
-.ss__track-wrap {
-  overflow: visible;
-}
-.ss__track {
+/* ── Row wrapper + label ───────────────────────────────────────── */
+.ss__row { margin-top: 40px; }
+.ss__row:first-of-type { margin-top: 0; }
+.ss__row--testimonials { margin-top: 56px; }
+
+.ss__row-head {
   display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  margin-right: calc(-1 * ((100vw - 100%) / 2 + var(--space-md)));
-  padding-right: 40px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-gray-100);
 }
-.ss__track::-webkit-scrollbar { display: none; }
+.ss__row-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-dark);
+}
+.ss__row-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-gray-500);
+}
 
-/* ── Shared card ── */
-.ss__card {
-  flex-shrink: 0;
-  scroll-snap-align: start;
-  border-radius: 6px;
+/* =====================================================================
+   Row 1 · Case Studies — stacked wide bento cards
+
+   Three compact cards in a single row, each with: badge (industry /
+   code) + large arrow CTA on top, short headline, thematic
+   illustration at the bottom. 1px gap + shared gray track exposes
+   hairline dividers between cards — same grammar as the rest of the
+   site's bento blocks. No stats: numbers live on the full case-study
+   page behind the card's link.
+   ===================================================================== */
+.ss__case-stack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 14px;
   overflow: hidden;
-  height: 600px;
 }
 
-/* ── Case Study card ── */
-.ss__card--case {
-  width: 760px;
+.ss__case {
   position: relative;
-  border: none;
-  background: #272727;
-}
-.ss__case-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-.ss__case-bg > img {
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -25%;
-  object-fit: cover;
-  mix-blend-mode: difference;
-  opacity: 0.8;
-}
-.ss__case-overlay-hue {
-  position: absolute;
-  inset: 0;
-  background: var(--color-orange);
-  mix-blend-mode: hue;
-}
-.ss__case-overlay-dark {
-  position: absolute;
-  inset: 0;
-  background: var(--color-dark);
-  mix-blend-mode: multiply;
-  opacity: 0.5;
-}
-.ss__case-content {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 28px 40px 40px;
-  color: var(--color-white);
+  gap: 24px;
+  background: var(--color-white);
+  padding: clamp(24px, 2.4vw, 32px);
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out,
+    background var(--transition-fast);
+  transition-delay: calc(var(--i) * 90ms);
 }
+.ss--revealed .ss__case {
+  opacity: 1;
+  transform: translateY(0);
+}
+.ss__case:hover {
+  background: var(--color-gray-50, #f7f7f7);
+}
+.ss__case:hover .ss__case-arrow {
+  background: var(--color-dark);
+  color: var(--color-white);
+  border-color: var(--color-dark);
+  transform: translate(2px, -2px);
+}
+
+/* ── Top row — badge + prominent arrow link ─────────────────────── */
 .ss__case-top {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: auto;
+  justify-content: space-between;
+  gap: 12px;
 }
+
 .ss__case-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 11px 42px;
-  background: var(--color-orange);
-  color: var(--color-white);
-  font-family: var(--font-primary);
-  font-size: 15px;
+  padding: 5px 10px;
+  color: var(--color-orange);
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: -0.15px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-orange);
   border-radius: 4px;
   line-height: 1.2;
+  white-space: nowrap;
 }
+
+/* Arrow is bigger and more present than the old 32 px tile — it now
+   does double duty as the visual cue that the whole card is a link
+   (card-wide anchor wraps the contents). */
 .ss__case-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 39px;
-  height: 39px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 0.5px solid rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  color: var(--color-dark);
-  font-size: 18px;
-  text-decoration: none;
-  transition: background var(--transition-fast);
-}
-.ss__case-arrow:hover { background: var(--color-white); }
-
-.ss__case-headline {
-  font-family: var(--font-primary);
-  font-size: 38px;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.76px;
-  color: var(--color-white);
-  max-width: 650px;
-  margin-bottom: 24px;
-}
-.ss__case-divider {
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.25);
-}
-.ss__case-stats {
-  display: flex;
-  gap: 0;
-  padding: 24px 0;
-}
-.ss__case-stat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.ss__case-stat-value {
-  font-family: var(--font-primary);
-  font-size: 44px;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.88px;
-  color: var(--color-white);
-}
-.ss__case-stat-label {
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: -0.15px;
-  color: var(--color-white);
-  line-height: 1.2;
-}
-.ss__case-company {
-  margin-top: auto;
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: -0.15px;
-  color: var(--color-white);
-  padding-top: 24px;
-  line-height: 1.2;
-}
-
-/* ── Testimonial card ── */
-.ss__card--testimonial {
-  width: 536px;
-  background: var(--color-white);
-  border: 1px solid #B9B9B9;
-  display: flex;
-  flex-direction: column;
-  padding: 28px;
-}
-.ss__test-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 11px 42px;
-  background: #E9E8E8;
-  color: #373A3A;
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.15px;
-  border-radius: 4px;
-  line-height: 1.2;
-  align-self: flex-start;
-}
-.ss__test-quote {
-  margin-top: 48px;
-  font-family: var(--font-primary);
-  font-size: 25px;
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: -1px;
-  color: var(--color-dark);
-  max-width: 457px;
-}
-.ss__test-author {
-  margin-top: auto;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-}
-.ss__test-author-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.ss__test-author-name {
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.15px;
-  color: var(--color-dark);
-  line-height: 1.2;
-}
-.ss__test-author-role {
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-weight: 400;
-  letter-spacing: -0.15px;
-  color: #949494;
-  line-height: 1.2;
-}
-.ss__test-avatar {
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-/* ── Nav buttons ── */
-.ss__nav {
-  display: flex;
-  gap: 12px;
-  margin-top: 32px;
-  justify-content: flex-end;
-}
-.ss__nav-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--color-orange);
-  background: transparent;
-  color: var(--color-orange);
-  font-size: 18px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 10px;
+  background: var(--color-white);
+  color: var(--color-dark);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
 }
-.ss__nav-btn:hover:not(:disabled) {
-  background: var(--color-orange);
-  color: var(--color-white);
-}
-.ss__nav-btn--disabled {
-  opacity: 0.3;
-  cursor: default;
+.ss__case-arrow svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
-/* ── Mobile ── */
+.ss__case-headline {
+  font-family: var(--font-primary);
+  font-size: clamp(20px, 1.5vw, 22px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.36px;
+  color: var(--color-dark);
+  margin: 0;
+  max-width: 22ch;
+}
+
+/* Illustration anchored to the bottom — the schematic sits beneath
+   the headline like a diagram annotation, without dominating the
+   card. */
+.ss__case-illus-wrap {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+.ss__case-illus {
+  width: 140px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.ss__case-illus-line {
+  stroke: var(--color-gray-100);
+  stroke-width: 1.25;
+}
+.ss__case-illus-line--dashed {
+  stroke-dasharray: 2 3;
+}
+.ss__case-illus-tick {
+  stroke: var(--color-gray-100);
+  stroke-width: 1.25;
+}
+.ss__case-illus-ring {
+  stroke: var(--color-gray-100);
+  stroke-width: 1.25;
+  fill: none;
+}
+.ss__case-illus-node {
+  fill: var(--color-gray-500);
+  stroke: none;
+}
+.ss__case-illus-node--accent {
+  fill: var(--color-orange);
+}
+
+/* =====================================================================
+   Row 2 · Testimonials — single-quote centered slider
+
+   Container bg matches the section (#F5F5F5) so the "box" reads as
+   pure structural padding with no visible boundary. No hairline
+   divider above; the row label sits inside the container at the top.
+   Big centered quote, real company logo on top (black-tinted for
+   uniformity, text wordmark fallback), name + role below, round-
+   rectangle arrow buttons + counter at the bottom.
+
+   All slides share one grid cell so the container sizes itself to the
+   tallest quote — the layout never jumps between slides.
+   ===================================================================== */
+.ss__ts {
+  background: #f5f5f5;
+  padding: clamp(48px, 6vw, 88px) clamp(32px, 5vw, 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(32px, 4vw, 56px);
+  outline: none;
+  position: relative;
+}
+
+/* Row label moved inside the container (replacing the deleted row-head
+   line above). Mono caps, muted, centered at the very top. */
+.ss__ts-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-gray-500);
+  line-height: 1;
+}
+
+/* Stage — all slides stacked in a single grid cell */
+.ss__ts-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+}
+.ss__ts-slide {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(24px, 3vw, 40px);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+  pointer-events: none;
+  visibility: hidden;
+}
+.ss__ts-slide--active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* ── Logo — real SVG when available, text wordmark fallback ─────
+   Each testimonial passes its own --logo-scale (default 1) so we can
+   nudge individual wordmarks up or down until they feel balanced
+   next to the quote (e.g. Mercedes star needs more presence, dense
+   wordmarks like MBDA / KUKA need less). */
+.ss__ts-logo {
+  --logo-scale: 1;
+  height: calc(28px * var(--logo-scale));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: height 0.35s ease;
+}
+.ss__ts-logo img {
+  max-height: 100%;
+  width: auto;
+  display: block;
+  /* Uniform black tint across all brand logos — keeps mixed sources
+     (orange SPREAD, black Mercedes, black Rheinmetall, future SVGs)
+     all reading as one consistent set. Use opacity 0.9 for very soft
+     blend with the section, or drop to 1.0 for pure black. */
+  filter: brightness(0);
+  opacity: 0.88;
+}
+.ss__ts-logo-text {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  color: var(--color-dark);
+  line-height: 1;
+}
+
+/* ── Quote — big, editorial, centered ─────────────────────────── */
+.ss__ts-quote {
+  margin: 0;
+  font-family: var(--font-primary);
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+  color: var(--color-dark);
+  max-width: 880px;
+}
+
+/* ── Attribution — name + italic caps role, centered ──────────── */
+.ss__ts-attr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.ss__ts-name {
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  color: var(--color-dark);
+  line-height: 1.2;
+}
+.ss__ts-role {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gray-500);
+  line-height: 1.3;
+}
+
+/* ── Controls — round-rectangle arrows + counter ──────────────── */
+.ss__ts-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+}
+.ss__ts-btn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 10px;
+  background: var(--color-white);
+  color: var(--color-dark);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+.ss__ts-btn svg {
+  width: 16px;
+  height: 8px;
+  display: block;
+}
+.ss__ts-btn:hover {
+  background: var(--color-dark);
+  color: var(--color-white);
+  border-color: var(--color-dark);
+}
+.ss__ts-btn:active {
+  transform: scale(0.96);
+}
+.ss__ts-btn:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+.ss__ts-counter {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--color-gray-500);
+  display: inline-flex;
+  gap: 6px;
+  min-width: 64px;
+  justify-content: center;
+}
+.ss__ts-counter-now { color: var(--color-dark); }
+.ss__ts-counter-sep { color: var(--color-gray-100); }
+
+/* =====================================================================
+   Responsive
+   ===================================================================== */
+
+/* Three-up case row → 2 columns at tablet, 1 column on mobile. */
+@media (max-width: 960px) {
+  .ss__case-stack {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ss__case-illus { width: 120px; }
+}
+
+@media (max-width: 640px) {
+  .ss__case-stack {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .ss__header {
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
   }
-  .ss__track {
-    margin-right: calc(-1 * var(--space-md));
-    padding-right: 20px;
+  .ss__ts {
+    padding: 48px 20px;
+    gap: 28px;
   }
-  .ss__card--case {
-    width: 85vw;
-    min-width: 320px;
-  }
-  .ss__card--testimonial {
-    width: 85vw;
-    min-width: 300px;
-  }
-  .ss__case-headline {
-    font-size: 28px;
-  }
-  .ss__case-stat-value {
-    font-size: 32px;
-  }
-  .ss__card {
-    height: 520px;
-  }
+  .ss__ts-quote { font-size: 20px; }
+  .ss__ts-logo { height: calc(24px * var(--logo-scale)); }
 }

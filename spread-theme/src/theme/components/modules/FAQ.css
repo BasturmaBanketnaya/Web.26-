@@ -1,8 +1,13 @@
 /* =====================================================================
    FAQ — bento-grid layout
-   One rounded container, intro cell on the left (spans all rows),
-   each question as its own row cell on the right. Same visual
-   grammar as PlatformArchitectureBento + ImpactMetrics (bento variant).
+   One rounded container, two cells:
+     • Intro cell (col 1) — eyebrow, headline, body, CTA, pixel scene.
+     • Items cell (col 2) — every Q&A stacked flat; row heights are
+                            content-driven on the items themselves, not
+                            on grid rows, so no single question can
+                            stretch oddly to match the intro cell.
+   Hairline dividers between questions come from the .faq__item-wrap
+   borders rather than from grid gaps.
    ===================================================================== */
 
 .faq {
@@ -16,9 +21,8 @@
 }
 
 /* ---- Grid ---------------------------------------------------------- *
-   col 1 = intro (1.2fr), col 2 = questions (2fr).
-   1px gap exposes the grid's gray background as hairline dividers.
-   The intro cell uses grid-row: 1 / -1 to span every item row in col 2.
+   Two simple cells side-by-side. The 1px gap exposes the grid's gray
+   background as the single vertical hairline between columns.
    ------------------------------------------------------------------- */
 .faq__grid {
   display: grid;
@@ -34,11 +38,14 @@
   background: var(--color-white);
 }
 
-/* ---- Intro cell ---------------------------------------------------- */
+/* ---- Intro cell ---------------------------------------------------- *
+   --faq-cell-pad is exposed as a CSS variable so the embedded pixel
+   scene can break out of the cell's padding and sit flush with the
+   cell edges (see FaqPixelGame.css negative-margin rule). */
 .faq__cell--intro {
+  --faq-cell-pad: clamp(32px, 3.5vw, 48px);
   grid-column: 1;
-  grid-row: 1 / -1;
-  padding: clamp(32px, 3.5vw, 48px);
+  padding: var(--faq-cell-pad);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -63,7 +70,36 @@
   letter-spacing: -0.72px;
   color: var(--color-dark);
   margin: 0;
-  white-space: pre-line;
+}
+
+/* Line-by-line reveal, mirroring the homepage hero headline.
+     • Each newline in the `headline` prop becomes its own line span,
+       so each can enter on its own delay (stagger via --line-i).
+     • NO overflow:hidden on the clip — the FAQ headline contains
+       letters with descenders (q in "questions") that would get their
+       tails clipped by a tight clipping box.
+     • Animation is pure opacity + translate. No blur anywhere — on
+       any element — so nothing on the section can read as a shadow
+       during the reveal. */
+.faq__headline-clip {
+  display: block;
+}
+
+.faq__headline-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(12px);
+  will-change: opacity, transform;
+}
+
+.faq--in-view .faq__headline-line {
+  animation: faqHeadlineReveal 1.1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: calc(var(--line-i, 0) * 180ms);
+}
+
+@keyframes faqHeadlineReveal {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .faq__intro {
@@ -77,7 +113,10 @@
   max-width: 34ch;
 }
 
-/* --- CTA at the bottom of the intro cell --- */
+/* --- CTA + ambient pixel scene pinned to the bottom of the intro cell ---
+   `margin-top: auto` on the CTA pushes the whole CTA + pixel scene block
+   down, filling any vertical slack so the bottom-left of the intro cell
+   never reads as empty wasted space. */
 .faq__cta {
   margin-top: auto;
   padding-top: 32px;
@@ -95,14 +134,17 @@
   margin: 0;
 }
 
+/* Arrow-style inline link — canonical "ghost CTA" used across
+   FAQ, ImpactMetrics, and PageHero. Same typography everywhere:
+   primary font, 13px, 500 weight, 0.3px letter-spacing. */
 .faq__cta-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-family: var(--font-primary);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
   color: var(--color-dark);
   text-decoration: none;
   transition: color 160ms ease;
@@ -117,43 +159,63 @@
   transform: translateX(3px);
 }
 
-/* ---- Item cells (col 2, one per Q&A) ------------------------------- */
-.faq__cell--item {
+/* ---- Items cell (col 2) --- *
+   One single grid cell. Every question lives inside as a flex row,
+   separated by a 1px bottom border on the wrap div. */
+.faq__cell--items {
   grid-column: 2;
-  /* Row auto-placed in order by the grid — rows 1, 2, 3, ... */
+  display: flex;
+  flex-direction: column;
 }
 
-/* AccordionItem lives flush inside each cell; we strip its own border
-   since the grid gap already produces the hairline between items. */
-.faq__cell--item .accordion-item {
+.faq__item-wrap {
+  border-bottom: 1px solid var(--color-gray-100);
+}
+.faq__item-wrap:last-child {
   border-bottom: none;
 }
 
-/* Hover state on a question row — matches the header nav pills'
-   subtle pill-background approach. */
-.faq__cell--item .accordion-item__trigger {
+/* AccordionItem inside a wrap — strip its own border since the wrap
+   already draws the divider. */
+.faq__item-wrap .accordion-item {
+  border-bottom: none;
+}
+
+/* Hover on a closed question: subtle gray pill-wash.
+   (When the item is OPEN we DON'T tint the trigger — the question row
+   should read as inert once expanded. See :not(.accordion-item--open)
+   below.) */
+.faq__item-wrap .accordion-item__trigger {
   padding: 22px clamp(20px, 2.4vw, 32px);
   transition: background-color 200ms ease;
 }
-.faq__cell--item .accordion-item__trigger:hover {
+.faq__item-wrap .accordion-item:not(.accordion-item--open) .accordion-item__trigger:hover {
   background-color: rgba(39, 39, 39, 0.03);
 }
+.faq__item-wrap .accordion-item--open .accordion-item__trigger,
+.faq__item-wrap .accordion-item--open .accordion-item__trigger:hover,
+.faq__item-wrap .accordion-item--open .accordion-item__trigger:focus,
+.faq__item-wrap .accordion-item--open .accordion-item__trigger:focus-visible {
+  background-color: transparent;
+}
 
-.faq__cell--item .accordion-item__answer {
+.faq__item-wrap .accordion-item__answer {
   padding: 0 clamp(20px, 2.4vw, 32px) 22px;
 }
 
-/* When an item is open, tint the icon orange on its rotated "×" so the
-   open state reads as a clear, branded affordance. */
-.faq__cell--item .accordion-item--open .accordion-item__icon {
+/* Open-state icon: rotated × tinted orange. */
+.faq__item-wrap .accordion-item--open .accordion-item__icon {
   background: rgba(255, 111, 71, 0.12);
 }
-.faq__cell--item .accordion-item--open .accordion-item__icon::before,
-.faq__cell--item .accordion-item--open .accordion-item__icon::after {
+.faq__item-wrap .accordion-item--open .accordion-item__icon::before,
+.faq__item-wrap .accordion-item--open .accordion-item__icon::after {
   background: var(--color-orange);
 }
 
-/* ---- Tech corner labels ------------------------------------------- */
+/* ---- Tech corner labels ------------------------------------------- *
+   Straddle the bento's border line with a white "mask" — identical to
+   Hero, PageHero, and PlatformArchitectureBento so every framed box
+   across the site reads with one visual grammar. */
 .faq__tech {
   position: absolute;
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
@@ -162,45 +224,70 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-gray-300);
+  background: var(--color-white);
+  padding: 0 4px;
   pointer-events: none;
   user-select: none;
   white-space: nowrap;
   z-index: 2;
 }
-.faq__tech--tl { top: -18px;    left: 2px;    }
-.faq__tech--tr { top: -18px;    right: 2px;   }
-.faq__tech--bl { bottom: -18px; left: 2px;    }
-.faq__tech--br { bottom: -18px; right: 2px;   }
+.faq__tech--tl { top: -6px;    left: 16px;  }
+.faq__tech--tr { top: -6px;    right: 16px; }
+.faq__tech--bl { bottom: -6px; left: 16px;  }
+.faq__tech--br { bottom: -6px; right: 16px; }
 
 /* ---- Scroll-in reveal --------------------------------------------- *
-   Transform + blur only (no opacity) so the gray grid divider color
-   doesn't flash through during the fade. Staggered top-to-bottom:
-   intro first, then items 1, 2, 3, ...
+   TEXT ONLY. The bento frame + cells stay fully opaque and do not
+   animate — fading them would reveal the 1px gray divider background
+   sitting behind each cell (that's how the hairlines between cells are
+   drawn), which read as a ghost gray flash during the transition.
+   Instead, only the content inside each cell fades + rises into place:
+   eyebrow → headline lines → intro paragraph → CTA, and each question
+   row's question text. No blur anywhere, no per-cell opacity, no
+   shadow risk. Triggered when the section scrolls into view via the
+   IntersectionObserver in FAQ.jsx (adds .faq--in-view).
    ------------------------------------------------------------------- */
-.faq__cell {
+.faq__eyebrow,
+.faq__intro,
+.faq__cta,
+.faq__item-wrap .accordion-item__question {
+  opacity: 0;
   transform: translateY(10px);
-  filter: blur(6px);
-  will-change: transform, filter;
+  will-change: opacity, transform;
   transition:
-    transform 900ms cubic-bezier(0.25, 1, 0.5, 1),
-    filter 900ms cubic-bezier(0.25, 1, 0.5, 1);
+    opacity 900ms cubic-bezier(0.25, 1, 0.5, 1),
+    transform 900ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.faq--in-view .faq__cell {
+.faq--in-view .faq__eyebrow,
+.faq--in-view .faq__intro,
+.faq--in-view .faq__cta,
+.faq--in-view .faq__item-wrap .accordion-item__question {
+  opacity: 1;
   transform: translateY(0);
-  filter: blur(0);
 }
 
-.faq--in-view .faq__cell--intro { transition-delay: 0ms; }
-.faq--in-view .faq__cell--item  {
-  transition-delay: calc(120ms + var(--faq-item-index, 0) * 90ms);
+/* Stagger — one continuous reveal rhythm, left cell first. */
+.faq--in-view .faq__eyebrow { transition-delay:   0ms; }
+.faq--in-view .faq__intro   { transition-delay: 520ms; } /* after both headline lines */
+.faq--in-view .faq__cta     { transition-delay: 680ms; }
+
+/* Question rows: stagger top-to-bottom via --faq-item-index. */
+.faq--in-view .faq__item-wrap .accordion-item__question {
+  transition-delay: calc(260ms + var(--faq-item-index, 0) * 90ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .faq__cell {
+  .faq__eyebrow,
+  .faq__intro,
+  .faq__cta,
+  .faq__item-wrap .accordion-item__question,
+  .faq__headline-line {
+    opacity: 1 !important;
     transform: none !important;
     filter: none !important;
     transition: none !important;
+    animation: none !important;
   }
 }
 
@@ -209,15 +296,12 @@
   .faq__grid {
     grid-template-columns: 1fr;
   }
-  .faq__cell--intro {
-    grid-column: 1;
-    grid-row: auto;
-  }
-  .faq__cell--item {
+  .faq__cell--intro,
+  .faq__cell--items {
     grid-column: 1;
   }
-  .faq__cell--item .accordion-item__trigger,
-  .faq__cell--item .accordion-item__answer {
+  .faq__item-wrap .accordion-item__trigger,
+  .faq__item-wrap .accordion-item__answer {
     padding-left: clamp(18px, 5vw, 28px);
     padding-right: clamp(18px, 5vw, 28px);
   }

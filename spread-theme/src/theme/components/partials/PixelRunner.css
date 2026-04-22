@@ -75,7 +75,7 @@
 @media (prefers-reduced-motion: reduce) {
   .pixel-runner,
   .pixel-runner__sprite,
-  .pixel-runner__cels {
+  .pixel-runner__sprite .pixel-sprite__cels {
     animation: none !important;
   }
   /* Hide on reduced motion — a static pixel runner just reads as a blob,

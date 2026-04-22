@@ -1,0 +1,168 @@
+/* =================================================================
+   PixelCarRunner — the footer's sign-off scene.
+
+   TIMELINE (one shared `--pcr-cycle`, default 20s):
+
+     0–58 %    Engineer runs left-edge → car's rear door (~72%)
+     58–64 %   Short beat at the boarding spot
+     64–66 %   Engineer fades out ("gets into" the car)
+     66–78 %   Car pulls away and exits past 100% (straight line)
+     78–80 %   Car fades to fully transparent (flat fade, no rotate,
+               no vertical lift — pure horizontal motion)
+     80–92 %   Empty scene (breathing room)
+     92–100 %  Car fades back in at the parked spot, ready for the
+               next loop.
+
+   The runner's internal 4-frame SMIL cycle inside <PixelSprite />
+   keeps ticking throughout — so when they re-enter they're already
+   mid-stride, not frozen.
+
+   FOOTER-ONLY. The homepage Hero and the FAQ game still use the
+   original <PixelRunner /> / <FaqPixelGame /> unchanged.
+   ================================================================= */
+
+.pixel-car-runner {
+  /* Total length of one run → board → drive-off → respawn loop.
+     A touch shorter than the jet version since a car pulls away
+     more gradually — the eye doesn't expect a "takeoff rush". */
+  --pcr-cycle: 20s;
+
+  /* Runner sprite — matches the homepage Hero runner exactly so the
+     character reads as the same engineer. */
+  --pcr-runner-w: 24px;
+  --pcr-runner-h: 34px;
+
+  /* Car sprite — side-profile compact car. ViewBox is 21×9
+     (aspect 2.33 : 1). Element aspect tuned to match so
+     preserveAspectRatio "meet" adds only a hair of vertical
+     breathing room above the roof. */
+  --pcr-car-w: 72px;
+  --pcr-car-h: 32px;
+
+  /* Parked X position of the car, relative to the container width.
+     The runner stops right behind the rear bumper via calc(). */
+  --pcr-car-parked: 72%;
+
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------
+   Runner — its BOTTOM edge sits on the bento's bottom border line
+   (feet connect to the border instead of hanging below it). Body
+   extends UP from there into the meta cell's padding area, which is
+   why that cell needs the taller padding-bottom (see Footer.css).
+   ------------------------------------------------------------------ */
+.pixel-car-runner__runner {
+  position: absolute;
+  bottom: 0;
+  width: var(--pcr-runner-w);
+  height: var(--pcr-runner-h);
+  animation: pcr-runner-travel var(--pcr-cycle) linear infinite;
+}
+
+.pixel-car-runner__runner-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Car — bottom edge on the same border line as the runner's feet,
+   so both sprites share a ground plane (wheels on the line, runner
+   standing on the line). No transform-origin, no rotation, no
+   vertical translate: the car moves in a perfectly straight
+   horizontal line, exiting right.
+   ------------------------------------------------------------------ */
+.pixel-car-runner__car {
+  position: absolute;
+  bottom: 0;
+  width: var(--pcr-car-w);
+  height: var(--pcr-car-h);
+  animation: pcr-car-driveaway var(--pcr-cycle) linear infinite;
+}
+
+.pixel-car-runner__car-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------- runner keyframes ------------------------------------
+   Runner slides in from off-screen left, stops at the car's rear
+   bumper (parked X − runner width), holds briefly, then fades as
+   they climb in. */
+@keyframes pcr-runner-travel {
+  0% {
+    left: -6%;
+    opacity: 1;
+  }
+  58% {
+    left: calc(var(--pcr-car-parked) - var(--pcr-runner-w));
+    opacity: 1;
+  }
+  64% {
+    left: calc(var(--pcr-car-parked) - var(--pcr-runner-w));
+    opacity: 1;
+  }
+  66% {
+    left: calc(var(--pcr-car-parked) - var(--pcr-runner-w));
+    opacity: 0;
+  }
+  100% {
+    left: calc(var(--pcr-car-parked) - var(--pcr-runner-w));
+    opacity: 0;
+  }
+}
+
+/* ---------- car keyframes ---------------------------------------
+   Pure horizontal slide. No rotation, no Y translate.
+     66%    : starts rolling from parked
+     78%    : fully off-screen right
+     78→80%: fades opacity 1 → 0
+     80→92%: invisible, teleports back to parked
+     92→100%: fades 0 → 1 for the next loop.
+
+   ease-in on the 66% keyframe gives a natural "releases the brake"
+   acceleration (parked → cruising) without any transform tricks. */
+@keyframes pcr-car-driveaway {
+  0%, 66% {
+    left: var(--pcr-car-parked);
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+  78% {
+    left: 105%;
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  80% {
+    left: 105%;
+    opacity: 0;
+  }
+  92% {
+    left: var(--pcr-car-parked);
+    opacity: 0;
+    animation-timing-function: ease-in;
+  }
+  100% {
+    left: var(--pcr-car-parked);
+    opacity: 1;
+  }
+}
+
+/* ---------- reduced motion -------------------------------------
+   Hide the whole scene — a frozen silhouette of a car + runner on
+   a footer reads more like a bug than a considered still. */
+@media (prefers-reduced-motion: reduce) {
+  .pixel-car-runner { display: none; }
+}
+
+/* ---------- narrow viewports -----------------------------------
+   Below ~900px the footer stacks into a single column and there's
+   no continuous bottom line to travel along. */
+@media (max-width: 900px) {
+  .pixel-car-runner { display: none; }
+}
