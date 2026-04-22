@@ -12,6 +12,28 @@
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
   />
+  <!--
+    GitHub Pages SPA decoder. Pairs with `public/404.html`.
+    When a deep link like `/Web.26-/platform` 404s, `404.html`
+    rewrites it to `/Web.26-/?/platform`. This runs before React
+    boots and rewrites that query string back into a real pathname
+    via history.replaceState, so the router in App.jsx sees the
+    path the user actually typed.
+  -->
+  <script>
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(
+          null,
+          null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    })(window.location);
+  </script>
   <script type="module" crossorigin src="/Web.26-/assets/index-BL5GuXip.js"></script>
   <link rel="stylesheet" crossorigin href="/Web.26-/assets/index-aof2IAfD.css">
 </head>
