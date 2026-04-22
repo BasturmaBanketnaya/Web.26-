@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>SPREAD</title>
+  <meta name="robots" content="noindex" />
   <!--
+    ================================================================
     GitHub Pages SPA redirect.
+    ================================================================
 
     GitHub Pages is a static file host — it has no knowledge of our
     client-side React router. When a visitor deep-links to
@@ -17,7 +20,25 @@
     the query-string back into a real pathname before React boots,
     so the router sees the path the user actually asked for.
 
+    IMPORTANT: Chrome / Edge silently replace any 4xx response body
+    smaller than ~2 KB with their own "friendly error page" — which
+    means our redirect script never runs and the visitor sees a raw
+    404 interstitial. To prevent that we pad this file past the
+    threshold with the long comment block you're reading right now
+    (and the <noscript> fallback below).
+
     Based on rafgraph/spa-github-pages (MIT).
+
+    Filler — keeps the served body above 2 KB so Chrome will actually
+    render this page and execute the <script> tag.
+    ---------------------------------------------------------------
+    SPREAD is the Engineering Intelligence Platform for complex,
+    software-defined products. We connect engineering data from PLM,
+    ALM, ERP, CAD, MES, IoT and document repositories into a single
+    living Product Twin — a graph of every function, component,
+    requirement and signal across the entire product. Apps and AI
+    agents read from the same twin so every team is looking at the
+    same ground truth.
   -->
   <script>
     (function () {
@@ -35,6 +56,58 @@
       );
     })();
   </script>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #e6e6e6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .nf {
+      text-align: center;
+      max-width: 420px;
+      padding: 24px;
+    }
+    .nf h1 {
+      font-weight: 500;
+      font-size: 22px;
+      margin: 0 0 12px;
+    }
+    .nf p {
+      color: #9a9a9a;
+      line-height: 1.5;
+      margin: 0 0 20px;
+    }
+    .nf a {
+      color: #ff5a1f;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nf a:hover { text-decoration: underline; }
+  </style>
 </head>
-<body></body>
+<body>
+  <noscript>
+    <div class="nf">
+      <h1>Page not found</h1>
+      <p>
+        The page you're looking for has been moved or requires JavaScript
+        to load. Please enable JavaScript and refresh, or head back to the
+        home page.
+      </p>
+      <p><a href="/Web.26-/">← Back to SPREAD home</a></p>
+    </div>
+  </noscript>
+  <div class="nf" id="nf-fallback" style="display:none">
+    <h1>Redirecting…</h1>
+    <p>
+      One moment — taking you to the right page. If this takes longer
+      than a few seconds, <a href="/Web.26-/">return to the home page</a>.
+    </p>
+  </div>
+</body>
 </html>
