@@ -27,11 +27,27 @@ import PrototypePage from './theme/pages/PrototypePage.jsx';
  * a `popstate` event, or we can add a small navigate() helper later.
  * ------------------------------------------------------------------------ */
 
+/* Vite injects the site's base path at build time:
+ *   - dev / HubSpot: '/'
+ *   - GitHub Pages:  '/Web.26-/'
+ * We strip it from the URL so the switch below can stay simple and
+ * the site routes identically whether served from `/` or `/Web.26-/`.
+ */
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function stripBase(pathname) {
+  if (BASE && pathname.startsWith(BASE)) {
+    return pathname.slice(BASE.length) || '/';
+  }
+  return pathname;
+}
+
 function resolvePage(pathname) {
-  if (pathname === '/platform' || pathname === '/platform/') {
+  const p = stripBase(pathname);
+  if (p === '/platform' || p === '/platform/') {
     return <PlatformPage />;
   }
-  if (pathname === '/prototype' || pathname === '/prototype/') {
+  if (p === '/prototype' || p === '/prototype/') {
     return <PrototypePage />;
   }
   return <HomePage />;
